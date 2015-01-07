@@ -16,6 +16,7 @@ module Lbp
 	      @xslt_dir = @confighash[:xslt_dir]
 
 	  end
+	  ## Begin file path methods
 	  # Returns the absolute path of the file requested
 	  def file_path(ms='edited')
 	  	if ms == 'edited'
@@ -25,7 +26,8 @@ module Lbp
     	end
     	return file_path
 		end
-		# returns the title specified in the TEI document
+		## End File Path Methods
+		### Item Header Extraction and Metadata Methods
 		def title(ms='edited')
 			xmldoc = Nokogiri::XML(File.open(self.file_path(ms)))
 			title = xmldoc.xpath("/tei:TEI/tei:teiHeader[1]/tei:fileDesc[1]/tei:titleStmt[1]/tei:title[1]", 'tei' => 'http://www.tei-c.org/ns/1.0')
@@ -76,7 +78,8 @@ module Lbp
       end
       return number_of_columns
     end
-    	### GIT FUNCTIONS ###
+    ### End Header and Metadata Information Extraction Methods ###
+   	### Begin GIT functions ###
   	def is_git_dir
   		gitpath = @file_dir + ".git"
   		
@@ -106,8 +109,9 @@ module Lbp
   		repo = Rugged::Repository.new(@file_dir)
   		repo.checkout(branch)
 		end
-		### XSLT transformation methods
-		def transform_main_view(ms='edited', ed='master', xslt_param_array=[], xsltfile=@xslt_dir + "text_display.xsl")
+		### End Git Methods ###
+		### Begin transform (XSLT) methocs ###
+		def transform (ms='edited', ed='master', xslt_param_array=[], xsltfile)
   		xmlfile = self.file_path(ms)
   		current_branch = self.git_current_branch
   		if current_branch != ed
@@ -117,17 +121,72 @@ module Lbp
       else
       	doc = xslt_transform(xmlfile, xsltfile, xslt_param_array)
       end
+		end
+
+		def transform_main_view(ms='edited', ed='master', xslt_param_array=[])
+			xsltfile=@xslt_dir + @confighash[:xslt_main_view] # "text_display.xsl"
+			doc = self.transform(ms, ed, xslt_param_array=[], xsltfile)
+		end
+		def transform_index_view(ms='edited', ed='master', xslt_param_array=[])
+			xsltfile=@xslt_dir + @confighash[:xslt_index_view] # "text_display_index.xsl"
+			doc = self.transform(ms, ed, xslt_param_array=[], xsltfile)
+		end
+		def transform_clean(ms='edited', ed='master', xslt_param_array=[])
+    	xsltfile=@xslt_dir + @confighash[:xslt_clean] # "clean_forStatistics.xsl"
+    	doc = self.transform(ms, ed, xslt_param_array=[], xsltfile)
     end
-    def transform_clean(ms='edited', ed='master', xslt_param_array=[], xsltfile=@xslt_dir + "clean_forStatistics.xsl")
-    	xmlfile = self.file_path(ms)
+		def transform_plain_text(ms='edited', ed='master', xslt_param_array=[])
+    	xsltfile=@xslt_dir + @confighash[:xslt_plain_text] # "plaintext.xsl"
+    	doc = self.transform(ms, ed, xslt_param_array=[], xsltfile)
+    end
+    def transform_toc(ms='edited', ed='master', xslt_param_array=[])
+    	xsltfile=@xslt_dir + @confighash[:xslt_toc] # "lectio_outline.xsl"
+    	doc = self.transform(ms, ed, xslt_param_array=[], xsltfile)
+    end
+    ### End of Transformation Methods ###
+    ### Begin Statistics Methods ###
+    def word_count(ms='edited', ed='master')
+    	plaintext = self.transform_plain_text(ms, ed)
+    	size = plaintext.text.split.size
+    end
+    def word_array(ms='edited', ed='master')
+    	plaintext = self.transform_plain_text(ms, ed)
+    	word_array = plaintext.text.split
+    	word_array.map!{ |word| word.downcase}
+    end
+    def word_frequency(sort, order) # could also sort by word
+    	word_array = self.word_array
+    	wf = Hash.new(0)
+			word_array.each { |word| wf[word] += 1 }
+			
+			if sort == "frequency" 
+				if order == "descending" # high to low
+					wf = wf.sort_by{|k,v| v}.reverse
+				elsif order == "ascending" # low to high
+					wf = wf.sort_by{|k,v| v}
+				end
+			elsif sort == "word"
+				if order == "descending" # z - a
+						wf = wf.sort_by{|k,v| k}.reverse
+				elsif order == "ascending" #a - z
+						wf = wf.sort_by{|k,v| k}
+				end
+			end
+			return wf.to_h
+    end
+    def number_of_body_paragraphs(ms='edited', ed='master')
+			xmlfile = self.file_path(ms)
   		current_branch = self.git_current_branch
   		if current_branch != ed
-      	self.git_checkout(ed)
-      		$doc = processXSLTDoc($xsltfile, $filename, $xsltParamArray);
-      	self.git_checkout(current_branch);
+      		self.git_checkout(ed)
+      			xmldoc = Nokogiri::XML(File.open(self.file_path(ms)))
+						p = xmldoc.xpath("//tei:body//tei:p", 'tei' => 'http://www.tei-c.org/ns/1.0')
+      		self.git_checkout(current_branch);
       else
-      	doc = xslt_transform(xmlfile, xsltfile, xslt_param_array)
+      			xmldoc = Nokogiri::XML(File.open(self.file_path(ms)))
+						p = xmldoc.xpath("//tei:body//tei:p", 'tei' => 'http://www.tei-c.org/ns/1.0')
       end
-    end
+      return p.count
+		end
   end
 end

@@ -7,7 +7,12 @@ describe 'item object' do
 	
 	$confighash = { texts_dir: "/Users/JCWitt/WebPages/lbpwrapper/lombardpress/pp-projectfiles/GitTextfiles/", 
 		projectdatafile_dir: "/Users/JCWitt/WebPages/lbpwrapper/lombardpress/pp-projectfiles/Conf/", 
-		xslt_dir: "/Users/JCWitt/WebPages/lbpwrapper/lombardpress/public/pl_xslt_stylesheets/"}
+		xslt_dir: "/Users/JCWitt/WebPages/lbpwrapper/lombardpress/public/pl_xslt_stylesheets/", 
+		xslt_main_view: "text_display.xsl",
+		xslt_index_view: "text_display_index.xsl", 
+		xslt_clean: "clean_forStatistics.xsl",
+		xslt_plain_text: "plaintext.xsl", 
+		xslt_toc: "lectio_outline.xsl"}
 
 	$itemobject = Lbp::Item.new($confighash, 'lectio1')
 
@@ -97,15 +102,44 @@ describe 'item object' do
 		#expect(result).to eq("master")
 	end
 
-	# This test shoudl work, but include file paths break in XSL document
+	it 'should transform a doc using a specified xslt file' do
+		xslt_param_array = []
+		result = $itemobject.transform('edited', 'master', xslt_param_array, $confighash[:xslt_dir] + $confighash[:xslt_clean])
+		expect(result).to be_instance_of(Nokogiri::XML::Document)
+	end
+	# This test should work, but include file paths break in XSL document
 	#it 'should process an xml doc with the text_display.xslt stylesheet' do 
 	#	result = $itemobject.transform._main_view
 	#	expect(result).to be_instance_of(Nokogiri::XML::Document)
 	#end
-
-	it 'should process an xml doc with the text_display.xslt stylesheet' do 
+	#it 'should process an xml doc with the text_display.xsl stylesheet' do 
+	#	result = $itemobject.transform_index_view
+	#	expect(result).to be_instance_of(Nokogiri::XML::Document)
+	#end
+	it 'should process an xml doc with the text_display.xsl stylesheet' do 
 		result = $itemobject.transform_clean
 		expect(result).to be_instance_of(Nokogiri::XML::Document)
+	end
+	it 'should process an xml doc with the text_display.xsl stylesheet' do 
+		result = $itemobject.transform_toc
+		expect(result).to be_instance_of(Nokogiri::XML::Document)
+	end
+	it 'should process an xml doc with the text_display.xsl stylesheet' do 
+		result = $itemobject.transform_plain_text
+		expect(result).to be_instance_of(Nokogiri::XML::Document)
+	end
+	it 'should get the word count of the item object' do 
+		result = $itemobject.word_count
+		#result.should eq(2122)
+		expect(result).to be_kind_of(Integer)
+	end
+	it 'should get the word frequency of the item object' do 
+		result = $itemobject.word_frequency("word", "ascending")
+		expect(result).to be_kind_of(Hash)
+	end
+	it 'should get the paragraph count of the item object' do 
+		result = $itemobject.number_of_body_paragraphs
+		expect(result).to be_kind_of(Integer)
 	end
 
 	
