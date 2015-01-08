@@ -6,4 +6,6 @@ def xslt_transform(xmlfile, xsltfile, xslt_param_array)
 	xslt = Nokogiri::XSLT(File.read(xsltfile))
 	result_doc = xslt.transform(xml, xslt_param_array)
 	return result_doc
-end				
+end
+
+				
