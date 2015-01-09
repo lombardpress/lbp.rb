@@ -82,8 +82,9 @@ module Lbp
 			array_number = sequence_array.index(@fs)
 			sequence_number = array_number + 1
 			return sequence_number
-			
 		end
-
+		def transcription(filehash=@filehash_default)
+			transcr = Transcription.new(@config, filehash)
+		end
 	end
 end
