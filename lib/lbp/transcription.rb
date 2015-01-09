@@ -31,9 +31,6 @@ module Lbp
   			if @current_branch != @ed
   				@item = item
   			end
-
-	      
-
 	  end
 	  ## Begin file path methods
 	  # Returns the absolute path of the file requested
@@ -47,50 +44,56 @@ module Lbp
     	end
     	return file_path
 		end
+		def file
+			file = File.open(self.file_path)
+		end
+		def nokogiri
+			xmldoc = Nokogiri::XML(self.file)
+		end
 		## End File Path Methods
 		### Item Header Extraction and Metadata Methods
 		def title
-			xmldoc = Nokogiri::XML(File.open(self.file_path))
+			xmldoc = self.nokogiri
 			title = xmldoc.xpath("/tei:TEI/tei:teiHeader[1]/tei:fileDesc[1]/tei:titleStmt[1]/tei:title[1]", 'tei' => 'http://www.tei-c.org/ns/1.0')
 			return title.text
 		end
 		def author
-			xmldoc = Nokogiri::XML(File.open(self.file_path))
+			xmldoc = self.nokogiri
 			author = xmldoc.xpath("/tei:TEI/tei:teiHeader[1]/tei:fileDesc/tei:titleStmt[1]/tei:author", 'tei' => 'http://www.tei-c.org/ns/1.0')
 			return author.text
 		end
 		def editor
-			xmldoc = Nokogiri::XML(File.open(self.file_path))
+			xmldoc = self.nokogiri
 			editor = xmldoc.xpath("/tei:TEI/tei:teiHeader[1]/tei:fileDesc/tei:titleStmt[1]/tei:editor", 'tei' => 'http://www.tei-c.org/ns/1.0')
 			return editor.text
 		end
 		def ed_no
-			xmldoc = Nokogiri::XML(File.open(self.file_path))
+			xmldoc = self.nokogiri
 			ed_no = xmldoc.at_xpath("/tei:TEI/tei:teiHeader[1]/tei:fileDesc[1]/tei:editionStmt[1]/tei:edition[1]/@n", 'tei' => 'http://www.tei-c.org/ns/1.0')
 			return ed_no.value
 		end
 		def ed_date
-			xmldoc = Nokogiri::XML(File.open(self.file_path))
+			xmldoc = self.nokogiri
 			ed_date = xmldoc.at_xpath("/tei:TEI/tei:teiHeader[1]/tei:fileDesc[1]/tei:editionStmt[1]/tei:edition[1]/tei:date[1]/@when", 'tei' => 'http://www.tei-c.org/ns/1.0')
 			return ed_date.value
 		end
 		def pub_date
-			xmldoc = Nokogiri::XML(File.open(self.file_path))
+			xmldoc = self.nokogiri
 			pub_date = xmldoc.at_xpath("/tei:TEI/tei:teiHeader[1]/tei:fileDesc[1]/tei:publicationStmt[1]/tei:date[1]/@when", 'tei' => 'http://www.tei-c.org/ns/1.0')
 			return pub_date.value
 		end
 		def encoding_method
-			xmldoc = Nokogiri::XML(File.open(self.file_path))
+			xmldoc = self.nokogiri
 			encoding_method = xmldoc.at_xpath("/tei:TEI/tei:teiHeader[1]/tei:encodingDesc[1]/tei:variantEncoding[1]/@method", 'tei' => 'http://www.tei-c.org/ns/1.0')
 			return encoding_method.value
 		end
 		def encoding_location
-			xmldoc = Nokogiri::XML(File.open(self.file_path))
+			xmldoc = self.nokogiri
 			encoding_location = xmldoc.at_xpath("/tei:TEI/tei:teiHeader[1]/tei:encodingDesc[1]/tei:variantEncoding[1]/@location", 'tei' => 'http://www.tei-c.org/ns/1.0')
 			return encoding_location.value
 		end
 		def number_of_columns
-			xmldoc = Nokogiri::XML(File.open(self.file_path))
+			xmldoc = self.nokogiri
 			test = xmldoc.xpath("//tei:pb", 'tei' => 'http://www.tei-c.org/ns/1.0')
 			if @type == "critical"
 				number_of_columns = nil
@@ -205,11 +208,11 @@ module Lbp
     def number_of_body_paragraphs
 			if @current_branch != @ed
   				@item.git_checkout(@ed)
-      			xmldoc = Nokogiri::XML(File.open(self.file_path))
+      			xmldoc = self.nokogiri
 						p = xmldoc.xpath("//tei:body//tei:p", 'tei' => 'http://www.tei-c.org/ns/1.0')
       		@item.git_checkout(@current_branch);
       else
-      		xmldoc = Nokogiri::XML(File.open(self.file_path))
+      		xmldoc = self.nokogiri
 					p = xmldoc.xpath("//tei:body//tei:p", 'tei' => 'http://www.tei-c.org/ns/1.0')
       end
       return p.count
