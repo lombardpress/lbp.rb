@@ -59,4 +59,8 @@ describe 'item object' do
 		result = $itemobject.next
 		expect(result).to be_instance_of(Lbp::Item)
 	end
+	it 'should return a transcription object' do 
+		result = $itemobject.transcription
+		expect(result).to be_instance_of(Lbp::Transcription)
+	end
 end

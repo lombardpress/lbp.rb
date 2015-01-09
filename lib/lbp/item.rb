@@ -84,7 +84,7 @@ module Lbp
 			return sequence_number
 		end
 		def transcription(filehash=@filehash_default)
-			transcr = Transcription.new(@config, filehash)
+			transcr = Transcription.new(@confighash, filehash)
 		end
 	end
 end
