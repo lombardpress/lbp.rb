@@ -24,12 +24,14 @@ module Lbp
 	      	@xslt_dir = @confighash[:xslt_documentary_dir]
 	      end
 
-	      item = Item.new(@confighash, @fs)
-  			@current_branch = item.git_current_branch
+	      if @filehash[:source] == 'local'
+	      	item = Item.new(@confighash, @fs)
+  				@current_branch = item.git_current_branch
   			# the effort here is to only set instance variable when absolutely necessary
-  			if @current_branch != @ed
-  				@item = item
+  				if @current_branch != @ed
+  					@item = item
   			end
+  		end
 	  end
 	  ## Begin file path methods
 	  # Returns the absolute path of the file requested
@@ -139,7 +141,7 @@ module Lbp
 		def transform (xsltfile, xslt_param_array=[])
 
   		xmlfile = self.file_path
-			if @current_branch != @ed && source == 'local'
+			if @current_branch != @ed && @filehash[:source] == 'local'
       	@item.git_checkout(@ed)
       		doc = xslt_transform(xmlfile, xsltfile, xslt_param_array)
       	@item.git_checkout(@current_branch);
@@ -200,7 +202,7 @@ module Lbp
 			return wf.to_h
     end
     def number_of_body_paragraphs
-			if @current_branch != @ed && source == 'local'
+			if @current_branch != @ed && @filehash[:source] == 'local'
   				@item.git_checkout(@ed)
       			xmldoc = self.nokogiri
 						p = xmldoc.xpath("//tei:body//tei:p", 'tei' => 'http://www.tei-c.org/ns/1.0')
@@ -213,7 +215,7 @@ module Lbp
 		end
 		def paragraphs
 			## it's not good to keep reusing this, git check out condition. Need a better solution
-			if @current_branch != @ed && source == 'local'
+			if @current_branch != @ed && @filehash[:source] == 'local'
   				@item.git_checkout(@ed)
       			xmldoc = self.nokogiri
 						paragraphs = xmldoc.xpath("//tei:body//tei:p/@xml:id", 'tei' => 'http://www.tei-c.org/ns/1.0')
