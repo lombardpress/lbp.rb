@@ -88,13 +88,13 @@ module Lbp
 		def file_path(source: 'local', wit: 'critical', ed: 'master')
 			if wit == 'critical'
 				if source == "origin"
-					file_path = "https://#{@confighash[:git_repo]}#{@fs}/#{ed}/#{@fs}.xml"
+					file_path = "https://#{@confighash[:git_repo]}#{@fs}/raw/#{ed}/#{@fs}.xml"
 				else
        		file_path = @file_dir + @fs + ".xml"
        	end
       else
       	if source == "origin"
-					file_path = "http://#{@confighash[:git_repo]}#{@fs}/#{ed}/#{wit}_#{@fs}.xml"
+					file_path = "http://#{@confighash[:git_repo]}#{@fs}/raw/#{ed}/#{wit}_#{@fs}.xml"
 				else
     			file_path = @file_dir + wit + "_" + @fs + ".xml"
     		end

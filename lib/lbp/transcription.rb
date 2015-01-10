@@ -48,6 +48,7 @@ module Lbp
 		### Item Header Extraction and Metadata Methods
 		def title
 			xmldoc = self.nokogiri
+			
 			title = xmldoc.xpath("/tei:TEI/tei:teiHeader[1]/tei:fileDesc[1]/tei:titleStmt[1]/tei:title[1]", 'tei' => 'http://www.tei-c.org/ns/1.0')
 			return title.text
 		end

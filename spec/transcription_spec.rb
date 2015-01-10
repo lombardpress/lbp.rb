@@ -78,8 +78,11 @@ describe 'transcription object' do
 	#	result = $itemobject.transform_index_view
 	#	expect(result).to be_instance_of(Nokogiri::XML::Document)
 	#end
-	it 'should process an xml doc with the text_display.xsl stylesheet' do 
+	it 'should process an xml doc with the cleanForStatistics.xsl stylesheet' do 
+		file_path = $transcriptionobject.file_path
+		nokogiri = $transcriptionobject.nokogiri
 		result = $transcriptionobject.transform_clean
+		
 		expect(result).to be_instance_of(Nokogiri::XML::Document)
 	end
 	it 'should process an xml doc with the text_display.xsl stylesheet' do 
