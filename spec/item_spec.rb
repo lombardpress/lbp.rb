@@ -14,11 +14,6 @@ describe 'item object' do
 		expect(result).to be_kind_of(String)
 	end
 
-	it 'should return the full directory path of texts wherein all individual item directories are found' do 
-		result = $itemobject.texts_dir 
-		result.should == $confighash[:texts_dir]
-	end
-
 	it 'should return the full directory path of file' do 
 		result = $itemobject.file_dir 
 		result.should include($confighash[:texts_dir]) 
@@ -62,5 +57,13 @@ describe 'item object' do
 	it 'should return a transcription object' do 
 		result = $itemobject.transcription
 		expect(result).to be_instance_of(Lbp::Transcription)
+	end
+	it 'should return a file path for a specified transcription' do 
+		result = $itemobject.file_path
+		expect(result).to be_kind_of(String)
+	end
+	it 'should return a filehash' do 
+		result = $itemobject.file_hash
+		expect(result).to be_kind_of(Hash)
 	end
 end

@@ -59,7 +59,7 @@ module Lbp
     	word_array = plaintext.text.split
     	word_array.map!{ |word| word.downcase}
     end
-    def word_frequency(sort, order)
+    def word_frequency(sort='frequency', order='descending')
     	word_array = self.word_array
     	wf = Hash.new(0)
 			word_array.each { |word| wf[word] += 1 }

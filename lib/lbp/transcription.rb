@@ -2,23 +2,22 @@ require 'nokogiri'
 require 'rugged'
 require 'lbp/functions'
 require 'lbp/item'
+require 'open-uri'
 
 module Lbp
 	class Transcription 
-		attr_reader :fs, :wit, :type, :ed, :filename_override, :texts_dir, :file_dir, :projectdatafile_dir, :xslt_dir
+		attr_reader :fs, :wit, :type, :ed, :xslt_dir
 
 		def initialize(confighash, filehash)
 
+				@filehash = filehash
 	      @fs = filehash[:fs]
 	      @wit = filehash[:wit] # i.e. critical, reims, svict, etc
 	      @type = filehash[:type] # critical or documentary
 	      @ed = filehash[:ed]
-	      @filename_override = filehash[:filename_override] # should be optional, best if not set
-
+	      
 	      @confighash = confighash
-	      @texts_dir = @confighash[:texts_dir]
-				@file_dir = @confighash[:texts_dir] + @fs + "/"
-	      @projectdatafile_dir = @confighash[:projectdatafile_dir]
+	      
 	      if @type == 'critical'
 	      	@xslt_dir = @confighash[:xslt_critical_dir]
 	      elsif @type == 'documentary'
@@ -35,20 +34,15 @@ module Lbp
 	  ## Begin file path methods
 	  # Returns the absolute path of the file requested
 	  def file_path
-	  	if @filename_override != nil
-	  		file_path = $filename_override
-	  	elsif @wit == 'critical'
-        file_path = @file_dir + @fs + ".xml"
-      else
-    		file_path = @file_dir + @wit + "_" + @fs + ".xml"
-    	end
-    	return file_path
+	  	@filehash[:path]
 		end
 		def file
-			file = File.open(self.file_path)
+
+			file = open(self.file_path)
 		end
 		def nokogiri
 			xmldoc = Nokogiri::XML(self.file)
+
 		end
 		## End File Path Methods
 		### Item Header Extraction and Metadata Methods
@@ -144,8 +138,7 @@ module Lbp
 		def transform (xsltfile, xslt_param_array=[])
 
   		xmlfile = self.file_path
-
-  		if @current_branch != @ed
+			if @current_branch != @ed && source == 'local'
       	@item.git_checkout(@ed)
       		doc = xslt_transform(xmlfile, xsltfile, xslt_param_array)
       	@item.git_checkout(@current_branch);
@@ -206,7 +199,7 @@ module Lbp
 			return wf.to_h
     end
     def number_of_body_paragraphs
-			if @current_branch != @ed
+			if @current_branch != @ed && source == 'local'
   				@item.git_checkout(@ed)
       			xmldoc = self.nokogiri
 						p = xmldoc.xpath("//tei:body//tei:p", 'tei' => 'http://www.tei-c.org/ns/1.0')
@@ -216,6 +209,25 @@ module Lbp
 					p = xmldoc.xpath("//tei:body//tei:p", 'tei' => 'http://www.tei-c.org/ns/1.0')
       end
       return p.count
+		end
+		def paragraphs
+			## it's not good to keep reusing this, git check out condition. Need a better solution
+			if @current_branch != @ed && source == 'local'
+  				@item.git_checkout(@ed)
+      			xmldoc = self.nokogiri
+						paragraphs = xmldoc.xpath("//tei:body//tei:p/@xml:id", 'tei' => 'http://www.tei-c.org/ns/1.0')
+      		@item.git_checkout(@current_branch);
+      else
+      		xmldoc = self.nokogiri
+					paragraphs = xmldoc.xpath("//tei:body//tei:p/@xml:id", 'tei' => 'http://www.tei-c.org/ns/1.0')
+      end
+
+      paragraph_objects = paragraphs.map do |p| Paragraph.new(@confighash, @filehash, p.value) end
+      
+      return paragraph_objects
+		end
+		def paragraph(pid)
+			Paragraph.new(@confighash, @filehash, pid)
 		end
 	end
 end

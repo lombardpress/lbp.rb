@@ -32,5 +32,5 @@ describe 'paragraph object' do
 		result = $paragraph.transform_plain_text
 		expect(result).to be_instance_of(Nokogiri::XML::NodeSet)
 	end
-
+	
 end 

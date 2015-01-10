@@ -9,16 +9,17 @@ module Lbp
 		
 		def initialize(confighash, fs)
       @fs = fs
+      
       @confighash = confighash
       @texts_dir = @confighash[:texts_dir]
-
-      @file_dir = @confighash[:texts_dir] + @fs + "/"
+			@file_dir = @confighash[:texts_dir] + @fs + "/"
       @projectdatafile_dir = @confighash[:projectdatafile_dir]
-      @filehash_default = {fs: @fs, wit: "critical", type: "critical", ed: "master"}
+      
+
 	  end
 	  ### Item Header Extraction and Metadata Methods
 		def title
-			transcr = Transcription.new(@confighash, @filehash_default)
+			transcr = Transcription.new(@confighash, self.file_hash)
 			transcr.title
 		end
 		
@@ -83,8 +84,33 @@ module Lbp
 			sequence_number = array_number + 1
 			return sequence_number
 		end
-		def transcription(filehash=@filehash_default)
-			transcr = Transcription.new(@confighash, filehash)
-		end
+		
+		def file_path(source: 'local', wit: 'critical', ed: 'master')
+			if wit == 'critical'
+				if source == "origin"
+					file_path = "https://#{@confighash[:git_repo]}#{@fs}/#{ed}/#{@fs}.xml"
+				else
+       		file_path = @file_dir + @fs + ".xml"
+       	end
+      else
+      	if source == "origin"
+					file_path = "http://#{@confighash[:git_repo]}#{@fs}/#{ed}/#{wit}_#{@fs}.xml"
+				else
+    			file_path = @file_dir + wit + "_" + @fs + ".xml"
+    		end
+    	end
+    	return file_path
+    end
+    def file_hash(source: 'local', wit: 'critical', ed: 'master')
+    	type = if wit == "critical" then "critical" else "documentary" end
+			filehash = {path: self.file_path(source: source, wit: wit, ed: ed), fs: @fs, ed: ed, type: type, source: source}
+			
+			return filehash
+    end
+    
+    def transcription(source: 'local', wit: 'critical', ed: 'master')
+    	filehash = self.file_hash(source: source, wit: wit, ed: ed)
+    	transcr = Transcription.new(@confighash, filehash)
+		end	
 	end
 end

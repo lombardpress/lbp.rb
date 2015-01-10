@@ -10,61 +10,45 @@ describe 'transcription object' do
 
 	it 'should return the filestem given at construction' do
 		result = $transcriptionobject.fs 
-		result.should == "lectio1"
-	end
-
-	it 'should return the full directory path of texts wherein all individual item directories are found' do 
-		result = $transcriptionobject.texts_dir 
-		result.should == "/Users/JCWitt/WebPages/lbplib-testfiles/GitTextfiles/"
-	end
-
-	it 'should return the full directory path of file' do 
-		result = $transcriptionobject.file_dir 
-		result.should == "/Users/JCWitt/WebPages/lbplib-testfiles/GitTextfiles/lectio1/"
+		expect(result).to be_kind_of(String)
 	end
 
 	it 'should return the full filename for an edited item' do
 		result = $transcriptionobject.file_path
-		result.should == "/Users/JCWitt/WebPages/lbplib-testfiles/GitTextfiles/lectio1/lectio1.xml" 
+		expect(result).to be_kind_of(String)
 	end
-=begin
-	it 'should return the full filename for a ms item' do
-		result = $itemobject.file_path('reims')
-		result.should == "/Users/JCWitt/WebPages/lbpwrapper/lombardpress/pp-projectfiles/GitTextfiles/lectio1/reims_lectio1.xml" 
-	end
-=end
 	it 'should retrieve the item name from the TEI xml file' do 
 		result = $transcriptionobject.title
-		result.should == "Lectio 1, de Fide" 
+		expect(result).to be_kind_of(String)
 	end
 
 	it 'should retrieve the author name from the TEI xml file' do 
 		result = $transcriptionobject.author
-		result.should == "Petrus Plaoul" 
+		expect(result).to be_kind_of(String) 
 	end
 	it 'should retrieve the editor name from the TEI xml file' do 
 		result = $transcriptionobject.editor
-		result.should == "Jeffrey C. Witt" 
+		expect(result).to be_kind_of(String) 
 	end
 	it 'should retrieve the edition number from TEI xml file' do 
 		result = $transcriptionobject.ed_no
-		result.should == "2011.10-dev-master" 
+		expect(result).to be_kind_of(String) 
 	end
 	it 'should retrieve the edition date from TEI xml file' do 
 		result = $transcriptionobject.ed_date
-		result.should == "2011-10-04" 
+		expect(result).to be_kind_of(String) 
 	end
 	it 'should retrieve the pubdate from TEI xml file' do 
 		result = $transcriptionobject.pub_date
-		result.should == "2011-03-25" 
+		expect(result).to be_kind_of(String)
 	end
 	it 'should retrieve the encoding method from TEI xml file' do 
 		result = $transcriptionobject.encoding_method
-		result.should == "parallel-segmentation" 
+		expect(result).to be_kind_of(String) 
 	end
 	it 'should retrieve the encoding location from TEI xml file' do 
 		result = $transcriptionobject.encoding_location
-		result.should == "internal" 
+		expect(result).to be_kind_of(String) 
 	end
 =begin	
 	it 'should retrieve the number of columns based on presence of cb element and return 2' do 
@@ -120,5 +104,14 @@ describe 'transcription object' do
 		result = $transcriptionobject.number_of_body_paragraphs
 		
 		expect(result).to be_kind_of(Integer)
+	end
+	it 'should return an array of paragraph objects' do
+		result = $transcriptionobject.paragraphs
+		
+		expect(result).to be_kind_of(Array)
+	end
+	it 'should return an paragraph object for the named id' do
+		result = $transcriptionobject.paragraph("l1-cpspfs")
+		expect(result).to be_instance_of(Lbp::Paragraph)
 	end
 end
