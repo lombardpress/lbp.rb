@@ -30,6 +30,7 @@ describe 'paragraph object' do
 	end
 	it 'should return the plain text of the paragraph as a nokogiri object' do 
 		result = $paragraph.transform_plain_text
+		binding.pry
 		expect(result).to be_instance_of(Nokogiri::XML::NodeSet)
 	end
 	

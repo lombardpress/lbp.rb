@@ -30,7 +30,7 @@ module Lbp
       end
 	  end
 	  def previous
-	  	xmlobject = Transcription.new(@confighash, $filehash).nokogiri
+	  	xmlobject = Transcription.new(@confighash, @filehash).nokogiri
 	  	previouspid = xmlobject.xpath("//tei:p[@xml:id='#{@pid}']/preceding::tei:p[1]/@xml:id", 'tei' => 'http://www.tei-c.org/ns/1.0')
 	  	if previouspid.empty?
         return nil
