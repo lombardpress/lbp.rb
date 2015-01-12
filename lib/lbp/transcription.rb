@@ -8,24 +8,38 @@ module Lbp
 	class Transcription 
 		attr_reader :fs, :wit, :type, :ed, :xslt_dir
 
-		def initialize(confighash, filehash)
+		def initialize(projectfile, filehash)
 
 				@filehash = filehash
+	      @projectfile = projectfile
+
 	      @fs = filehash[:fs]
 	      @wit = filehash[:wit] # i.e. critical, reims, svict, etc
 	      @type = filehash[:type] # critical or documentary
 	      @ed = filehash[:ed]
 	      
-	      @confighash = confighash
+	      @confighash = Collection.new(@projectfile).confighash
+	      @xslthash = @confighash[:xslt_dirs]
 	      
-	      if @type == 'critical'
-	      	@xslt_dir = @confighash[:xslt_critical_dir]
-	      elsif @type == 'documentary'
-	      	@xslt_dir = @confighash[:xslt_documentary_dir]
+	      #xslt version needs to gathered from a method
+	      xslt_version = nil
+	      #for now its being set to nil because no documents currently declare it
+
+	      if xslt_version == nil
+	      	@schema = @xslthash["default"]
+	      else
+	      	@schema = @xslthash[xslt_version]
 	      end
 
+	      if @type == 'critical'
+		      	@xslt_dir = @schema[:critical]
+	      elsif @type == 'documentary'
+		      	@xslt_dir = @schema[:documentary]
+      	end
+	      	
+
 	      if @filehash[:source] == 'local'
-	      	item = Item.new(@confighash, @fs)
+	      	item = Item.new(@projectfile, @fs)
   				@current_branch = item.git_current_branch
   			# the effort here is to only set instance variable when absolutely necessary
   				if @current_branch != @ed
@@ -138,7 +152,7 @@ module Lbp
 		### End Git Methods ###
 =end		
 		### Begin transform (XSLT) methocs ###
-		def transform (xsltfile, xslt_param_array=[])
+		def transform(xsltfile, xslt_param_array=[])
 
   		xmlfile = self.file_path
 			if @current_branch != @ed && @filehash[:source] == 'local'
@@ -151,23 +165,23 @@ module Lbp
 		end
 
 		def transform_main_view(xslt_param_array=[])
-			xsltfile=@xslt_dir + @confighash[:xslt_main_view] # "text_display.xsl"
+			xsltfile=@xslt_dir + @schema[:main_view] # "text_display.xsl"
 			doc = self.transform(xsltfile, xslt_param_array=[])
 		end
 		def transform_index_view(xslt_param_array=[])
-			xsltfile=@xslt_dir + @confighash[:xslt_index_view] # "text_display_index.xsl"
+			xsltfile=@xslt_dir + @schema[:index_view] # "text_display_index.xsl"
 			doc = self.transform( xsltfile, xslt_param_array=[])
 		end
 		def transform_clean(xslt_param_array=[])
-    	xsltfile=@xslt_dir + @confighash[:xslt_clean] # "clean_forStatistics.xsl"
+    	xsltfile=@xslt_dir + @schema[:clean_view] # "clean_forStatistics.xsl"
     	doc = self.transform(xsltfile, xslt_param_array=[])
     end
 		def transform_plain_text(xslt_param_array=[])
-    	xsltfile=@xslt_dir + @confighash[:xslt_plain_text] # "plaintext.xsl"
+    	xsltfile=@xslt_dir + @schema[:plain_text] # "plaintext.xsl"
     	doc = self.transform(xsltfile, xslt_param_array=[])
     end
     def transform_toc(xslt_param_array=[])
-    	xsltfile=@xslt_dir + @confighash[:xslt_toc] # "lectio_outline.xsl"
+    	xsltfile=@xslt_dir + @schema[:toc] # "lectio_outline.xsl"
     	doc = self.transform(xsltfile, xslt_param_array=[])
     end
     ### End of Transformation Methods ###
@@ -225,12 +239,12 @@ module Lbp
 					paragraphs = xmldoc.xpath("//tei:body//tei:p/@xml:id", 'tei' => 'http://www.tei-c.org/ns/1.0')
       end
 
-      paragraph_objects = paragraphs.map do |p| Paragraph.new(@confighash, @filehash, p.value) end
+      paragraph_objects = paragraphs.map do |p| Paragraph.new(@projectfile, @filehash, p.value) end
       
       return paragraph_objects
 		end
 		def paragraph(pid)
-			Paragraph.new(@confighash, @filehash, pid)
+			Paragraph.new(@projectfile, @filehash, pid)
 		end
 	end
 end

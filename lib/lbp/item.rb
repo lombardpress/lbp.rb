@@ -5,21 +5,20 @@ require 'lbp/transcription'
 
 module Lbp
 	class Item 
-		attr_reader :fs, :texts_dir, :file_dir, :projectdatafile_dir, :xslt_dir
+		attr_reader :fs, :local_texts_dir, :file_dir, :projectfile, :xslt_dir
 		
-		def initialize(confighash, fs)
+		def initialize(projectfile, fs)
       @fs = fs
+      @projectfile = projectfile
       
-      @confighash = confighash
-      @texts_dir = @confighash[:texts_dir]
-			@file_dir = @confighash[:texts_dir] + @fs + "/"
-      @projectdatafile_dir = @confighash[:projectdatafile_dir]
-      
+      @confighash = Collection.new(projectfile).confighash
+      @texts_dir = @confighash[:local_texts_dir]
+			@file_dir = @confighash[:local_texts_dir] + @fs + "/"
 
 	  end
 	  ### Item Header Extraction and Metadata Methods
 		def title
-			transcr = Transcription.new(@confighash, self.file_hash)
+			transcr = Transcription.new(@projectfile, self.file_hash)
 			transcr.title
 		end
 		
@@ -59,27 +58,27 @@ module Lbp
 		# previous and next functions don't handle ends of arrays very well	
 		# they also rely on the "item_filestems" methods which works but should be changed see comments in collection file
 		def previous
-			sequence_array = Collection.new(@confighash).item_filestems
+			sequence_array = Collection.new(@projectfile).item_filestems
 			#if sequence_array[sequence_array.index(@fs) - 1 ] != nil
 				previous_fs = sequence_array[sequence_array.index(@fs) - 1]
-				previous_item = Item.new(@confighash, previous_fs)
+				previous_item = Item.new(@projectfile, previous_fs)
 			#else
 			#	previous_item = nil
 			#end
 			return previous_item
 		end
 		def next
-			sequence_array = Collection.new(@confighash).item_filestems
+			sequence_array = Collection.new(@projectfile).item_filestems
 			#if sequence_array[@sequence_array.index(@fs) + 1 ] != nil
 				next_fs = sequence_array[sequence_array.index(@fs) + 1]
-				next_item = Item.new(@confighash, next_fs)
+				next_item = Item.new(@projectfile, next_fs)
 			#else
 			#	next_item = nil
 			#end
 			return next_item
 		end
 		def order_number
-			sequence_array = Collection.new(@confighash).item_filestems
+			sequence_array = Collection.new(@projectfile).item_filestems
 			array_number = sequence_array.index(@fs)
 			sequence_number = array_number + 1
 			return sequence_number
@@ -110,7 +109,7 @@ module Lbp
     
     def transcription(source: 'local', wit: 'critical', ed: 'master')
     	filehash = self.file_hash(source: source, wit: wit, ed: ed)
-    	transcr = Transcription.new(@confighash, filehash)
+    	transcr = Transcription.new(@projectfile, filehash)
 		end	
 	end
 end

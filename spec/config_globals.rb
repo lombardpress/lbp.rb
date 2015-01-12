@@ -10,5 +10,7 @@ $confighash = { texts_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/GitTextfiles
 		git_repo: "bitbucket.org/jeffreycwitt/"}
 
 
-$filehash = {path: "https://bitbucket.org/jeffreycwitt/lectio1/raw/master/lectio1.xml", fs: "lectio1", ed: "master", type: "critical", source: "origin"}
-#$filehash = {path: "/Users/JCWitt/WebPages/lbplib-testfiles/GitTextfiles/lectio1/lectio1.xml", fs: "lectio1", ed: "master", type: "critical", source: "local"}
+#filehash = {path: "https://bitbucket.org/jeffreycwitt/lectio1/raw/master/lectio1.xml", fs: "lectio1", ed: "master", type: "critical", source: "origin"}
+$filehash = {path: "/Users/JCWitt/WebPages/lbplib-testfiles/GitTextfiles/lectio1/lectio1.xml", fs: "lectio1", ed: "master", type: "critical", source: "local"}
+
+$projectfile = "/Users/JCWitt/WebPages/lbplib-testfiles/Conf/projectdata.xml"

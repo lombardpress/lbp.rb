@@ -7,7 +7,7 @@ describe 'item object' do
 	
 	require_relative "config_globals"
 
-	$itemobject = Lbp::Item.new($confighash, 'lectio1')
+	$itemobject = Lbp::Item.new($projectfile, 'lectio1')
 
 	it 'should return the filestem given at construction' do
 		result = $itemobject.fs 

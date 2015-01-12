@@ -5,14 +5,17 @@ require 'lbp/functions'
 module Lbp
 	class Paragraph
 		attr_reader :pid 
-		def initialize(confighash, filehash, pid)
-			@pid = pid
+		def initialize(projectfile, filehash, pid)
+			
+			@projectfile = projectfile
 			@filehash = filehash
-			@confighash = confighash
+			@pid = pid
+			
+			@confighash = Collection.new(@projectfile)
 	  end
 
 	  def number
-	  	transcr = Transcription.new(@confighash, @filehash)
+	  	transcr = Transcription.new(@projectfile, @filehash)
 	  	totalparagraphs = transcr.number_of_body_paragraphs
 	  	xmlobject = transcr.nokogiri
 	  	paragraphs_following = xmlobject.xpath("//tei:body//tei:p[preceding::tei:p[@xml:id='#{@pid}']]", 'tei' => 'http://www.tei-c.org/ns/1.0').count
@@ -21,32 +24,33 @@ module Lbp
 			return paragraph_number
 	  end
 	  def next
-	  	xmlobject = Transcription.new(@confighash, @filehash).nokogiri
+	  	xmlobject = Transcription.new(@projectfile, @filehash).nokogiri
 	  	nextpid = xmlobject.xpath("//tei:p[@xml:id='#{@pid}']/following::tei:p[1]/@xml:id", 'tei' => 'http://www.tei-c.org/ns/1.0')
 			if nextpid.text == nil
         return nil
       else
-				return Paragraph.new(@confighash, @filehash, nextpid.text)
+				return Paragraph.new(@projectfile, @filehash, nextpid.text)
       end
 	  end
 	  def previous
-	  	xmlobject = Transcription.new(@confighash, @filehash).nokogiri
+	  	xmlobject = Transcription.new(@projectfile, @filehash).nokogiri
 	  	previouspid = xmlobject.xpath("//tei:p[@xml:id='#{@pid}']/preceding::tei:p[1]/@xml:id", 'tei' => 'http://www.tei-c.org/ns/1.0')
 	  	if previouspid.empty?
         return nil
       else
-				return Paragraph.new(@confighash, @filehash, previouspid.text)
+				return Paragraph.new(@projectfile, @filehash, previouspid.text)
       end
 	  end
 	  def transform(xsltfile, xslt_param_array=[])
-	  	result = Transcription.new(@confighash, @filehash).transform(xsltfile, xslt_param_array)
+	  	result = Transcription.new(@projectfile, @filehash).transform(xsltfile, xslt_param_array)
 			p = result.xpath("//p[@id='#{@pid}']")
 			return p
 		end
 		def transform_plain_text(xslt_param_array=[])
 			# not that it could be slightly confusing that paragraph plain text uses the transform clean,
 			# because we still the basic paragraph elements in order to select the desired paragraph
-			result = Transcription.new(@confighash, @filehash).transform_clean(xslt_param_array)
+			result = Transcription.new(@projectfile, @filehash).transform_clean(xslt_param_array)
+			
 			p = result.xpath("//p[@id='#{@pid}']")
 			return p
 		end

@@ -6,7 +6,7 @@ require 'nokogiri'
 describe 'transcription object' do 
 	
 	require_relative "config_globals"
-	$transcriptionobject = Lbp::Transcription.new($confighash, $filehash)
+	$transcriptionobject = Lbp::Transcription.new($projectfile, $filehash)
 
 	it 'should return the filestem given at construction' do
 		result = $transcriptionobject.fs 
