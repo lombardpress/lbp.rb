@@ -102,7 +102,7 @@ module Lbp
     end
     def file_hash(source: 'local', wit: 'critical', ed: 'master')
     	type = if wit == "critical" then "critical" else "documentary" end
-			filehash = {path: self.file_path(source: source, wit: wit, ed: ed), fs: @fs, ed: ed, type: type, source: source}
+    	filehash = {path: self.file_path(source: source, wit: wit, ed: ed), fs: @fs, ed: ed, type: type, source: source}
 			
 			return filehash
     end
@@ -111,5 +111,15 @@ module Lbp
     	filehash = self.file_hash(source: source, wit: wit, ed: ed)
     	transcr = Transcription.new(@projectfile, filehash)
 		end	
+		def transcriptions(source: 'local', ed: 'master')
+			file = Nokogiri::XML(File.read(@projectfile))
+			parts = file.xpath("//item[fileName/@filestem='#{@fs}']/hasParts/part/slug")
+			transcription_array = parts.map do |part| 
+				self.transcription(source: source, wit: part.text, ed: ed)
+			end
+			transcription_array << self.transcription(source: source, wit: 'critical', ed: ed)
+
+			return transcription_array
+		end
 	end
 end

@@ -6,7 +6,7 @@ require 'open-uri'
 
 module Lbp
 	class Transcription 
-		attr_reader :fs, :wit, :type, :ed, :xslt_dir
+		attr_reader :fs, :type, :ed, :xslt_dir
 
 		def initialize(projectfile, filehash)
 
@@ -14,7 +14,6 @@ module Lbp
 	      @projectfile = projectfile
 
 	      @fs = filehash[:fs]
-	      @wit = filehash[:wit] # i.e. critical, reims, svict, etc
 	      @type = filehash[:type] # critical or documentary
 	      @ed = filehash[:ed]
 	      

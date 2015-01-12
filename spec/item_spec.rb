@@ -66,4 +66,8 @@ describe 'item object' do
 		result = $itemobject.file_hash
 		expect(result).to be_kind_of(Hash)
 	end
+	it 'should return an array of Transcriptions objects when transcriptions method is called' do 
+		result = $itemobject.transcriptions
+		expect(result).to be_kind_of(Array)
+	end
 end
