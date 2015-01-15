@@ -34,7 +34,10 @@ describe 'collection object' do
 	end
 	it 'should return xslt hash' do 
 		result = $collection_obj.xslt_dirs
-
-	expect(result).to be_kind_of(Hash)
+		expect(result).to be_kind_of(Hash)
+	end
+	it 'should get return an specific item object when a specific item group id is given' do
+		result = $collection_obj.item('lectio1')
+		expect(result).to be_kind_of(Lbp::Item)
 	end
 end

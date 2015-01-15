@@ -70,4 +70,5 @@ describe 'item object' do
 		result = $itemobject.transcriptions
 		expect(result).to be_kind_of(Array)
 	end
+	
 end

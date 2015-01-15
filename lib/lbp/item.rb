@@ -52,6 +52,21 @@ module Lbp
   		repo = Rugged::Repository.new(@file_dir)
   		repo.checkout(branch)
 		end
+		def git_construct_remote_path(username: nil, password: nil)
+			if username == nil and password == nil
+				remote_path = "https://#{@confighash[:git_repo]}#{@fs}.git";
+			else 
+				remote_path = "https://" + username + ":" + password + "@#{confighash[:git_repo]}#{@fs}.git";
+			end
+		end
+		def git_clone(username: nil, password: nil)
+			remote_path = self.git_construct_remote_path(username: nil, password: nil)
+			# still need to test this when username and password are given.
+			Rugged::Repository.clone_at(remote_path, @confighash[:local_texts_dir] + "#{@fs}/")
+		end
+		def git_pull
+			# not sure what the Rugged API is for this.
+		end
 		### End Git Methods ###
 		### Begin Order Info ##
 

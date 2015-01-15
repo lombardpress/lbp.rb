@@ -5,7 +5,7 @@ require 'lbp/functions'
 
 module Lbp
 	class Collection
-		attr_reader :confighash
+		#attr_reader :confighash
 		def initialize(projectfile)
 			#@confighash = self.confighash
 			#@projectdatafile_dir = @confighash[:projectdatafile_dir]
@@ -80,6 +80,10 @@ module Lbp
 			end
 			return fs_array
 		end
+		def item(fs)
+			Item.new(@projectfile, fs)
+		end
+
 		def item_filestems
 		####this commentated out section is preferred but is oddly not working for principia 	
 		## ideally this commented code would replace the current code
