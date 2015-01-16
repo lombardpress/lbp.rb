@@ -27,7 +27,12 @@ module Lbp
 			file = Nokogiri::XML(File.read(@projectfile))
 			gitrepo = file.xpath("//header/git_repo").text
 		end
-		
+		#need test
+		def git_clone(username: nil, password: nil)
+			self.items.each do |item| 
+				item.git_clone(username: username, password: password)
+			end
+		end
 
 		def xslt_dirs
 			#test change to hash

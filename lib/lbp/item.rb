@@ -52,20 +52,33 @@ module Lbp
   		repo = Rugged::Repository.new(@file_dir)
   		repo.checkout(branch)
 		end
-		def git_construct_remote_path(username: nil, password: nil)
-			if username == nil and password == nil
+		def git_construct_remote_path
 				remote_path = "https://#{@confighash[:git_repo]}#{@fs}.git";
-			else 
-				remote_path = "https://" + username + ":" + password + "@#{confighash[:git_repo]}#{@fs}.git";
+		end
+		
+		def git_username_password_credentials(username, password) 
+			Rugged::Credentials::UserPassword
+			credentials = Rugged::Credentials::UserPassword.new(:username=>username, :password=>password)
+			return credentials
 			end
-		end
+		#needs a test	
 		def git_clone(username: nil, password: nil)
-			remote_path = self.git_construct_remote_path(username: nil, password: nil)
-			# still need to test this when username and password are given.
-			Rugged::Repository.clone_at(remote_path, @confighash[:local_texts_dir] + "#{@fs}/")
+			remote_path = self.git_construct_remote_path
+			Rugged::Repository.clone_at(remote_path, @file_dir, :credentials => self.git_username_password_credentials(username, password))
 		end
-		def git_pull
+		#nneds a test
+		def git_pull(username: nil, password: nil)
 			# not sure what the Rugged API is for this.
+			# doesn't like this methods has been created 
+			# for now it may have to be constructed from fetch and merge
+			# or my method 'git_pull' could simply delete the existing repository and the re-lcone
+				#this is is what i'm doing below, but it is not ideal
+			self.remove_local_dir
+			self.git_clone(username: username, password: password)
+		end
+		#needs a test
+		def remove_local_dir
+			FileUtils.rm_rf @file_dir
 		end
 		### End Git Methods ###
 		### Begin Order Info ##
