@@ -90,12 +90,6 @@ module Lbp
 		end
 
 		def item_filestems
-		####this commentated out section is preferred but is oddly not working for principia 	
-		## ideally this commented code would replace the current code
-			
-			#items = self.items
-			#item_filestems = items.map {|item| item.title}
-			#return item_filestems
 			file = Nokogiri::XML(File.read(@projectfile))
 			result = file.xpath("//div[@id='body']//item/fileName/@filestem")
 
@@ -103,6 +97,32 @@ module Lbp
 				fs.value
 			end
 			return fs_array
+		end
+
+		def item_titles
+			file = Nokogiri::XML(File.read(@projectfile))
+			result = file.xpath("//div[@id='body']//item/title")
+
+			title_array = result.map do |title| 
+				title.text
+			end
+			return title_array
+		end
+
+		def items_fs_fn_hash
+			file = Nokogiri::XML(File.read(@projectfile))
+			result = file.xpath("//div[@id='body']//item")
+
+			fs_fn_hash = Hash.new
+
+			result.each do |item| 
+				fn = item.children.find {|child| child.name == "title"}.text
+				fs = item.children.find {|child| child.name == "fileName"}.attributes["filestem"].value
+				fs_fn_hash[fs] = fn
+			end
+			return fs_fn_hash
+
+
 		end
 
 	end

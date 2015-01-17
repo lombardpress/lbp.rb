@@ -1,5 +1,5 @@
-$confighash = { texts_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/GitTextfiles/", 
-		projectdatafile_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/Conf/", 
+$confighash = { texts_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projecfiles/GitTextfiles/", 
+		projectdatafile_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/Conf/", 
 		xslt_critical_dir: "/Users/JCWitt/WebPages/lbpwrapper/lombardpress/public/pl_xslt_stylesheets/",
 		xslt_documentary_dir: "/Users/JCWitt/WebPages/lbpwrapper/lombardpress/public/pl_xslt_stylesheets/", 
 		xslt_main_view: "text_display.xsl",
@@ -11,6 +11,8 @@ $confighash = { texts_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/GitTextfiles
 
 
 #filehash = {path: "https://bitbucket.org/jeffreycwitt/lectio1/raw/master/lectio1.xml", fs: "lectio1", ed: "master", type: "critical", source: "origin"}
-$filehash = {path: "/Users/JCWitt/WebPages/lbplib-testfiles/GitTextfiles/lectio1/lectio1.xml", fs: "lectio1", ed: "master", type: "critical", source: "local"}
+$filehash = {path: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/GitTextfiles/lectio1/lectio1.xml", fs: "lectio1", ed: "master", type: "critical", source: "local"}
 
-$projectfile = "/Users/JCWitt/WebPages/lbplib-testfiles/Conf/projectdata.xml"
+$projectfile = "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/Conf/projectdata.xml"
+
+$pg_projectfile = "/Users/JCWitt/WebPages/lbplib-testfiles/pg-projectfiles/Conf/projectdata.xml"

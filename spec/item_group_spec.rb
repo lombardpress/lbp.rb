@@ -7,7 +7,7 @@ describe 'item group object' do
 	
 	require_relative "config_globals"
 	
-	$itemgroup = Lbp::ItemGroup.new($projectfile, "principia")
+	$itemgroup = Lbp::ItemGroup.new($projectfile, "deFide")
 
 	it 'should return the item group id input at initialization' do 
 		result = $itemgroup.igid

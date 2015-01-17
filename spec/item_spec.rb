@@ -16,7 +16,7 @@ describe 'item object' do
 
 	it 'should return the full directory path of file' do 
 		result = $itemobject.file_dir 
-		result.should include($confighash[:texts_dir]) 
+		expect(result).to be_kind_of(String)
 	end
 
 	it 'should retrieve the item name from the TEI xml file' do 
