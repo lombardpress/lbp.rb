@@ -11,8 +11,7 @@ class LbpCli < Thor
 
     desc "ini", "create projectifles dirs in current working directory"
     def init(dir="projectfiles")
-        directories = 
-        ["projectfiles/Conf", "projectfiles/Textfiles", "projectfiles/citationlists"]
+        directories = ["projectfiles/Conf", "projectfiles/Textfiles", "projectfiles/citationlists"]
         FileUtils.mkpath(directories)
     end
 end
@@ -147,6 +146,7 @@ $writeData = $writeData . $endData;
 $file = fopen($fullfilename, 'w');
 fwrite($file, $writeData);
 fclose($file);
-    =end
+
+=end
 
 
