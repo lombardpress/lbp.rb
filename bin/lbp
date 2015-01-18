@@ -6,15 +6,17 @@ require 'thor'
 class LbpCli < Thor 
     desc "hello", "say hello to NAME"
     def hello(name)
-        "Hello #{name}!"
+        puts "Hello #{name}!"
     end
 
-    desc "ini", "create projectifles dirs in current working directory"
+    desc "init", "create projectifles dirs in current working directory"
     def init(dir="projectfiles")
-        directories = ["projectfiles/Conf", "projectfiles/Textfiles", "projectfiles/citationlists"]
+        directories = ["#{dir}/Conf", "#{dir}/Textfiles", "#{dir}/citationlists"]
         FileUtils.mkpath(directories)
     end
 end
+
+LbpCli.start(ARGV)
 
 =begin
 
