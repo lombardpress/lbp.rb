@@ -1,0 +1,152 @@
+#!/usr/bin/env ruby
+
+require 'rdf'
+require 'thor'
+
+class LbpCli < Thor 
+    desc "hello", "say hello to NAME"
+    def hello(name)
+        "Hello #{name}!"
+    end
+
+    desc "ini", "create projectifles dirs in current working directory"
+    def init(dir="projectfiles")
+        directories = 
+        ["projectfiles/Conf", "projectfiles/Textfiles", "projectfiles/citationlists"]
+        FileUtils.mkpath(directories)
+    end
+end
+
+=begin
+
+commentaryid = $_GET['commentaryid'];
+$filename = "projectdata.xml";
+$date = new DateTime();
+$date = $date->format("Y-m-d");
+
+$sctaAddress = "http://localhost:4567/text/$commentaryid/commentary";
+$sctaAddressAlt = "http://scta.info/text/$commentaryid/commentary";
+
+
+$graph = new EasyRdf_Graph();
+    $graph->load($sctaAddress);
+$title = $graph->getLiteral($sctaAddressAlt, "dc11:title");
+
+
+function getUriTail($uri){
+    $link_array = explode('/', $uri);
+    $tail = end($link_array);
+    return $tail;
+}
+
+function displayTitleId($item){
+
+    $id = getUriTail($item);
+    $subgraph = new EasyRdf_Graph();
+    $subgraph->load($item); //this load actually went to live site.
+    $title = $subgraph->getLiteral($item, "dc11:title");
+    $type = $subgraph->getResource($item, "rdf:type");
+    $status = $subgraph->getLiteral($item, "<http://scta.info/property/status>");
+
+    if (getUriTail($type) == 'item'){
+        $questionTitle = $subgraph->getLiteral($item, "<http://scta.info/property/questionTitle>");
+        return $title . ": " . $questionTitle;
+    }
+    else{
+        return $title;
+    }
+}
+
+function writeData($item){
+    $id = getUriTail($item);
+        $subgraph = new EasyRdf_Graph();
+        $subgraph->load($item); //this load actually went to live site.
+        $title = $subgraph->getLiteral($item, "dc11:title");
+        $type = $subgraph->getResource($item, "rdf:type");
+        $status = $subgraph->getLiteral($item, "<http://scta.info/property/status>");
+        if (getUriTail($type) == 'item'){
+        $writeData = "<item live=\"" . $status . "\">
+                            <fileName filestem=\"" . $id . "\">$id.xml</fileName>
+                            <title>$title</title>
+                        </item>";}
+        elseif (getUriTail($type) == 'book' || getUriTail($type) == 'librum' || getUriTail($type) == 'distinction' || getUriTail($type) == 'distinctio'){
+
+        }
+        else $writeData = '';
+    return $writeData;
+
+}
+
+
+function getParts($address){
+
+    $graph = new EasyRdf_Graph();
+    $graph->load($address);
+    $parts = $graph->allResources($address, "dc:hasPart");
+
+    return $parts;
+
+}
+/*****************HTML**********************/
+
+?>
+
+<h1><?php echo $title ?></h1>
+
+<?php
+
+$parts = getParts($sctaAddressAlt);
+echo "<ul>";
+foreach ($parts as $part){
+    echo "<li>" . displayTitleId($part) . "</li>";
+    $parts = getParts($part);
+    foreach ($parts as $part){
+        echo "<li>" . displayTitleId($part) . "</li>";
+        $parts = getParts($part);
+        foreach ($parts as $part){
+            echo "<li>" . displayTitleId($part) . "</li>";
+            $parts = getParts($part);
+            }
+        }
+    }
+
+
+/********** Write to File ********************/
+
+$writeData="<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<listofFileNames>
+    <div id=\"frontmatter\" class=\"toplevel\">
+        <head>Front Matter</head>
+        <item>
+            <fileName filestem=\"titlepage\">titlepage.xml</fileName>
+            <title>Title Page</title>
+        </item>
+    </div>
+    <div id=\"body\">
+    ";
+
+$parts = getParts($sctaAddressAlt);
+echo "<ul>";
+foreach ($parts as $part){
+    //$writeData = $writeData . writeData($part);
+    $writeData = $writeData . "<div id=\"pg-book1\" class=\"toplevel\" type=\"book\">\n<head>Book Level</head>\n";
+    $parts = getParts($part);
+    foreach ($parts as $part){
+        $writeData = $writeData . writeData($part);
+        $parts = getParts($part);
+        foreach ($parts as $part){
+            $writeData = $writeData . writeData($part);
+            $parts = getParts($part);
+            }
+        }
+    $writeData = $writeData . "</div>\n";
+    }
+$endData = "</div>
+</listofFileNames>";
+$writeData = $writeData . $endData;
+$file = fopen($fullfilename, 'w');
+fwrite($file, $writeData);
+fclose($file);
+    =end
+
+
