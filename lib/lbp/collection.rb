@@ -12,8 +12,10 @@ module Lbp
 			@projectfile = projectfile
 		end
 
-		 
-
+		def title
+			file = Nokogiri::XML(File.read(@projectfile))
+			title = file.xpath(("//header/collectionTitle")).text
+		end	
 		def local_texts_dir
 			file = Nokogiri::XML(File.read(@projectfile))
 			textdir = file.xpath(("//header/localTextsDirectory")).text
@@ -109,18 +111,18 @@ module Lbp
 			return title_array
 		end
 
-		def items_fs_fn_hash
+		def items_fs_title_hash
 			file = Nokogiri::XML(File.read(@projectfile))
 			result = file.xpath("//div[@id='body']//item")
 
-			fs_fn_hash = Hash.new
+			fs_title_hash = Hash.new
 
 			result.each do |item| 
-				fn = item.children.find {|child| child.name == "title"}.text
+				title = item.children.find {|child| child.name == "title"}.text
 				fs = item.children.find {|child| child.name == "fileName"}.attributes["filestem"].value
-				fs_fn_hash[fs] = fn
+				fs_title_hash[fs] = title
 			end
-			return fs_fn_hash
+			return fs_title_hash
 
 
 		end

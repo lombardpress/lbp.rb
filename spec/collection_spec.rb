@@ -14,11 +14,10 @@ describe 'collection object' do
  	end
  	it 'should get a list of item names in sequenced array' do 
  		result = $collection_obj.item_titles
- 		binding.pry
-		expect(result).to be_kind_of(Array)
+ 		expect(result).to be_kind_of(Array)
  	end
  	it 'should return a hash of filestems and item names' do 
-		result = $collection_obj.items_fs_fn_hash
+		result = $collection_obj.items_fs_title_hash
 		expect(result).to be_kind_of(Hash)
 	end
 
@@ -51,6 +50,10 @@ describe 'collection object' do
 	it 'should return a specific item object when a specific item group id is given' do
 		result = $collection_obj.item('lectio1')
 		expect(result).to be_kind_of(Lbp::Item)
+	end
+	it 'should return the title of a given collection specified in the project data file' do 
+		result = $collection_obj.title
+		expect(result).to be_kind_of(String)
 	end
 	
 	
