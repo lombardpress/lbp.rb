@@ -31,7 +31,7 @@ class LbpCli < Thor
     data = graph.data
     title = data.query(:predicate => RDF::DC11.title).first.object
     itemarray = []
-
+###Warning Directories in Header need some specification or the user needs to be direct to modify these acoordingly 
     headerdata = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
     <lbpProjectFile>
     <header>
@@ -102,9 +102,9 @@ class LbpCli < Thor
     end
   end
   desc "loaed_text_files", "clone collection repos" 
-  def load_text_files(projectfile)
+  def load_text_files(projectfile, username=nil, password=nil)
     collection = Lbp::Collection.new(projectfile)
-    collection.git_clone
+    collection.git_clone(username: username, password: password)
   end    
 end
 
