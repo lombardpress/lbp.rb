@@ -6,7 +6,7 @@ require 'nokogiri'
 describe 'collection object' do 
 	require_relative "config_globals"
 	
-	$collection_obj = Lbp::Collection.new($pg_projectfile)
+	$collection_obj = Lbp::Collection.new($auto_pp_projectfile)
 
 	it 'should get list of item filestems in sequenced array' do 
 		result = $collection_obj.item_filestems
@@ -18,6 +18,10 @@ describe 'collection object' do
  	end
  	it 'should return a hash of filestems and item names' do 
 		result = $collection_obj.items_fs_title_hash
+		expect(result).to be_kind_of(Hash)
+	end
+	it 'should return a hash of filestems and question titles' do 
+		result = $collection_obj.items_fs_question_title_hash
 		expect(result).to be_kind_of(Hash)
 	end
 

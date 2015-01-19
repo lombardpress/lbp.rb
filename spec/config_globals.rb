@@ -16,3 +16,5 @@ $filehash = {path: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/GitT
 $projectfile = "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/Conf/projectdata.xml"
 
 $pg_projectfile = "/Users/JCWitt/WebPages/lbplib-testfiles/pg-projectfiles/Conf/projectdata.xml"
+
+$auto_pp_projectfile = "/Users/JCWitt/WebPages/lbp.rb/pp-projectfiles/Conf/projectfile.xml"

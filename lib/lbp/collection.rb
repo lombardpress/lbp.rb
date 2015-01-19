@@ -123,8 +123,23 @@ module Lbp
 				fs_title_hash[fs] = title
 			end
 			return fs_title_hash
+		end
+		def items_fs_question_title_hash
+			file = Nokogiri::XML(File.read(@projectfile))
+			result = file.xpath("//div[@id='body']//item")
 
+			fs_question_title_hash = Hash.new
 
+			result.each do |item| 
+				question_title = item.children.find {|child| child.name == "questionTitle"}.text
+				fs = item.children.find {|child| child.name == "fileName"}.attributes["filestem"].value
+				fs_question_title_hash[fs] = question_title
+			end
+			return fs_question_title_hash
+		end
+		def items_fs_parts_hash
+			## need to creat this, but needs handle cases where there are not question parts 
+			## uncless critical part become mandatory.
 		end
 
 	end

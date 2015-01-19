@@ -65,7 +65,7 @@ class LbpCli < Thor
 
     itemarray << headerdata
 
-    data.query(:predicate => RDF::DC.hasPart).each do |part|
+    data.query(:predicate => RDF::URI.new("http://scta.info/property/hasItem")).each do |part|
       
       newresource = RDF::Resource.new(part.object)
       newgraph = RDF::Graph.load(newresource)
@@ -78,13 +78,44 @@ class LbpCli < Thor
 
       unless status == 'Not Started'
         title = newdata.query(:predicate => RDF::DC11.title).first.object
+        if newdata.query(:predicate => RDF::URI.new("http://scta.info/property/questionTitle")).count == 0
+          question_title = "unknown"
+        else
+          question_title = newdata.query(:predicate => RDF::URI.new("http://scta.info/property/questionTitle")).first.object
+        end
         id = URI(part.object.to_s).path.split('/').last
         itemunit = "
         <item live='#{status}'>
           <fileName filestem='#{id}'>#{id}.xml</fileName>
           <title>#{title}</title>
-        </item>\n"
+          <questionTitle>#{question_title}</questionTitle>"
         itemarray << itemunit
+        #eventually hasPart property should be sctap:hasTranscription
+          hastranscriptions = newdata.query(:predicate => RDF::DC.hasPart) 
+          if hastranscriptions.count > 0 
+            partunitopen = "\n<hasParts>"
+            itemarray << partunitopen
+            hastranscriptions.each do |transcription|
+              transcription_resource = RDF::Resource.new(transcription.object)
+              transcription_graph = RDF::Graph.load(transcription_resource)
+              transcription_data = transcription_graph.data
+              transcription_title = transcription_data.query(:predicate => RDF::DC11.title).first.object
+              transcription_id = URI(transcription.object.to_s).path.split('/').last
+              transcription_slug = transcription_id.split("_").first
+              transcription_initial = transcription_slug.each_char.first.upcase # not ideal, some initials will be two letters
+              partunit = "\n<part>
+                <slug>#{transcription_slug}</slug>
+                <title>#{transcription_title}</title>
+                <initial>#{transcription_initial}</initial>
+              </part>"
+              itemarray << partunit
+            end
+            partunitclose = "\n</hasParts>"
+            itemarray << partunitclose
+          end
+         #end
+        close_item_unit = "\n</item>\n"
+        itemarray << close_item_unit
       end
        
     end
