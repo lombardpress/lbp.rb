@@ -12,4 +12,8 @@
 *.o
 *.a
 mkmf.log
+/projectfiles/
+/pp-projectfiles/
+/pg-projectfiles/
+/aw-projectfiles/
 
