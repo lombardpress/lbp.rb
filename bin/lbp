@@ -1,154 +1,115 @@
 #!/usr/bin/env ruby
 
-#require 'rdf'
+require 'rdf'
+require 'rdf/rdfxml'
+require 'rdf/ntriples'
 require 'thor'
+require 'openssl'
+require 'pry'
+require 'uri'
+require 'lbp' 
 
 class LbpCli < Thor 
-    desc "hello", "say hello to NAME"
-    def hello(name)
-        puts "Hello #{name}!"
+  
+  desc "hello", "say hello to NAME"
+  def hello(name)
+      puts "Hello #{name}!"
+  end
+
+  desc "init", "create projectifles dirs in current working directory"
+  def init(dir)
+      directories = ["#{dir}/Conf", "#{dir}/Textfiles", "#{dir}/citationlists"]
+      FileUtils.mkpath(directories)
+      @dir
+  end
+
+  desc "projecfile", "make projetfile from SCTA" 
+  def projectfile(sctaurl, installdir)
+    resource = RDF::Resource.new(RDF::URI.new(sctaurl))
+    #resource = RDF::Resource(RDF::URI.new("http://rdf.rubyforge.org/"))
+    graph = RDF::Graph.load(resource)
+    data = graph.data
+    title = data.query(:predicate => RDF::DC11.title).first.object
+    itemarray = []
+
+    headerdata = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+    <lbpProjectFile>
+    <header>
+      <collectionTitle>#{title}</collectionTitle>
+      <localTextsDirectory>/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/GitTextfiles/</localTextsDirectory>
+      <citationListsDirectory>/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/citationlists/</citationListsDirectory>
+      <xsltDirectories>
+        <schema version='lbp-0.0.1' default='true'>
+            <critical>/Users/JCWitt/WebPages/lbpwrapper/lombardpress/public/pl_xslt_stylesheets/</critical>
+            <documentary>/Users/JCWitt/WebPages/lbpwrapper/lombardpress/public/pl_xslt_stylesheets/</documentary>
+            <main_view>text_display.xsl</main_view>
+            <index_view>'text_display_index.xsl'</index_view>
+            <clean_view>clean_forStatistics.xsl</clean_view>
+            <plain_text>plaintext.xsl</plain_text>
+            <toc>lectio_outline.xsl</toc>
+        </schema>
+        <schema version='lbp-0.0.2' default='true'>
+            <critical>/Users/JCWitt/WebPages/lbpwrapper/lombardpress/public/pl_xslt_stylesheets/</critical>
+            <documentary>/Users/JCWitt/WebPages/lbpwrapper/lombardpress/public/pl_xslt_stylesheets/</documentary>
+            <main_view>text_display.xsl</main_view>
+            <index_view>'text_display_index.xsl'</index_view>
+            <clean_view>clean_forStatistics.xsl</clean_view>
+            <plain_text>plaintext.xsl</plain_text>
+            <toc>lectio_outline.xsl</toc>
+        </schema>
+      </xsltDirectories>
+      <git_repo>bitbucket.org/jeffreycwitt/</git_repo>
+    </header>
+      <listofFileNames>
+      <div id=\"body\">"
+
+    itemarray << headerdata
+
+    data.query(:predicate => RDF::DC.hasPart).each do |part|
+      
+      newresource = RDF::Resource.new(part.object)
+      newgraph = RDF::Graph.load(newresource)
+      newdata = newgraph.data
+      
+      #type = newdata.query(:predicate => RDF::RDF.type).first.object.to_s
+      #type_slug = URI(type.object.to_s).path.split('/').last
+
+      status = newdata.query(:predicate => RDF::URI.new("http://scta.info/property/status")).first.object
+
+      unless status == 'Not Started'
+        title = newdata.query(:predicate => RDF::DC11.title).first.object
+        id = URI(part.object.to_s).path.split('/').last
+        itemunit = "
+        <item live='#{status}'>
+          <fileName filestem='#{id}'>#{id}.xml</fileName>
+          <title>#{title}</title>
+        </item>\n"
+        itemarray << itemunit
+      end
+       
     end
 
-    desc "init", "create projectifles dirs in current working directory"
-    def init(dir="projectfiles")
-        directories = ["#{dir}/Conf", "#{dir}/Textfiles", "#{dir}/citationlists"]
-        FileUtils.mkpath(directories)
+    footerdata = "</div>
+        </listofFileNames>
+    </lbpProjectFile>"
+    
+    itemarray << footerdata
+
+    f = File.new("#{installdir}/Conf/projectfile.xml", 'w')
+
+    itemarray.each do |section|
+      f.write(section)
     end
+  end
+  desc "loaed_text_files", "clone collection repos" 
+  def load_text_files(projectfile)
+    collection = Lbp::Collection.new(projectfile)
+    collection.git_clone
+  end    
 end
 
 LbpCli.start(ARGV)
 
-=begin
 
-commentaryid = $_GET['commentaryid'];
-$filename = "projectdata.xml";
-$date = new DateTime();
-$date = $date->format("Y-m-d");
-
-$sctaAddress = "http://localhost:4567/text/$commentaryid/commentary";
-$sctaAddressAlt = "http://scta.info/text/$commentaryid/commentary";
-
-
-$graph = new EasyRdf_Graph();
-    $graph->load($sctaAddress);
-$title = $graph->getLiteral($sctaAddressAlt, "dc11:title");
-
-
-function getUriTail($uri){
-    $link_array = explode('/', $uri);
-    $tail = end($link_array);
-    return $tail;
-}
-
-function displayTitleId($item){
-
-    $id = getUriTail($item);
-    $subgraph = new EasyRdf_Graph();
-    $subgraph->load($item); //this load actually went to live site.
-    $title = $subgraph->getLiteral($item, "dc11:title");
-    $type = $subgraph->getResource($item, "rdf:type");
-    $status = $subgraph->getLiteral($item, "<http://scta.info/property/status>");
-
-    if (getUriTail($type) == 'item'){
-        $questionTitle = $subgraph->getLiteral($item, "<http://scta.info/property/questionTitle>");
-        return $title . ": " . $questionTitle;
-    }
-    else{
-        return $title;
-    }
-}
-
-function writeData($item){
-    $id = getUriTail($item);
-        $subgraph = new EasyRdf_Graph();
-        $subgraph->load($item); //this load actually went to live site.
-        $title = $subgraph->getLiteral($item, "dc11:title");
-        $type = $subgraph->getResource($item, "rdf:type");
-        $status = $subgraph->getLiteral($item, "<http://scta.info/property/status>");
-        if (getUriTail($type) == 'item'){
-        $writeData = "<item live=\"" . $status . "\">
-                            <fileName filestem=\"" . $id . "\">$id.xml</fileName>
-                            <title>$title</title>
-                        </item>";}
-        elseif (getUriTail($type) == 'book' || getUriTail($type) == 'librum' || getUriTail($type) == 'distinction' || getUriTail($type) == 'distinctio'){
-
-        }
-        else $writeData = '';
-    return $writeData;
-
-}
-
-
-function getParts($address){
-
-    $graph = new EasyRdf_Graph();
-    $graph->load($address);
-    $parts = $graph->allResources($address, "dc:hasPart");
-
-    return $parts;
-
-}
-/*****************HTML**********************/
-
-?>
-
-<h1><?php echo $title ?></h1>
-
-<?php
-
-$parts = getParts($sctaAddressAlt);
-echo "<ul>";
-foreach ($parts as $part){
-    echo "<li>" . displayTitleId($part) . "</li>";
-    $parts = getParts($part);
-    foreach ($parts as $part){
-        echo "<li>" . displayTitleId($part) . "</li>";
-        $parts = getParts($part);
-        foreach ($parts as $part){
-            echo "<li>" . displayTitleId($part) . "</li>";
-            $parts = getParts($part);
-            }
-        }
-    }
-
-
-/********** Write to File ********************/
-
-$writeData="<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<listofFileNames>
-    <div id=\"frontmatter\" class=\"toplevel\">
-        <head>Front Matter</head>
-        <item>
-            <fileName filestem=\"titlepage\">titlepage.xml</fileName>
-            <title>Title Page</title>
-        </item>
-    </div>
-    <div id=\"body\">
-    ";
-
-$parts = getParts($sctaAddressAlt);
-echo "<ul>";
-foreach ($parts as $part){
-    //$writeData = $writeData . writeData($part);
-    $writeData = $writeData . "<div id=\"pg-book1\" class=\"toplevel\" type=\"book\">\n<head>Book Level</head>\n";
-    $parts = getParts($part);
-    foreach ($parts as $part){
-        $writeData = $writeData . writeData($part);
-        $parts = getParts($part);
-        foreach ($parts as $part){
-            $writeData = $writeData . writeData($part);
-            $parts = getParts($part);
-            }
-        }
-    $writeData = $writeData . "</div>\n";
-    }
-$endData = "</div>
-</listofFileNames>";
-$writeData = $writeData . $endData;
-$file = fopen($fullfilename, 'w');
-fwrite($file, $writeData);
-fclose($file);
-
-=end
 
 

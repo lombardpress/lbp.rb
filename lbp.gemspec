@@ -25,5 +25,12 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "nokogiri"
   spec.add_runtime_dependency "rugged"
   spec.add_runtime_dependency "thor"
+  spec.add_runtime_dependency "rdf"
+  spec.add_runtime_dependency "rdf-rdfxml"
+  spec.add_runtime_dependency "rest-client"
+
+
+
+
   
 end
