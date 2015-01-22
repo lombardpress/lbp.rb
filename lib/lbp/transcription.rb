@@ -236,12 +236,12 @@ module Lbp
 					paragraphs = xmldoc.xpath("//tei:body//tei:p/@xml:id", 'tei' => 'http://www.tei-c.org/ns/1.0')
       end
 
-      paragraph_objects = paragraphs.map do |p| Paragraph.new(@projectfile, @filehash, p.value) end
+      paragraph_objects = paragraphs.map do |p| Paragraph.new(@confighash, @filehash, p.value) end
       
       return paragraph_objects
 		end
 		def paragraph(pid)
-			Paragraph.new(@projectfile, @filehash, pid)
+			Paragraph.new(@confighash, @filehash, pid)
 		end
 	end
 end
