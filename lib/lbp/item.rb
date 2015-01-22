@@ -131,7 +131,7 @@ module Lbp
        	end
       else
       	if source == "origin"
-					file_path = "http://#{@confighash[:git_repo]}#{@fs}/raw/#{ed}/#{wit}_#{@fs}.xml"
+					file_path = "https://#{@confighash[:git_repo]}#{@fs}/raw/#{ed}/#{wit}_#{@fs}.xml"
 				else
     			file_path = @file_dir + wit + "_" + @fs + ".xml"
     		end
