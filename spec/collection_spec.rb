@@ -4,6 +4,7 @@ require 'pry'
 require 'nokogiri'
 
 describe 'collection object' do 
+=begin	
 	require_relative "config_globals"
 	
 	$collection_obj = Lbp::Collection.new($auto_pp_projectfile)
@@ -24,8 +25,12 @@ describe 'collection object' do
 		result = $collection_obj.items_fs_question_title_hash
 		expect(result).to be_kind_of(Hash)
 	end
-
-
+	it 'should return a hash of filestems and arrays of transcriptions' do 
+		#NOTWorking
+		#result = $collection_obj.items_fs_transcriptions_hash
+		#binding.pry
+		#expect(result).to be_kind_of(Hash)
+	end
 
 	it 'should get list of item objects in an array' do
  		result = $collection_obj.items
@@ -60,5 +65,5 @@ describe 'collection object' do
 		expect(result).to be_kind_of(String)
 	end
 	
-	
+=end	
 end

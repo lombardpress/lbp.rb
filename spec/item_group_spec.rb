@@ -4,7 +4,7 @@ require 'pry'
 require 'nokogiri'
 
 describe 'item group object' do 
-	
+=begin	
 	require_relative "config_globals"
 	
 	$itemgroup = Lbp::ItemGroup.new($projectfile, "deFide")
@@ -36,4 +36,5 @@ describe 'item group object' do
 		# not ideal because I would prefer the test to pass if the result is either false or true
 		expect(result).to be false
 	end
+=end
 end

@@ -8,16 +8,16 @@ module Lbp
 	class Transcription 
 		attr_reader :fs, :type, :ed, :xslt_dir
 
-		def initialize(projectfile, filehash)
+		def initialize(confighash, filehash)
 
 				@filehash = filehash
-	      @projectfile = projectfile
+	      
 
 	      @fs = filehash[:fs]
 	      @type = filehash[:type] # critical or documentary
 	      @ed = filehash[:ed]
 	      
-	      @confighash = Collection.new(@projectfile).confighash
+	      @confighash = confighash
 	      @xslthash = @confighash[:xslt_dirs]
 	      
 	      #xslt version needs to gathered from a method
@@ -26,7 +26,7 @@ module Lbp
 
 	      if xslt_version == nil
 	      	@schema = @xslthash["default"]
-	      else
+	     	else
 	      	@schema = @xslthash[xslt_version]
 	      end
 
@@ -38,9 +38,10 @@ module Lbp
 	      	
 
 	      if @filehash[:source] == 'local'
-	      	item = Item.new(@projectfile, @fs)
+	      	commentary_id = @confighash[:commentary_id]
+	      	item = Item.new(@confighash, "http://scta.info/text/#{commentary_id}/item/#{@fs}")
   				@current_branch = item.git_current_branch
-  			# the effort here is to only set instance variable when absolutely necessary
+  			 	#the effort here is to only set instance variable when absolutely necessary
   				if @current_branch != @ed
   					@item = item
   			end
@@ -53,17 +54,16 @@ module Lbp
 		end
 		def file
 
-			file = open(self.file_path)
+			file = open(self.file_path, {:http_basic_authentication => [@confighash[:git_username], @confighash[:git_password]]})
+			
 		end
 		def nokogiri
 			xmldoc = Nokogiri::XML(self.file)
-
 		end
 		## End File Path Methods
 		### Item Header Extraction and Metadata Methods
 		def title
 			xmldoc = self.nokogiri
-			
 			title = xmldoc.xpath("/tei:TEI/tei:teiHeader[1]/tei:fileDesc[1]/tei:titleStmt[1]/tei:title[1]", 'tei' => 'http://www.tei-c.org/ns/1.0')
 			return title.text
 		end

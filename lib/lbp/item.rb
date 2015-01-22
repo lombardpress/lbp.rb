@@ -2,30 +2,40 @@ require 'nokogiri'
 require 'rugged'
 require 'lbp/functions'
 require 'lbp/transcription'
+require 'openssl'
+require 'rdf'
+require 'rdf/rdfxml'
+require 'rdf/ntriples'
 
 module Lbp
 	class Item 
-		attr_reader :fs, :local_texts_dir, :file_dir, :projectfile, :xslt_dir
+		attr_reader :url, :fs, :file_dir
 		
-		def initialize(projectfile, fs)
-      @fs = fs
-      @projectfile = projectfile
+		def initialize(confighash, url)
+			
+			@url = url
+			@fs = url.split('/').last
+			@commentary_id = url.split('/')[4]
+			@resource = RDF::Resource.new(RDF::URI.new(@url))
+			
+			@graph = RDF::Graph.load(@resource)
       
-      @confighash = Collection.new(projectfile).confighash
+      @data = @graph.data
+      @confighash = confighash
       @texts_dir = @confighash[:local_texts_dir]
 			@file_dir = @confighash[:local_texts_dir] + @fs + "/"
 
 	  end
 	  ### Item Header Extraction and Metadata Methods
 		def title
-			transcr = Transcription.new(@projectfile, self.file_hash)
-			transcr.title
+			title = @data.query(:predicate => RDF::DC11.title).first.object.to_s
 		end
-		
+
+
    	### Begin GIT functions ###
   	def is_git_dir
+
   		gitpath = @file_dir + ".git"
-  		
   		if File.directory?(gitpath) 
   			true
   		else
@@ -37,11 +47,13 @@ module Lbp
   		branches = repo.branches.map { |branch| branch.name }
 		return branches
 		end
+		
 		def git_current_branch
   		repo = Rugged::Repository.new(@file_dir)
   		current_branch = repo.head.name.gsub(%r!\Arefs/heads/(.*)\z!) { $1 }
   		return current_branch
   	end
+  	
   	def git_tags
   		repo = Rugged::Repository.new(@file_dir)
   		tags = repo.tags.map { |tag| tag.name }
@@ -85,33 +97,31 @@ module Lbp
 
 		# previous and next functions don't handle ends of arrays very well	
 		# they also rely on the "item_filestems" methods which works but should be changed see comments in collection file
-		def previous
-			sequence_array = Collection.new(@projectfile).item_filestems
+		#def previous
+		#	sequence_array = Collection.new(@projectfile).item_filestems
 			#if sequence_array[sequence_array.index(@fs) - 1 ] != nil
-				previous_fs = sequence_array[sequence_array.index(@fs) - 1]
-				previous_item = Item.new(@projectfile, previous_fs)
+		#		previous_fs = sequence_array[sequence_array.index(@fs) - 1]
+		#		previous_item = Item.new(@projectfile, previous_fs)
 			#else
 			#	previous_item = nil
 			#end
-			return previous_item
-		end
-		def next
-			sequence_array = Collection.new(@projectfile).item_filestems
-			#if sequence_array[@sequence_array.index(@fs) + 1 ] != nil
-				next_fs = sequence_array[sequence_array.index(@fs) + 1]
-				next_item = Item.new(@projectfile, next_fs)
+		#	return previous_item
+		#end
+		#def next
+		#	sequence_array = Collection.new(@projectfile).item_filestems
+		#	#if sequence_array[@sequence_array.index(@fs) + 1 ] != nil
+		#		next_fs = sequence_array[sequence_array.index(@fs) + 1]
+		#		next_item = Item.new(@projectfile, next_fs)
 			#else
 			#	next_item = nil
 			#end
-			return next_item
-		end
+		#	return next_item
+		#end
+
 		def order_number
-			sequence_array = Collection.new(@projectfile).item_filestems
-			array_number = sequence_array.index(@fs)
-			sequence_number = array_number + 1
-			return sequence_number
+			ordernumber = @data.query(:predicate => RDF::URI.new("http://scta.info/property/totalOrderNumber")).first.object.to_s.to_i
 		end
-		
+				
 		def file_path(source: 'local', wit: 'critical', ed: 'master')
 			if wit == 'critical'
 				if source == "origin"
@@ -130,24 +140,33 @@ module Lbp
     end
     def file_hash(source: 'local', wit: 'critical', ed: 'master')
     	type = if wit == "critical" then "critical" else "documentary" end
-    	filehash = {path: self.file_path(source: source, wit: wit, ed: ed), fs: @fs, ed: ed, type: type, source: source}
+    	filehash = {path: self.file_path(source: source, wit: wit, ed: ed), fs: @fs, ed: ed, type: type, source: source, commentary_id: @commentary_id}
 			
 			return filehash
     end
     
     def transcription(source: 'local', wit: 'critical', ed: 'master')
     	filehash = self.file_hash(source: source, wit: wit, ed: ed)
-    	transcr = Transcription.new(@projectfile, filehash)
+    	transcr = Transcription.new(@confighash, filehash)
 		end	
+
 		def transcriptions(source: 'local', ed: 'master')
-			file = Nokogiri::XML(File.read(@projectfile))
-			parts = file.xpath("//item[fileName/@filestem='#{@fs}']/hasParts/part/slug")
-			transcription_array = parts.map do |part| 
-				self.transcription(source: source, wit: part.text, ed: ed)
+			slug_array = []
+
+			transcriptions = @data.query(:predicate => RDF::URI.new("http://scta.info/property/hasTranscription"))
+			transcriptions.each do |transcription|
+				
+				slug_array << transcription.object.to_s.split("/").last
 			end
-			transcription_array << self.transcription(source: source, wit: 'critical', ed: ed)
+			
+			transcription_array = slug_array.map do |slug| 
+				self.transcription(source: source, wit: slug, ed: ed)
+			end
+			
+			#transcription_array << self.transcription(source: source, wit: 'critical', ed: ed)
 
 			return transcription_array
 		end
+
 	end
 end

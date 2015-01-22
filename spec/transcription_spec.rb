@@ -6,7 +6,7 @@ require 'nokogiri'
 describe 'transcription object' do 
 	
 	require_relative "config_globals"
-	$transcriptionobject = Lbp::Transcription.new($projectfile, $filehash)
+	$transcriptionobject = Lbp::Transcription.new($confighash, $filehash)
 
 	it 'should return the filestem given at construction' do
 		result = $transcriptionobject.fs 
@@ -17,6 +17,24 @@ describe 'transcription object' do
 		result = $transcriptionobject.file_path
 		expect(result).to be_kind_of(String)
 	end
+
+	it 'should return the File object for the given transcription' do 
+		result = $transcriptionobject.file
+		expect(result).to be_kind_of(File)
+	end
+	it 'should return the file from a public git repo' do 
+		filehash = {path: "https://bitbucket.org/jeffreycwitt/lectio1/raw/master/lectio1.xml", fs: "lectio1", ed: "master", type: "critical", source: "origin", commentary_id: "plaoulcommentary"}
+		transcriptionobject = Lbp::Transcription.new($confighash, filehash)
+		result = transcriptionobject.file
+		expect(result).to be_kind_of(Tempfile)
+	end
+	it 'should return the file from a private git repo' do 
+		filehash = {path: "https://bitbucket.org/jeffreycwitt/lectio19/raw/master/lectio19.xml", fs: "lectio19", ed: "master", type: "critical", source: "origin", commentary_id: "plaoulcommentary"}
+		transcriptionobject = Lbp::Transcription.new($confighash, filehash)
+		result = transcriptionobject.file
+		expect(result).to be_kind_of(Tempfile)
+	end
+
 	it 'should retrieve the item name from the TEI xml file' do 
 		result = $transcriptionobject.title
 		expect(result).to be_kind_of(String)
@@ -65,7 +83,7 @@ describe 'transcription object' do
 
 	it 'should transform a doc using a specified xslt file' do
 		xslt_param_array = []
-		result = $transcriptionobject.transform($confighash[:xslt_critical_dir] + $confighash[:xslt_clean], xslt_param_array)
+		result = $transcriptionobject.transform($confighash[:xslt_dirs]["default"][:critical] + $confighash[:xslt_dirs]["default"][:clean_view], xslt_param_array)
 		
 		expect(result).to be_instance_of(Nokogiri::XML::Document)
 	end

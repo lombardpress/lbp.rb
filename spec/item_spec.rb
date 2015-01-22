@@ -7,20 +7,23 @@ describe 'item object' do
 	
 	require_relative "config_globals"
 
-	$itemobject = Lbp::Item.new($projectfile, 'lectio1')
+	$itemobject = Lbp::Item.new($confighash, $scta_url)
 
 	it 'should return the filestem given at construction' do
 		result = $itemobject.fs 
 		expect(result).to be_kind_of(String)
 	end
-
-	it 'should return the full directory path of file' do 
-		result = $itemobject.file_dir 
+	it 'should return the imput url' do 
+		result = $itemobject.url
+		expect(result).to be_kind_of(String)
+	end
+	it 'should retrieve the item name from the scta rdf graph' do 
+		result = $itemobject.title
 		expect(result).to be_kind_of(String)
 	end
 
-	it 'should retrieve the item name from the TEI xml file' do 
-		result = $itemobject.title
+	it 'should return the full directory path of file' do 
+		result = $itemobject.file_dir 
 		expect(result).to be_kind_of(String)
 	end
 	it 'should return true when file is part of a git directory' do
@@ -42,18 +45,16 @@ describe 'item object' do
 		expect(result).to be_instance_of(String) 
 		#expect(result).to eq("master")
 	end
+	
+
 	it 'should return the sequence number of the item' do 
 		result = $itemobject.order_number
 		expect(result).to be_kind_of(Integer)
 	end
-	it 'should return an item of object of the previous item' do 
-		result = $itemobject.previous
-		expect(result).to be_instance_of(Lbp::Item)
-	end
-	it 'should return an item of object of the next item' do 
-		result = $itemobject.next
-		expect(result).to be_instance_of(Lbp::Item)
-	end
+
+
+
+
 	it 'should return a transcription object' do 
 		result = $itemobject.transcription
 		expect(result).to be_instance_of(Lbp::Transcription)
@@ -70,5 +71,5 @@ describe 'item object' do
 		result = $itemobject.transcriptions
 		expect(result).to be_kind_of(Array)
 	end
-	
+
 end

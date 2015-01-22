@@ -5,6 +5,7 @@ require 'lbp/functions'
 
 module Lbp
 	class Collection
+=begin		
 		#attr_reader :confighash
 		def initialize(projectfile)
 			#@confighash = self.confighash
@@ -137,10 +138,35 @@ module Lbp
 			end
 			return fs_question_title_hash
 		end
-		def items_fs_parts_hash
+		def items_fs_transcriptions_hash
 			## need to creat this, but needs handle cases where there are not question parts 
 			## uncless critical part become mandatory.
-		end
+=begin 
+			## THIS IS A FAILED ATTEMPT			
+			file = Nokogiri::XML(File.read(@projectfile))
+			result = file.xpath("//div[@id='body']//item")
 
+			fs_transcriptions_hash = Hash.new
+
+			result.each do |item| 
+				parts_array = []
+				transcriptions = item.children.find {|child| child.name == "hasParts"}
+				unless transcriptions == nil
+					transcriptions.children.each do |transcription|
+						unless transcription.class == Nokogiri::XML::Text
+							parts = transcription.children.find {|child| child.name == "part"}
+							binding.pry
+							parts.children.each do |part|
+								slug = parts.children.find {|child| child.name == "slug"}.text
+								parts_array << slug
+							end
+						end
+					end
+				end
+			end
+			return fs_transcriptions_hash
+
+		end
+=end
 	end
 end

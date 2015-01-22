@@ -8,7 +8,7 @@ describe 'paragraph object' do
 		require_relative "config_globals"
 		paragraph1 = "l1-cpspfs"
 		paragraph3 = "l1-shoatd"
-		$paragraph = Lbp::Paragraph.new($projectfile, $filehash, paragraph1)
+		$paragraph = Lbp::Paragraph.new($confighash, $filehash, paragraph1)
 
 	it 'should return the pid for the Paragraph object' do 
 		result = $paragraph.pid

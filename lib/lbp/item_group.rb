@@ -5,6 +5,7 @@ require 'lbp/transcription'
 
 module Lbp
 	class ItemGroup
+=begin		
 		attr_reader :igid
 		
 		def initialize(projectfile, igid)
@@ -48,5 +49,6 @@ module Lbp
 				false
 			end
 		end
+=end		
 	end
 end
