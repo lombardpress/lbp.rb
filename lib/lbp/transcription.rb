@@ -167,7 +167,7 @@ module Lbp
 		end
 		def transform_index_view(xslt_param_array=[])
 			xsltfile=@xslt_dir + @schema[:index_view] # "text_display_index.xsl"
-			doc = self.transform( xsltfile, xslt_param_array=[])
+			doc = self.transform(xsltfile, xslt_param_array=[])
 		end
 		def transform_clean(xslt_param_array=[])
     	xsltfile=@xslt_dir + @schema[:clean_view] # "clean_forStatistics.xsl"

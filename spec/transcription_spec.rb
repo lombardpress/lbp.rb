@@ -38,6 +38,7 @@ describe 'transcription object' do
 		filehash = {path: "https://bitbucket.org/jeffreycwitt/lectio19/raw/master/lectio19.xml", fs: "lectio19", ed: "master", type: "critical", source: "origin", commentary_id: "plaoulcommentary"}
 		transcriptionobject = Lbp::Transcription.new($confighash, filehash)
 		result = transcriptionobject.transform_clean
+		binding.pry
 		expect(result).to be_kind_of(Nokogiri::XML::Document)
 	end
 
