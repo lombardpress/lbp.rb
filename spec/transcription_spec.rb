@@ -34,6 +34,12 @@ describe 'transcription object' do
 		result = transcriptionobject.file
 		expect(result).to be_kind_of(Tempfile)
 	end
+	it 'should transform file from private git repository' do 
+		filehash = {path: "https://bitbucket.org/jeffreycwitt/lectio19/raw/master/lectio19.xml", fs: "lectio19", ed: "master", type: "critical", source: "origin", commentary_id: "plaoulcommentary"}
+		transcriptionobject = Lbp::Transcription.new($confighash, filehash)
+		result = transcriptionobject.transform_clean
+		expect(result).to be_kind_of(Nokogiri::XML::Document)
+	end
 
 	it 'should retrieve the item name from the TEI xml file' do 
 		result = $transcriptionobject.title

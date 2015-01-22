@@ -53,9 +53,7 @@ module Lbp
 	  	@filehash[:path]
 		end
 		def file
-
 			file = open(self.file_path, {:http_basic_authentication => [@confighash[:git_username], @confighash[:git_password]]})
-			
 		end
 		def nokogiri
 			xmldoc = Nokogiri::XML(self.file)
@@ -156,10 +154,10 @@ module Lbp
   		xmlfile = self.file_path
 			if @current_branch != @ed && @filehash[:source] == 'local'
       	@item.git_checkout(@ed)
-      		doc = xslt_transform(xmlfile, xsltfile, xslt_param_array)
+      		doc = xslt_transform(self.nokogiri, xsltfile, xslt_param_array)
       	@item.git_checkout(@current_branch);
       else
-      	doc = xslt_transform(xmlfile, xsltfile, xslt_param_array)
+      	doc = xslt_transform(self.nokogiri, xsltfile, xslt_param_array)
       end
 		end
 
