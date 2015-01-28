@@ -175,7 +175,14 @@ module Lbp
     end
 		def transform_plain_text(xslt_param_array=[])
     	xsltfile=@xslt_dir + @schema[:plain_text] # "plaintext.xsl"
-    	doc = self.transform(xsltfile, xslt_param_array=[])
+    	xmlfile = self.file_path
+			if @current_branch != @ed && @filehash[:source] == 'local'
+      	@item.git_checkout(@ed)
+      		doc = xslt_apply_to(self.nokogiri, xsltfile, xslt_param_array)
+      	@item.git_checkout(@current_branch);
+      else
+      	doc = xslt_apply_to(self.nokogiri, xsltfile, xslt_param_array)
+      end
     end
     def transform_toc(xslt_param_array=[])
     	xsltfile=@xslt_dir + @schema[:toc] # "lectio_outline.xsl"
@@ -185,11 +192,11 @@ module Lbp
     ### Begin Statistics Methods ###
     def word_count
     	plaintext = self.transform_plain_text
-    	size = plaintext.text.split.size
+    	size = plaintext.split.size
     end
     def word_array
     	plaintext = self.transform_plain_text
-    	word_array = plaintext.text.split
+    	word_array = plaintext.split
     	word_array.map!{ |word| word.downcase}
     end
     def word_frequency(sort, order)

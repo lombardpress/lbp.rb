@@ -38,7 +38,6 @@ describe 'transcription object' do
 		filehash = {path: "https://bitbucket.org/jeffreycwitt/lectio19/raw/master/lectio19.xml", fs: "lectio19", ed: "master", type: "critical", source: "origin", commentary_id: "plaoulcommentary"}
 		transcriptionobject = Lbp::Transcription.new($confighash, filehash)
 		result = transcriptionobject.transform_clean
-		binding.pry
 		expect(result).to be_kind_of(Nokogiri::XML::Document)
 	end
 
@@ -114,10 +113,13 @@ describe 'transcription object' do
 		result = $transcriptionobject.transform_toc
 		expect(result).to be_instance_of(Nokogiri::XML::Document)
 	end
-	it 'should process an xml doc with the text_display.xsl stylesheet' do 
+	
+	it 'should process an xml doc with the plaintext.xsl stylesheet and return plaintext document' do 
 		result = $transcriptionobject.transform_plain_text
-		expect(result).to be_instance_of(Nokogiri::XML::Document)
+		binding.pry
+		expect(result).to be_instance_of(String)
 	end
+
 	it 'should get the word count of the item object' do 
 		result = $transcriptionobject.word_count
 		#result.should eq(2122)
