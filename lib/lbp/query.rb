@@ -59,8 +59,8 @@ module Lbp
 
 	      SELECT ?item_title ?transcript ?transcript_title ?transcript_status ?transcript_type
 	      {
-	        #{url} <http://purl.org/dc/elements/1.1/title> ?item_title .
-	        #{url} <http://scta.info/property/hasTranscription> ?transcript .
+	        #{item_url} <http://purl.org/dc/elements/1.1/title> ?item_title .
+	        #{item_url} <http://scta.info/property/hasTranscription> ?transcript .
 	        ?transcript <http://purl.org/dc/elements/1.1/title> ?transcript_title  .
 	        ?transcript <http://scta.info/property/status> ?transcript_status .
 	        ?transcript <http://scta.info/property/transcriptionType> ?transcript_type .
