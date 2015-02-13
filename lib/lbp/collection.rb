@@ -1,172 +1,51 @@
 require 'nokogiri'
-require 'rugged'
 require 'lbp/functions'
-
 
 module Lbp
 	class Collection
-=begin		
-		#attr_reader :confighash
-		def initialize(projectfile)
-			#@confighash = self.confighash
-			#@projectdatafile_dir = @confighash[:projectdatafile_dir]
-			@projectfile = projectfile
+		attr_reader :url 
+		def initialize(confighash, url)
+			
+			@url = url
+			@resource = RDF::Resource.new(RDF::URI.new(@url))
+			@graph = RDF::Graph.load(@resource)
+      @data = @graph.data
+
+      @confighash = confighash
 		end
 
 		def title
-			file = Nokogiri::XML(File.read(@projectfile))
-			title = file.xpath(("//header/collectionTitle")).text
-		end	
-		def local_texts_dir
-			file = Nokogiri::XML(File.read(@projectfile))
-			textdir = file.xpath(("//header/localTextsDirectory")).text
+			title = @data.query(:predicate => RDF::DC11.title).first.object.to_s
 		end
 
-		def citation_lists_dir
-			file = Nokogiri::XML(File.read(@projectfile))
-			citationlistdir = file.xpath(("//header/citationListsDirectory")).text
-		end
-		def git_repo
-			file = Nokogiri::XML(File.read(@projectfile))
-			gitrepo = file.xpath("//header/git_repo").text
-		end
-		#need test
-		def git_clone(username: nil, password: nil)
-			self.items.each do |item| 
-				item.git_clone(username: username, password: password)
+		def item_urls
+			items = []
+			results = @data.query(:predicate => RDF::URI.new("http://scta.info/property/hasItem"))
+			results.each do |item| 
+				items << item.object.to_s
 			end
+			return items
 		end
-
-		def xslt_dirs
-			#test change to hash
-			@xslthash = Hash.new
-			file = Nokogiri::XML(File.read(@projectfile))
-			schemas = file.xpath("//header/xsltDirectories/schema")
-
-			schemas.each do |schema| 
-				schema_number = schema.attributes["version"].value 
-				schema_default = schema.attributes["default"].value 
-				@xslthash["#{schema_number}"] = {
-					critical: schema.children.find {|child| child.name == "critical"}.text,
-					documentary: schema.children.find {|child| child.name == "documentary"}.text,
-					main_view: schema.children.find {|child| child.name == "main_view"}.text,
-					index_view: schema.children.find {|child| child.name == "index_view"}.text,
-					clean_view: schema.children.find {|child| child.name == "clean_view"}.text,
-					plain_text: schema.children.find {|child| child.name == "plain_text"}.text,
-					toc: schema.children.find {|child| child.name == "toc"}.text
-				}
-				if schema_default == 'true'
-						@xslthash["default"] = {
-						critical: schema.children.find {|child| child.name == "critical"}.text,
-						documentary: schema.children.find {|child| child.name == "documentary"}.text,
-						main_view: schema.children.find {|child| child.name == "main_view"}.text,
-						index_view: schema.children.find {|child| child.name == "index_view"}.text,
-						clean_view: schema.children.find {|child| child.name == "clean_view"}.text,
-						plain_text: schema.children.find {|child| child.name == "plain_text"}.text,
-						toc: schema.children.find {|child| child.name == "toc"}.text
-					}
-					end
-					
-			end
-			return @xslthash
-			
-		end
-
-		def confighash
-			confighash = {
-				local_texts_dir: self.local_texts_dir, 
-				citation_lists_dir: self.citation_lists_dir, 
-				xslt_dirs: self.xslt_dirs, 
-				git_repo: self.git_repo}
-		end
-
 		def items
-			file = Nokogiri::XML(File.read(@projectfile))
-			result = file.xpath("//div[@id='body']//item/fileName/@filestem")
-			fs_array = result.map do |fs| 
-				Item.new(@projectfile, fs.value)
+			#actually creating objects would reult in a separate http request for item - could overload the memory on my current server
+		end
+		def item_count
+			self.item_urls.count
+		end
+
+		def part_urls
+			parts = []
+			results = @data.query(:predicate => RDF::DC.hasPart)
+			results.each do |part| 
+				parts << part.object.to_s
 			end
-			return fs_array
+			return parts
 		end
-		def item(fs)
-			Item.new(@projectfile, fs)
-		end
-
-		def item_filestems
-			file = Nokogiri::XML(File.read(@projectfile))
-			result = file.xpath("//div[@id='body']//item/fileName/@filestem")
-
-			fs_array = result.map do |fs| 
-				fs.value
-			end
-			return fs_array
+		def parts
+			#actually creating objects would reult in a separate http request for part - could overload the memory on my current server
+			#should just return a new sub collection
 		end
 
-		def item_titles
-			file = Nokogiri::XML(File.read(@projectfile))
-			result = file.xpath("//div[@id='body']//item/title")
-
-			title_array = result.map do |title| 
-				title.text
-			end
-			return title_array
-		end
-
-		def items_fs_title_hash
-			file = Nokogiri::XML(File.read(@projectfile))
-			result = file.xpath("//div[@id='body']//item")
-
-			fs_title_hash = Hash.new
-
-			result.each do |item| 
-				title = item.children.find {|child| child.name == "title"}.text
-				fs = item.children.find {|child| child.name == "fileName"}.attributes["filestem"].value
-				fs_title_hash[fs] = title
-			end
-			return fs_title_hash
-		end
-		def items_fs_question_title_hash
-			file = Nokogiri::XML(File.read(@projectfile))
-			result = file.xpath("//div[@id='body']//item")
-
-			fs_question_title_hash = Hash.new
-
-			result.each do |item| 
-				question_title = item.children.find {|child| child.name == "questionTitle"}.text
-				fs = item.children.find {|child| child.name == "fileName"}.attributes["filestem"].value
-				fs_question_title_hash[fs] = question_title
-			end
-			return fs_question_title_hash
-		end
-		def items_fs_transcriptions_hash
-			## need to creat this, but needs handle cases where there are not question parts 
-			## uncless critical part become mandatory.
-=begin 
-			## THIS IS A FAILED ATTEMPT			
-			file = Nokogiri::XML(File.read(@projectfile))
-			result = file.xpath("//div[@id='body']//item")
-
-			fs_transcriptions_hash = Hash.new
-
-			result.each do |item| 
-				parts_array = []
-				transcriptions = item.children.find {|child| child.name == "hasParts"}
-				unless transcriptions == nil
-					transcriptions.children.each do |transcription|
-						unless transcription.class == Nokogiri::XML::Text
-							parts = transcription.children.find {|child| child.name == "part"}
-							binding.pry
-							parts.children.each do |part|
-								slug = parts.children.find {|child| child.name == "slug"}.text
-								parts_array << slug
-							end
-						end
-					end
-				end
-			end
-			return fs_transcriptions_hash
-
-		end
-=end
+		
 	end
 end

@@ -151,13 +151,23 @@ module Lbp
 		### Begin transform (XSLT) methocs ###
 		def transform(xsltfile, xslt_param_array=[])
 
-  		xmlfile = self.file_path
+  		#xmlfile = self.file_path
 			if @current_branch != @ed && @filehash[:source] == 'local'
       	@item.git_checkout(@ed)
       		doc = xslt_transform(self.nokogiri, xsltfile, xslt_param_array)
       	@item.git_checkout(@current_branch);
       else
       	doc = xslt_transform(self.nokogiri, xsltfile, xslt_param_array)
+      end
+		end
+		def transform_apply(xsltfile, xslt_param_array=[])
+			#xmlfile = self.file_path
+			if @current_branch != @ed && @filehash[:source] == 'local'
+      	@item.git_checkout(@ed)
+      		doc = xslt_apply_to(self.nokogiri, xsltfile, xslt_param_array)
+      	@item.git_checkout(@current_branch);
+      else
+      	doc = xslt_apply_to(self.nokogiri, xsltfile, xslt_param_array)
       end
 		end
 
@@ -175,14 +185,11 @@ module Lbp
     end
 		def transform_plain_text(xslt_param_array=[])
     	xsltfile=@xslt_dir + @schema[:plain_text] # "plaintext.xsl"
-    	xmlfile = self.file_path
-			if @current_branch != @ed && @filehash[:source] == 'local'
-      	@item.git_checkout(@ed)
-      		doc = xslt_apply_to(self.nokogiri, xsltfile, xslt_param_array)
-      	@item.git_checkout(@current_branch);
-      else
-      	doc = xslt_apply_to(self.nokogiri, xsltfile, xslt_param_array)
-      end
+    	doc = self.transform_apply(xsltfile, xslt_param_array)
+    end
+    def transform_json(xslt_param_array=[])
+    	xsltfile=@xslt_dir + @schema[:json] # "plaintext.xsl"
+    	doc = self.transform_apply(xsltfile, xslt_param_array)
     end
     def transform_toc(xslt_param_array=[])
     	xsltfile=@xslt_dir + @schema[:toc] # "lectio_outline.xsl"

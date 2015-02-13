@@ -116,7 +116,6 @@ describe 'transcription object' do
 	
 	it 'should process an xml doc with the plaintext.xsl stylesheet and return plaintext document' do 
 		result = $transcriptionobject.transform_plain_text
-		binding.pry
 		expect(result).to be_instance_of(String)
 	end
 

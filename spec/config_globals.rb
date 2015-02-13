@@ -29,3 +29,6 @@ $auto_pp_projectfile = "/Users/JCWitt/WebPages/lbp.rb/pp-projectfiles/Conf/proje
 
 $scta_url = "http://scta.info/text/plaoulcommentary/item/lectio1"
 #$scta_url = "http://localhost:4567/text/plaoulcommentary/item/lectio1"
+
+$commentary_url = "http://scta.info/text/plaoulcommentary/commentary"
+#$commentary_url = "http://scta.info/text/wodehamordinatio/commentary"
