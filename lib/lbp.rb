@@ -7,6 +7,7 @@ require "lbp/version"
   require 'lbp/transcription'
 	require 'lbp/collection'
   require 'lbp/query'
+  require 'lbp/paragraph_image'
   
 
 
