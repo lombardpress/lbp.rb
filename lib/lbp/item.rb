@@ -94,8 +94,7 @@ module Lbp
 			#index = repo.index
 			#index.add_all
 			#Rugged::Commit.create(repo, {:message => message})
-			`cd #{@file_dir}`
-			`git commit -a -m "#{message}"`
+			`cd #{@file_dir} | git commit -a -m "#{message}"`
 		end
 		#needs a test
 		def git_push(username: nil, password: nil)
