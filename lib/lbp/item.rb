@@ -89,6 +89,21 @@ module Lbp
 			self.git_clone(username: username, password: password)
 		end
 		#needs a test
+		def git_commit(message)
+			#repo = Rugged::Repository.new(@file_dir)
+			#index = repo.index
+			#index.add_all
+			#Rugged::Commit.create(repo, {:message => message})
+			`git add -A`
+			`git commit -m "#{message}"`
+		end
+		#needs a test
+		def git_push(username: nil, password: nil)
+			credentials = self.git_username_password_credentials(username, password)
+			repo = Rugged::Repository.new(@file_dir)
+			repo.push('origin', ['refs/heads/master'])
+		end
+		#needs a test
 		def remove_local_dir
 			FileUtils.rm_rf @file_dir
 		end
