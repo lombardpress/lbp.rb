@@ -90,18 +90,23 @@ module Lbp
 		end
 		#needs a test
 		def git_commit(message)
-			#repo = Rugged::Repository.new(@file_dir)
-			#index = repo.index
-			#index.add_all
-			#Rugged::Commit.create(repo, {:message => message})
-			`cd #{@file_dir} | git commit -a -m "#{message}"`
-		end
-		#needs a test
-		def git_push(username: nil, password: nil)
-			credentials = self.git_username_password_credentials(username, password)
 			repo = Rugged::Repository.new(@file_dir)
-			repo.push('origin', ['refs/heads/master'])
+			puts message
+			repo.inspect
+			index = repo.index
+			index.add_all
+			index.write
+			commit_tree = index.write_tree
+			Rugged::Commit.create(repo, {message: message, parents: [repo.head.target], tree: commit_tree, update_ref: 'HEAD'})
 		end
+		#needs a test # not working yet
+		#def git_push(username: nil, password: nil)
+		#	credentials = self.git_username_password_credentials(username, password)
+			
+		#	remote = Rugged::Remote.lookup(@file_dir, 'origin')
+			#repo.push(origin['refs/heads/master'], {credentials: credentials})
+		#	repo.push('origin', {credentials: credentials})
+		#end
 		#needs a test
 		def remove_local_dir
 			FileUtils.rm_rf @file_dir
