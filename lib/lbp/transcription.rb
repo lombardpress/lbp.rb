@@ -173,15 +173,15 @@ module Lbp
 
 		def transform_main_view(xslt_param_array=[])
 			xsltfile=@xslt_dir + @schema[:main_view] # "text_display.xsl"
-			doc = self.transform(xsltfile, xslt_param_array=[])
+			doc = self.transform_apply(xsltfile, xslt_param_array=[])
 		end
 		def transform_index_view(xslt_param_array=[])
 			xsltfile=@xslt_dir + @schema[:index_view] # "text_display_index.xsl"
-			doc = self.transform(xsltfile, xslt_param_array=[])
+			doc = self.transform_apply(xsltfile, xslt_param_array=[])
 		end
 		def transform_clean(xslt_param_array=[])
     	xsltfile=@xslt_dir + @schema[:clean_view] # "clean_forStatistics.xsl"
-    	doc = self.transform(xsltfile, xslt_param_array=[])
+    	doc = self.transform_apply(xsltfile, xslt_param_array=[])
     end
 		def transform_plain_text(xslt_param_array=[])
     	xsltfile=@xslt_dir + @schema[:plain_text] # "plaintext.xsl"
@@ -193,7 +193,7 @@ module Lbp
     end
     def transform_toc(xslt_param_array=[])
     	xsltfile=@xslt_dir + @schema[:toc] # "lectio_outline.xsl"
-    	doc = self.transform(xsltfile, xslt_param_array=[])
+    	doc = self.transform_apply(xsltfile, xslt_param_array=[])
     end
     ### End of Transformation Methods ###
     ### Begin Statistics Methods ###

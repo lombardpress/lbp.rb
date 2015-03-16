@@ -38,7 +38,7 @@ describe 'transcription object' do
 		filehash = {path: "https://bitbucket.org/jeffreycwitt/lectio19/raw/master/lectio19.xml", fs: "lectio19", ed: "master", type: "critical", source: "origin", commentary_id: "plaoulcommentary"}
 		transcriptionobject = Lbp::Transcription.new($confighash, filehash)
 		result = transcriptionobject.transform_clean
-		expect(result).to be_kind_of(Nokogiri::XML::Document)
+		expect(result).to be_kind_of(String)
 	end
 
 	it 'should retrieve the item name from the TEI xml file' do 
@@ -107,11 +107,11 @@ describe 'transcription object' do
 		nokogiri = $transcriptionobject.nokogiri
 		result = $transcriptionobject.transform_clean
 		
-		expect(result).to be_instance_of(Nokogiri::XML::Document)
+		expect(result).to be_instance_of(String)
 	end
 	it 'should process an xml doc with the text_display.xsl stylesheet' do 
 		result = $transcriptionobject.transform_toc
-		expect(result).to be_instance_of(Nokogiri::XML::Document)
+		expect(result).to be_instance_of(String)
 	end
 	
 	it 'should process an xml doc with the plaintext.xsl stylesheet and return plaintext document' do 
