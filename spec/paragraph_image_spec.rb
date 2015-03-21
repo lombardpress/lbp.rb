@@ -8,7 +8,8 @@ describe 'paragraph object' do
 		paragraph1 = "l7-cmisir"
 		#paragraph1 = "l7-seqgpe"
 		position = 2
-		filehash = $filehash = {path: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/GitTextfiles/lectio7/sorb_lectio7.xml", fs: "lectio7", ed: "master", type: "documentary", source: "local", commentar_id: "plaoulcommentary"}		
+
+		filehash = {path: "https://bitbucket.org/jeffreycwitt/lectio7/raw/master/sorb_lectio7.xml", fs: "lectio7", ed: "master", type: "documentary", source: "origin", commentar_id: "plaoulcommentary"}		
 		$paragraph_image = Lbp::ParagraphImage.new($confighash, filehash, paragraph1, position)
 
 	it 'should return the ulx for the Paragraph Image object' do 
@@ -37,6 +38,10 @@ describe 'paragraph object' do
 	end
 	it 'should return the url for the Paragraph Image object' do 
 		result = $paragraph_image.url
+		expect(result).to be_kind_of(String)
+	end
+	it 'should return the canvas for the Paragraph Image object' do 
+		result = $paragraph_image.canvas
 		expect(result).to be_kind_of(String)
 	end
 end

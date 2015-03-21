@@ -1,4 +1,4 @@
-$confighash = {local_texts_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/GitTextfiles/", 
+$confighash = {local_texts_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles-test/GitTextfiles/", 
 							citation_lists_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/citationlists/", 
 							xslt_dirs: { "default" => {
 								critical: "/Users/JCWitt/WebPages/lbpwrapper/lombardpress/public/pl_xslt_stylesheets/",
@@ -11,8 +11,8 @@ $confighash = {local_texts_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-proj
 									}
 								},
 							git_repo: "bitbucket.org/jeffreycwitt/",
-							git_username: "jeffreycwitt",
-							git_password: "plaoulRepo"
+							git_username: ENV["GUN"],
+							git_password: ENV["GPW"]
 						}
 
 		

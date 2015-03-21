@@ -6,21 +6,22 @@ module Lbp
 		attr_reader :pid 
 		
 		def initialize(confighash, filehash, pid, position=1)
+
 			@confighash = confighash
 			@filehash = filehash
 			@pid = pid
 			@position = position
 			@pid_pointer = "#" + @pid
+			
 		end
-
 		def info(xpathfragment)
+			
 			xmlobject = Transcription.new(@confighash, @filehash).nokogiri
+			
 			#this xpath will need to be revised when xml facsimile gets improved and reorganized
-			unless @position == 1
-	  	result = xmlobject.xpath("/tei:TEI/tei:facsimile/tei:surface[@start='#{@pid_pointer}'][@n='#{@position}']/#{xpathfragment}", 'tei' => 'http://www.tei-c.org/ns/1.0')
-	  	else
-	  	result = xmlobject.xpath("/tei:TEI/tei:facsimile/tei:surface[@start='#{@pid_pointer}'][not(@n)]/#{xpathfragment}", 'tei' => 'http://www.tei-c.org/ns/1.0')
-	  	end
+	  	result = xmlobject.xpath("/tei:TEI/tei:facsimile//tei:surface/tei:zone[@start='#{@pid_pointer}'][@n='#{@position}']/#{xpathfragment}", 'tei' => 'http://www.tei-c.org/ns/1.0')
+	  	binding.pry
+
 	  	return result
 		end
 		def ulx
@@ -46,8 +47,11 @@ module Lbp
 			height = self.uly - self.lry
 		end
 		def url
-			url = self.info("tei:graphic/@url")
+			url = self.info("preceding-sibling::tei:graphic/@url")
 			return url.first.value
+		end
+		def canvas
+			return self.url.split(".").first
 		end
 	end
 end
