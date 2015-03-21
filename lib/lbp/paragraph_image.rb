@@ -39,10 +39,10 @@ module Lbp
 			return lry.first.value.to_i
 		end
 		def width
-			width = self.ulx - self.lrx
+			width =  self.lrx - self.ulx
 		end
 		def height
-			height = self.uly - self.lry
+			height = self.lry - self.uly
 		end
 		def url
 			url = self.info("preceding-sibling::tei:graphic/@url")
