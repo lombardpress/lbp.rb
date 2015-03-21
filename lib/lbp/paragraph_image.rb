@@ -20,8 +20,6 @@ module Lbp
 			
 			#this xpath will need to be revised when xml facsimile gets improved and reorganized
 	  	result = xmlobject.xpath("/tei:TEI/tei:facsimile//tei:surface/tei:zone[@start='#{@pid_pointer}'][@n='#{@position}']/#{xpathfragment}", 'tei' => 'http://www.tei-c.org/ns/1.0')
-	  	binding.pry
-
 	  	return result
 		end
 		def ulx
