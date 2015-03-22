@@ -183,9 +183,17 @@ module Lbp
     	xsltfile=@xslt_dir + @schema[:clean_view] # "clean_forStatistics.xsl"
     	doc = self.transform_apply(xsltfile, xslt_param_array=[])
     end
+    def transform_clean_nokogiri(xslt_param_array=[])
+    	xsltfile=@xslt_dir + @schema[:clean_view] # "clean_forStatistics.xsl"
+    	doc = self.transform(xsltfile, xslt_param_array=[])
+    end
 		def transform_plain_text(xslt_param_array=[])
     	xsltfile=@xslt_dir + @schema[:plain_text] # "plaintext.xsl"
     	doc = self.transform_apply(xsltfile, xslt_param_array)
+    end
+    def transform_plain_text_nokogiri(xslt_param_array=[])
+    	xsltfile=@xslt_dir + @schema[:plain_text] # "plaintext.xsl"
+    	doc = self.transform(xsltfile, xslt_param_array)
     end
     def transform_json(xslt_param_array=[])
     	xsltfile=@xslt_dir + @schema[:json] # "plaintext.xsl"

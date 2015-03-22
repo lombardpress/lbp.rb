@@ -48,7 +48,7 @@ module Lbp
 		def transform_plain_text(xslt_param_array=[])
 			# not that it could be slightly confusing that paragraph plain text uses the transform clean,
 			# because we still the basic paragraph elements in order to select the desired paragraph
-			result = Transcription.new(@confighash, @filehash).transform_clean(xslt_param_array)
+			result = Transcription.new(@confighash, @filehash).transform_clean_nokogiri(xslt_param_array)
 			
 			p = result.xpath("//p[@id='#{@pid}']")
 			return p
