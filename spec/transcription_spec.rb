@@ -103,12 +103,15 @@ describe 'transcription object' do
 	#	expect(result).to be_instance_of(Nokogiri::XML::Document)
 	#end
 	it 'should process an xml doc with the cleanForStatistics.xsl stylesheet' do 
-		file_path = $transcriptionobject.file_path
-		nokogiri = $transcriptionobject.nokogiri
 		result = $transcriptionobject.transform_clean
-		
 		expect(result).to be_instance_of(String)
 	end
+	it 'should process an xml doc with the cleanForStatistics.xsl stylesheet and return as nokogiri object' do 
+		
+		result = $transcriptionobject.transform_clean_nokogiri
+		expect(result).to be_instance_of(Nokogiri::XML::Document)
+	end
+
 	it 'should process an xml doc with the text_display.xsl stylesheet' do 
 		result = $transcriptionobject.transform_toc
 		expect(result).to be_instance_of(String)
@@ -117,6 +120,11 @@ describe 'transcription object' do
 	it 'should process an xml doc with the plaintext.xsl stylesheet and return plaintext document' do 
 		result = $transcriptionobject.transform_plain_text
 		expect(result).to be_instance_of(String)
+	end
+
+	it 'should process an xml doc with the plaintext.xsl stylesheet and return nokogiri object of the plaintext document' do 
+		result = $transcriptionobject.transform_plain_text_nokogiri
+		expect(result).to be_instance_of(Nokogiri::XML::Document)
 	end
 
 	it 'should get the word count of the item object' do 
