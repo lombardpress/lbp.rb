@@ -1,4 +1,4 @@
-$confighash = {local_texts_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles-test/GitTextfiles/", 
+$confighash = {local_texts_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/GitTextfiles/", 
 							citation_lists_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/citationlists/", 
 							xslt_dirs: { "default" => {
 								critical: "/Users/JCWitt/WebPages/lbpwrapper/lombardpress/public/pl_xslt_stylesheets/",

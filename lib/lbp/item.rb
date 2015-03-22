@@ -169,14 +169,17 @@ module Lbp
     	transcr = Transcription.new(@confighash, filehash)
 		end	
 
-		def transcriptions(source: 'local', ed: 'master')
+		def transcription_slugs(source: 'local', ed: 'master')
 			slug_array = []
-
 			transcriptions = @data.query(:predicate => RDF::URI.new("http://scta.info/property/hasTranscription"))
 			transcriptions.each do |transcription|
-				
 				slug_array << transcription.object.to_s.split("/").last
 			end
+			return slug_array
+		end
+
+		def transcriptions(source: 'local', ed: 'master')
+			slug_array = self.transcription_slugs
 			
 			transcription_array = slug_array.map do |slug| 
 				self.transcription(source: source, wit: slug, ed: ed)
