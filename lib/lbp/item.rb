@@ -31,7 +31,6 @@ module Lbp
 			title = @data.query(:predicate => RDF::DC11.title).first.object.to_s
 		end
 
-
    	### Begin GIT functions ###
   	def is_git_dir
 
@@ -78,7 +77,7 @@ module Lbp
 			remote_path = self.git_construct_remote_path
 			Rugged::Repository.clone_at(remote_path, @file_dir, :credentials => self.git_username_password_credentials(username, password))
 		end
-		#nneds a test
+		#needs a test
 		def git_pull(username: nil, password: nil)
 			# not sure what the Rugged API is for this.
 			# doesn't like this methods has been created 
@@ -114,28 +113,22 @@ module Lbp
 		### End Git Methods ###
 		### Begin Order Info ##
 
-		# previous and next functions don't handle ends of arrays very well	
-		# they also rely on the "item_filestems" methods which works but should be changed see comments in collection file
-		#def previous
-		#	sequence_array = Collection.new(@projectfile).item_filestems
-			#if sequence_array[sequence_array.index(@fs) - 1 ] != nil
-		#		previous_fs = sequence_array[sequence_array.index(@fs) - 1]
-		#		previous_item = Item.new(@projectfile, previous_fs)
-			#else
-			#	previous_item = nil
-			#end
-		#	return previous_item
-		#end
-		#def next
-		#	sequence_array = Collection.new(@projectfile).item_filestems
-		#	#if sequence_array[@sequence_array.index(@fs) + 1 ] != nil
-		#		next_fs = sequence_array[sequence_array.index(@fs) + 1]
-		#		next_item = Item.new(@projectfile, next_fs)
-			#else
-			#	next_item = nil
-			#end
-		#	return next_item
-		#end
+		def next
+			unless @data.query(:predicate => RDF::URI.new("http://scta.info/property/next")) == nil
+				next_item = @data.query(:predicate => RDF::URI.new("http://scta.info/property/next")).first.object.to_s
+			else
+				next_item = null
+			end
+			return next_item
+		end
+		def previous
+			unless @data.query(:predicate => RDF::URI.new("http://scta.info/property/previous")) == nil
+				previous_item = @data.query(:predicate => RDF::URI.new("http://scta.info/property/previous")).first.object.to_s
+			else
+				previous_item = null
+			end
+			return previous_item
+		end
 
 		def order_number
 			ordernumber = @data.query(:predicate => RDF::URI.new("http://scta.info/property/totalOrderNumber")).first.object.to_s.to_i

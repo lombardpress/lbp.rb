@@ -51,6 +51,17 @@ describe 'item object' do
 		result = $itemobject.order_number
 		expect(result).to be_kind_of(Integer)
 	end
+	it 'should return the url id of the next item' do 
+		result = $itemobject.next
+		# this is a bad test -- the result could also be nil
+		expect(result).to be_kind_of(String)
+	end
+	it 'should return the url id of the previous item' do 
+		result = $itemobject.previous
+		binding.pry
+		# this is a bad test -- the result could also be nil
+		expect(result).to be_kind_of(String)
+	end
 
 
 
