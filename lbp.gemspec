@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "pry"
   spec.add_runtime_dependency "nokogiri"
-  spec.add_runtime_dependency "rugged"
+  #spec.add_runtime_dependency "rugged"
   spec.add_runtime_dependency "thor"
   spec.add_runtime_dependency "rdf"
   spec.add_runtime_dependency "rdf-rdfxml"

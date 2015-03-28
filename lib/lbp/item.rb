@@ -133,6 +133,10 @@ module Lbp
 		def order_number
 			ordernumber = @data.query(:predicate => RDF::URI.new("http://scta.info/property/totalOrderNumber")).first.object.to_s.to_i
 		end
+
+		def status
+			status = @data.query(:predicate => RDF::URI.new("http://scta.info/property/status")).first.object.to_s
+		end
 				
 		def file_path(source: 'local', wit: 'critical', ed: 'master')
 			if wit == 'critical'
