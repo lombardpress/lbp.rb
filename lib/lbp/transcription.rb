@@ -1,5 +1,5 @@
 require 'nokogiri'
-require 'rugged'
+#require 'rugged'
 require 'lbp/functions'
 require 'lbp/item'
 require 'open-uri'
@@ -40,12 +40,15 @@ module Lbp
 	      if @filehash[:source] == 'local'
 	      	commentary_id = @confighash[:commentary_id]
 	      	item = Item.new(@confighash, "http://scta.info/text/#{commentary_id}/item/#{@fs}")
-  				@current_branch = item.git_current_branch
+  				@current_branch = 'master'
+  				#@current_branch = item.git_current_branch
   			 	#the effort here is to only set instance variable when absolutely necessary
-  				if @current_branch != @ed
-  					@item = item
+  				#if @current_branch != @ed
+  				#	@item = item
+  				#end
+  			else
+  				@current_branch = 'master'
   			end
-  		end
 	  end
 	  ## Begin file path methods
 	  # Returns the absolute path of the file requested
@@ -152,23 +155,23 @@ module Lbp
 		def transform(xsltfile, xslt_param_array=[])
 
   		#xmlfile = self.file_path
-			if @current_branch != @ed && @filehash[:source] == 'local'
-      	@item.git_checkout(@ed)
-      		doc = xslt_transform(self.nokogiri, xsltfile, xslt_param_array)
-      	@item.git_checkout(@current_branch);
-      else
+			#if @current_branch != @ed && @filehash[:source] == 'local'
+      #	@item.git_checkout(@ed)
+      #		doc = xslt_transform(self.nokogiri, xsltfile, xslt_param_array)
+      #	@item.git_checkout(@current_branch);
+      #else
       	doc = xslt_transform(self.nokogiri, xsltfile, xslt_param_array)
-      end
+      #end
 		end
 		def transform_apply(xsltfile, xslt_param_array=[])
 			#xmlfile = self.file_path
-			if @current_branch != @ed && @filehash[:source] == 'local'
-      	@item.git_checkout(@ed)
-      		doc = xslt_apply_to(self.nokogiri, xsltfile, xslt_param_array)
-      	@item.git_checkout(@current_branch);
-      else
+			#if @current_branch != @ed && @filehash[:source] == 'local'
+      #	@item.git_checkout(@ed)
+      #		doc = xslt_apply_to(self.nokogiri, xsltfile, xslt_param_array)
+      #	@item.git_checkout(@current_branch);
+      #else
       	doc = xslt_apply_to(self.nokogiri, xsltfile, xslt_param_array)
-      end
+      #end
 		end
 
 		def transform_main_view(xslt_param_array=[])
@@ -235,30 +238,30 @@ module Lbp
 			return wf.to_h
     end
     def number_of_body_paragraphs
-			if @current_branch != @ed && @filehash[:source] == 'local'
-  				@item.git_checkout(@ed)
-      			xmldoc = self.nokogiri
-						p = xmldoc.xpath("//tei:body//tei:p", 'tei' => 'http://www.tei-c.org/ns/1.0')
-      		@item.git_checkout(@current_branch);
-      else
+			#if @current_branch != @ed && @filehash[:source] == 'local'
+  		#		@item.git_checkout(@ed)
+      #			xmldoc = self.nokogiri
+			#			p = xmldoc.xpath("//tei:body//tei:p", 'tei' => 'http://www.tei-c.org/ns/1.0')
+      #		@item.git_checkout(@current_branch);
+      #else
       		xmldoc = self.nokogiri
 					p = xmldoc.xpath("//tei:body//tei:p", 'tei' => 'http://www.tei-c.org/ns/1.0')
-      end
+      #end
       return p.count
 		end
 		def paragraphs
 			## it's not good to keep reusing this, git check out condition. Need a better solution
-			if @current_branch != @ed && @filehash[:source] == 'local'
-  				@item.git_checkout(@ed)
-      			xmldoc = self.nokogiri
-						paragraphs = xmldoc.xpath("//tei:body//tei:p/@xml:id", 'tei' => 'http://www.tei-c.org/ns/1.0')
-      		@item.git_checkout(@current_branch);
-      else
+			#if @current_branch != @ed && @filehash[:source] == 'local'
+  		#		@item.git_checkout(@ed)
+      #			xmldoc = self.nokogiri
+			#			paragraphs = xmldoc.xpath("//tei:body//tei:p/@xml:id", 'tei' => 'http://www.tei-c.org/ns/1.0')
+      #		@item.git_checkout(@current_branch);
+      #else
       		xmldoc = self.nokogiri
 					paragraphs = xmldoc.xpath("//tei:body//tei:p/@xml:id", 'tei' => 'http://www.tei-c.org/ns/1.0')
-      end
+      #end
 
-      paragraph_objects = paragraphs.map do |p| Paragraph.new(@confighash, @filehash, p.value) end
+      paragraph_objects = paragraphs.map { |p| Paragraph.new(@confighash, @filehash, p.value) }
       
       return paragraph_objects
 		end

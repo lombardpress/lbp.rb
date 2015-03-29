@@ -30,6 +30,7 @@ describe 'item object' do
 		result = $itemobject.is_git_dir
 		result.should == true 
 	end
+=begin	
 	it 'should return an array of branches' do
 		result = $itemobject.git_branches
 		expect(result).to be_instance_of(Array) 
@@ -45,7 +46,7 @@ describe 'item object' do
 		expect(result).to be_instance_of(String) 
 		#expect(result).to eq("master")
 	end
-	
+=end
 
 	it 'should return the sequence number of the item' do 
 		result = $itemobject.order_number
@@ -58,7 +59,7 @@ describe 'item object' do
 	end
 	it 'should return the url id of the previous item' do 
 		result = $itemobject.previous
-		binding.pry
+		
 		# this is a bad test -- the result could also be nil
 		expect(result).to be_kind_of(String)
 	end

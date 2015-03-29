@@ -41,6 +41,7 @@ module Lbp
   			false
   		end
   	end
+=begin  	
   	def git_branches
   		repo = Rugged::Repository.new(@file_dir)
   		branches = repo.branches.map { |branch| branch.name }
@@ -63,10 +64,11 @@ module Lbp
   		repo = Rugged::Repository.new(@file_dir)
   		repo.checkout(branch)
 		end
+=end		
 		def git_construct_remote_path
 				remote_path = "https://#{@confighash[:git_repo]}#{@fs}.git";
 		end
-		
+=begin		
 		def git_username_password_credentials(username, password) 
 			Rugged::Credentials::UserPassword
 			credentials = Rugged::Credentials::UserPassword.new(:username=>username, :password=>password)
@@ -111,6 +113,8 @@ module Lbp
 			FileUtils.rm_rf @file_dir
 		end
 		### End Git Methods ###
+
+=end		
 		### Begin Order Info ##
 
 		def next
