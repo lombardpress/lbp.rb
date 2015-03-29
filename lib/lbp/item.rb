@@ -1,5 +1,5 @@
 require 'nokogiri'
-require 'rugged'
+#require 'rugged'
 require 'lbp/functions'
 require 'lbp/transcription'
 require 'openssl'
