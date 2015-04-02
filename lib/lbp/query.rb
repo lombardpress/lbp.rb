@@ -88,13 +88,13 @@ module Lbp
 			item_url = "<#{item_url}>"
 				query = "#{@prefixes}
 				
-					SELECT ?item ?quote ?quoteText ?quoteCitation 
+					SELECT ?item ?quote ?quoteText ?quoteCitation
 		      {
 		        #{item_url} <http://scta.info/property/quotes> ?quote .
 		        ?quote <http://scta.info/property/quotation> ?quoteText .
-		        
+		        ?quote <http://scta.info/property/citation> ?quoteCitation .
 		       }
-		       ORDER BY ?quoteTitle
+		       ORDER BY ?quoteText
 		       "
 		    result = self.query(query)
 			end
