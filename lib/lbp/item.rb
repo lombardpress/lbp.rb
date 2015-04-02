@@ -165,6 +165,21 @@ module Lbp
 			return filehash
     end
     
+    ## transcription methods
+
+    def transcription?(slug)
+    	if slug == 'critical'
+    		test_url = RDF::URI.new("http://scta.info/text/#{@commentary_id}/transcription/#{fs}")
+    	else
+    		test_url = RDF::URI.new("http://scta.info/text/#{@commentary_id}/transcription/#{slug}_#{fs}")
+    	end
+    	
+    	transcription_array = @data.query(:predicate => RDF::URI.new("http://scta.info/property/hasTranscription"))
+    	test_array = transcription_array.map {|statement| statement.object}
+    	return test_array.include? test_url
+    	
+		end
+
     def transcription(source: 'local', wit: 'critical', ed: 'master')
     	filehash = self.file_hash(source: source, wit: wit, ed: ed)
     	transcr = Transcription.new(@confighash, filehash)

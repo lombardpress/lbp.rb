@@ -1,4 +1,3 @@
-
 require 'sparql'
 
 module Lbp
@@ -70,5 +69,34 @@ module Lbp
 			result = self.query(query)	        
 			
 		end
+		def names(item_url)
+		item_url = "<#{item_url}>"
+			query = "#{@prefixes}
+			
+				SELECT ?item ?name ?nameTitle ?mentioningItem
+	      {
+	        #{item_url} <http://scta.info/property/mentions> ?name .
+	        ?name <http://purl.org/dc/elements/1.1/title> ?nameTitle  .
+	      }
+	       	ORDER BY ?nameTitle
+	       
+	       "
+	    result = self.query(query)
+		end
+
+		def quotes(item_url)
+			item_url = "<#{item_url}>"
+				query = "#{@prefixes}
+				
+					SELECT ?item ?quote ?quoteText ?quoteCitation 
+		      {
+		        #{item_url} <http://scta.info/property/quotes> ?quote .
+		        ?quote <http://scta.info/property/quotation> ?quoteText .
+		        
+		       }
+		       ORDER BY ?quoteTitle
+		       "
+		    result = self.query(query)
+			end
 	end
 end

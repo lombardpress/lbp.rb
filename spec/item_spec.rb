@@ -65,7 +65,10 @@ describe 'item object' do
 	end
 
 
-
+	it 'should return true or false if item object hasTranscription' do 
+		result = $itemobject.transcription?("reims")
+		result.should == true || false
+	end
 
 	it 'should return a transcription object' do 
 		result = $itemobject.transcription
