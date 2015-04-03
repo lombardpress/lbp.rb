@@ -33,5 +33,9 @@ describe 'paragraph object' do
 		result = $paragraph.transform_plain_text
 		expect(result).to be_instance_of(Nokogiri::XML::NodeSet)
 	end
+	it 'it should return the paragragraph as TEI XML an nokogiri node set' do 
+		result = $paragraph.xml
+		expect(result).to be_instance_of(Nokogiri::XML::NodeSet)
+	end
 	
 end 

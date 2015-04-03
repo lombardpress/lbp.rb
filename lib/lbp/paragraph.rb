@@ -40,6 +40,11 @@ module Lbp
 				return Paragraph.new(@confighash, @filehash, previouspid.text)
       end
 	  end
+	  def xml
+	  	result = Transcription.new(@confighash, @filehash).nokogiri
+	  	p = result.xpath("//tei:p[@xml:id='#{@pid}']", 'tei' => 'http://www.tei-c.org/ns/1.0')
+	  end
+
 	  def transform(xsltfile, xslt_param_array=[])
 	  	result = Transcription.new(@confighash, @filehash).transform(xsltfile, xslt_param_array)
 			p = result.xpath("//p[@id='#{@pid}']")
@@ -53,6 +58,7 @@ module Lbp
 			p = result.xpath("//p[@id='#{@pid}']")
 			return p
 		end
+
 		def word_count
     	plaintext = self.transform_plain_text
     	size = plaintext.text.split.size
