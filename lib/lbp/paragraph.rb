@@ -40,6 +40,13 @@ module Lbp
 				return Paragraph.new(@confighash, @filehash, previouspid.text)
       end
 	  end
+		def number_of_zones
+			xmlobject = Transcription.new(@confighash, @filehash).nokogiri
+			pid_with_hash = "#" + @pid
+			result = xmlobject.xpath("/tei:TEI/tei:facsimile//tei:surface/tei:zone[@start='#{pid_with_hash}']", 'tei' => 'http://www.tei-c.org/ns/1.0')
+			return result.count
+		end
+
 	  def xml
 	  	result = Transcription.new(@confighash, @filehash).nokogiri
 	  	p = result.xpath("//tei:p[@xml:id='#{@pid}']", 'tei' => 'http://www.tei-c.org/ns/1.0')
