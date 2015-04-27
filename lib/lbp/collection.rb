@@ -7,22 +7,26 @@ module Lbp
 		def initialize(confighash, url)
 			
 			@url = url
-			@resource = RDF::Resource.new(RDF::URI.new(@url))
-			@graph = RDF::Graph.load(@resource)
-      @data = @graph.data
-
-      @confighash = confighash
+			@confighash = confighash
+			
+			@query = Query.new();
+			@results = @query.subject("<" + url + ">");
+      
 		end
 
 		def title
-			title = @data.query(:predicate => RDF::DC11.title).first.object.to_s
+			#title = @data.query(:predicate => RDF::DC11.title).first.object.to_s
+			title = @results.dup.filter(:p => RDF::URI(RDF::DC11.title)).first[:o].to_s
+			
 		end
 
 		def item_urls
+			
 			items = []
-			results = @data.query(:predicate => RDF::URI.new("http://scta.info/property/hasItem"))
+			#results = @data.query(:predicate => RDF::URI.new("http://scta.info/property/hasItem"))
+			results = @results.dup.filter(:p => RDF::URI("http://scta.info/property/hasItem"))
 			results.each do |item| 
-				items << item.object.to_s
+				items << item[:o].to_s
 			end
 			return items
 		end
@@ -35,9 +39,10 @@ module Lbp
 
 		def part_urls
 			parts = []
-			results = @data.query(:predicate => RDF::DC.hasPart)
+			#results = @data.query(:predicate => RDF::DC.hasPart)
+			results = @results.dup.filter(:p => RDF::URI(RDF::DC.hasPart))
 			results.each do |part| 
-				parts << part.object.to_s
+				parts << part[:o].to_s
 			end
 			return parts
 		end

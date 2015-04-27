@@ -18,8 +18,8 @@ $confighash = {local_texts_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-proj
 		
 
 
-#filehash = {path: "https://bitbucket.org/jeffreycwitt/lectio1/raw/master/lectio1.xml", fs: "lectio1", ed: "master", type: "critical", source: "origin"}
-$filehash = {path: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/GitTextfiles/lectio1/lectio1.xml", fs: "lectio1", ed: "master", type: "critical", source: "local", commentar_id: "plaoulcommentary"}
+#$filehash = {path: "https://bitbucket.org/jeffreycwitt/lectio1/raw/master/reims_lectio1.xml", fs: "lectio1", ed: "master", type: "documentary", source: "origin"}
+$filehash = {path: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/GitTextfiles/lectio1/lectio1.xml", fs: "lectio1", ed: "master", type: "critical", source: "local", commentary_id: "plaoulcommentary"}
 
 $projectfile = "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/Conf/projectdata.xml"
 

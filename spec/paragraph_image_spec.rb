@@ -4,13 +4,12 @@ require 'pry'
 require 'nokogiri'
 
 describe 'paragraph object' do
-		require_relative "config_globals"
-		paragraph1 = "l7-cmisir"
-		#paragraph1 = "l7-seqgpe"
-		position = 2
-
-		filehash = {path: "https://bitbucket.org/jeffreycwitt/lectio7/raw/master/sorb_lectio7.xml", fs: "lectio7", ed: "master", type: "documentary", source: "origin", commentar_id: "plaoulcommentary"}		
-		$paragraph_image = Lbp::ParagraphImage.new($confighash, filehash, paragraph1, position)
+	require_relative "config_globals"
+	paragraph1 = "l7-cmisir"
+	#paragraph1 = "l7-seqgpe"
+	position = 2
+	paragraphurl = "http://scta.info/text/plaoulcommentary/transcription/sorb_lectio7/paragraph/#{paragraph1}"
+	$paragraph_image = Lbp::ParagraphImage.new(paragraphurl, position)
 
 	it 'should return the ulx for the Paragraph Image object' do 
 		result = $paragraph_image.ulx

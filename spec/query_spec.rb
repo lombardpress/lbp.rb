@@ -11,7 +11,6 @@ describe 'query object' do
 
 	it "should return result object from sparqle query" do 
 		result = $query_obj.collection_query("<" + $commentary_url + ">")
-		binding.pry
 		expect(result).to be_kind_of(Array)
 	end
 

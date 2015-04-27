@@ -15,11 +15,11 @@ describe 'collection object' do
  	end
  	it 'should get the title of the commentary as string' do 
  		result = $collection_obj.title
-		expect(result).to be_kind_of(String)
+ 		expect(result).to be_kind_of(String)
  	end
  	it 'should return an array of item urls' do 
  		result = $collection_obj.item_urls
-		expect(result).to be_kind_of(Array)
+ 		expect(result).to be_kind_of(Array)
  	end
  	it 'should return the number of items' do 
  		result = $collection_obj.item_count

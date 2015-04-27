@@ -16,11 +16,18 @@ module Lbp
 			@url = url
 			@fs = url.split('/').last
 			@commentary_id = url.split('/')[4]
-			@resource = RDF::Resource.new(RDF::URI.new(@url))
-			
-			@graph = RDF::Graph.load(@resource)
+
+#new insert 
+			@query = Query.new();
+			@results = @query.subject("<" + url + ">");
+#new insert
+
+#deletion
+			#@resource = RDF::Resource.new(RDF::URI.new(@url))
+			#@graph = RDF::Graph.load(@resource)
+      #@data = @graph.data
+#deletion
       
-      @data = @graph.data
       @confighash = confighash
       @texts_dir = @confighash[:local_texts_dir]
 			@file_dir = @confighash[:local_texts_dir] + @fs + "/"
@@ -28,7 +35,8 @@ module Lbp
 	  end
 	  ### Item Header Extraction and Metadata Methods
 		def title
-			title = @data.query(:predicate => RDF::DC11.title).first.object.to_s
+			#title = @data.query(:predicate => RDF::DC11.title).first.object.to_s
+			title = @results.dup.filter(:p => RDF::URI(RDF::DC11.title)).first[:o].to_s
 		end
 
    	### Begin GIT functions ###
@@ -118,16 +126,21 @@ module Lbp
 		### Begin Order Info ##
 
 		def next
-			unless @data.query(:predicate => RDF::URI.new("http://scta.info/property/next")) == nil
-				next_item = @data.query(:predicate => RDF::URI.new("http://scta.info/property/next")).first.object.to_s
+
+			#unless @data.query(:predicate => RDF::URI.new("http://scta.info/property/next")) == nil
+			unless @results.dup.filter(:p => RDF::URI("http://scta.info/property/next")) == nil
+				#next_item = @data.query(:predicate => RDF::URI.new("http://scta.info/property/next")).first.object.to_s
+				next_item = @results.dup.filter(:p => RDF::URI("http://scta.info/property/next")).first[:o].to_s
 			else
 				next_item = null
 			end
 			return next_item
 		end
 		def previous
-			unless @data.query(:predicate => RDF::URI.new("http://scta.info/property/previous")) == nil
-				previous_item = @data.query(:predicate => RDF::URI.new("http://scta.info/property/previous")).first.object.to_s
+			#unless @data.query(:predicate => RDF::URI.new("http://scta.info/property/previous")) == nil
+			unless @results.dup.filter(:p => RDF::URI("http://scta.info/property/previous")) == nil
+				#previous_item = @data.query(:predicate => RDF::URI.new("http://scta.info/property/previous")).first.object.to_s
+				previous_item = @results.dup.filter(:p => RDF::URI("http://scta.info/property/previous")).first[:o].to_s
 			else
 				previous_item = null
 			end
@@ -135,11 +148,14 @@ module Lbp
 		end
 
 		def order_number
-			ordernumber = @data.query(:predicate => RDF::URI.new("http://scta.info/property/totalOrderNumber")).first.object.to_s.to_i
+			#ordernumber = @data.query(:predicate => RDF::URI.new("http://scta.info/property/totalOrderNumber")).first.object.to_s.to_i
+			ordernumber = @results.dup.filter(:p => RDF::URI("http://scta.info/property/totalOrderNumber")).first[:o].to_s.to_i
+
 		end
 
 		def status
-			status = @data.query(:predicate => RDF::URI.new("http://scta.info/property/status")).first.object.to_s
+			#status = @data.query(:predicate => RDF::URI.new("http://scta.info/property/status")).first.object.to_s
+			status = @results.dup.filter(:p => RDF::URI("http://scta.info/property/status")).first[:o].to_s
 		end
 				
 		def file_path(source: 'local', wit: 'critical', ed: 'master')
@@ -174,8 +190,10 @@ module Lbp
     		test_url = RDF::URI.new("http://scta.info/text/#{@commentary_id}/transcription/#{slug}_#{fs}")
     	end
     	
-    	transcription_array = @data.query(:predicate => RDF::URI.new("http://scta.info/property/hasTranscription"))
-    	test_array = transcription_array.map {|statement| statement.object}
+    	#transcription_array = @data.query(:predicate => RDF::URI.new("http://scta.info/property/hasTranscription"))
+    	transcription_array = @results.dup.filter(:p => RDF::URI.new("http://scta.info/property/hasTranscription"))
+
+    	test_array = transcription_array.map {|statement| statement[:o]}
     	return test_array.include? test_url
     	
 		end
@@ -187,9 +205,10 @@ module Lbp
 
 		def transcription_slugs(source: 'local', ed: 'master')
 			slug_array = []
-			transcriptions = @data.query(:predicate => RDF::URI.new("http://scta.info/property/hasTranscription"))
+			#transcriptions = @data.query(:predicate => RDF::URI.new("http://scta.info/property/hasTranscription"))
+			transcriptions = @results.dup.filter(:p => RDF::URI.new("http://scta.info/property/hasTranscription"))
 			transcriptions.each do |transcription|
-				slug_array << transcription.object.to_s.split("/").last
+				slug_array << transcription[:o].to_s.split("/").last
 			end
 			return slug_array
 		end
