@@ -41,7 +41,7 @@ module Lbp
 
    	### Begin GIT functions ###
   	def is_git_dir
-
+  		
   		gitpath = @file_dir + ".git"
   		if File.directory?(gitpath) 
   			true
@@ -167,7 +167,12 @@ module Lbp
        	end
       else
       	if source == "origin"
-					file_path = "https://#{@confighash[:git_repo]}#{@fs}/raw/#{ed}/#{wit}_#{@fs}.xml"
+      		if @confighash[:git_repo] == 'bitbucket.org'
+      			fs = @fs.downcase
+      		else
+      			fs = @fs
+      		end
+					file_path = "https://#{@confighash[:git_repo]}#{fs}/raw/#{ed}/#{wit}_#{fs}.xml"
 				else
     			file_path = @file_dir + wit + "_" + @fs + ".xml"
     		end
