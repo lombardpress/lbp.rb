@@ -53,15 +53,20 @@ describe 'item object' do
 		expect(result).to be_kind_of(Integer)
 	end
 	it 'should return the url id of the next item' do 
-		result = $itemobject.next
-		# this is a bad test -- the result could also be nil
+		result = Lbp::Item.new($confighash, "http://scta.info/text/plaoulcommentary/item/lectio1").next
 		expect(result).to be_kind_of(String)
 	end
+	it 'should return the nil for item that does not have a previous' do 
+		result = Lbp::Item.new($confighash, "http://scta.info/text/plaoulcommentary/item/lectio134").next
+		expect(result).to be_nil
+	end
 	it 'should return the url id of the previous item' do 
-		result = $itemobject.previous
-		
-		# this is a bad test -- the result could also be nil
+		result = Lbp::Item.new($confighash, "http://scta.info/text/plaoulcommentary/item/lectio1").previous
 		expect(result).to be_kind_of(String)
+	end
+	it 'should return the nil for item that does not have a previous' do 
+		result = Lbp::Item.new($confighash, "http://scta.info/text/plaoulcommentary/item/principiumI").previous
+		expect(result).to be_nil
 	end
 
 

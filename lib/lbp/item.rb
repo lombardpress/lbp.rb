@@ -128,21 +128,21 @@ module Lbp
 		def next
 
 			#unless @data.query(:predicate => RDF::URI.new("http://scta.info/property/next")) == nil
-			unless @results.dup.filter(:p => RDF::URI("http://scta.info/property/next")) == nil
+			unless @results.dup.filter(:p => RDF::URI("http://scta.info/property/next")).count == 0
 				#next_item = @data.query(:predicate => RDF::URI.new("http://scta.info/property/next")).first.object.to_s
 				next_item = @results.dup.filter(:p => RDF::URI("http://scta.info/property/next")).first[:o].to_s
 			else
-				next_item = null
+				next_item = nil
 			end
 			return next_item
 		end
 		def previous
 			#unless @data.query(:predicate => RDF::URI.new("http://scta.info/property/previous")) == nil
-			unless @results.dup.filter(:p => RDF::URI("http://scta.info/property/previous")) == nil
+			unless @results.dup.filter(:p => RDF::URI("http://scta.info/property/previous")).count == 0
 				#previous_item = @data.query(:predicate => RDF::URI.new("http://scta.info/property/previous")).first.object.to_s
 				previous_item = @results.dup.filter(:p => RDF::URI("http://scta.info/property/previous")).first[:o].to_s
 			else
-				previous_item = null
+				previous_item = nil
 			end
 			return previous_item
 		end
@@ -159,20 +159,20 @@ module Lbp
 		end
 				
 		def file_path(source: 'local', wit: 'critical', ed: 'master')
-			#conditional to downcase fs since bitbukcet gives a 404 error if not using lowercase
-			if @confighash[:git_repo] == 'bitbucket.org'
+			#conditional to downcase fs since bitbukcet gives a 404 error if not using lowercase for repo name
+			if @confighash[:git_repo].include? 'bitbucket.org'
       			origin_fs = @fs.downcase
       end
 
 			if wit == 'critical'
 				if source == "origin"
-					file_path = "https://#{@confighash[:git_repo]}#{origin_fs}/raw/#{ed}/#{origin_fs}.xml"
+					file_path = "https://#{@confighash[:git_repo]}#{origin_fs}/raw/#{ed}/#{@fs}.xml"
 				else
        		file_path = @file_dir + @fs + ".xml"
        	end
       else
       	if source == "origin"
-      		file_path = "https://#{@confighash[:git_repo]}#{origin_fs}/raw/#{ed}/#{wit}_#{origin_fs}.xml"
+      		file_path = "https://#{@confighash[:git_repo]}#{origin_fs}/raw/#{ed}/#{wit}_#{@fs}.xml"
 				else
     			file_path = @file_dir + wit + "_" + @fs + ".xml"
     		end
