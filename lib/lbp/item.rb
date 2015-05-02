@@ -159,20 +159,20 @@ module Lbp
 		end
 				
 		def file_path(source: 'local', wit: 'critical', ed: 'master')
+			#conditional to downcase fs since bitbukcet gives a 404 error if not using lowercase
+			if @confighash[:git_repo] == 'bitbucket.org'
+      			origin_fs = @fs.downcase
+      end
+
 			if wit == 'critical'
 				if source == "origin"
-					file_path = "https://#{@confighash[:git_repo]}#{@fs}/raw/#{ed}/#{@fs}.xml"
+					file_path = "https://#{@confighash[:git_repo]}#{origin_fs}/raw/#{ed}/#{origin_fs}.xml"
 				else
        		file_path = @file_dir + @fs + ".xml"
        	end
       else
       	if source == "origin"
-      		if @confighash[:git_repo] == 'bitbucket.org'
-      			fs = @fs.downcase
-      		else
-      			fs = @fs
-      		end
-					file_path = "https://#{@confighash[:git_repo]}#{fs}/raw/#{ed}/#{wit}_#{fs}.xml"
+      		file_path = "https://#{@confighash[:git_repo]}#{origin_fs}/raw/#{ed}/#{wit}_#{origin_fs}.xml"
 				else
     			file_path = @file_dir + wit + "_" + @fs + ".xml"
     		end
