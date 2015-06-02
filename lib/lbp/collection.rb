@@ -17,7 +17,16 @@ module Lbp
 		def title
 			#title = @data.query(:predicate => RDF::DC11.title).first.object.to_s
 			title = @results.dup.filter(:p => RDF::URI(RDF::DC11.title)).first[:o].to_s
-			
+		end
+		def slug()
+			slug = @results.dup.filter(:p => RDF::URI("http://scta.info/property/slug")).first[:o].to_s
+			#query = "SELECT ?slug {
+			#	<#{@url}> <http://scta.info/property/slug> ?slug
+			#}"
+			#query_obj = Query.new
+			#results = query_obj.query(query)
+			#slug = results.first[:slug].to_s
+			return slug
 		end
 
 		def item_urls

@@ -29,5 +29,9 @@ describe 'collection object' do
  		result = $collection_obj.part_urls
  		expect(result).to be_kind_of(Array)
  	end
+ 	it 'should return commentary slug' do 
+ 		result = $collection_obj.slug
+ 		expect(result).to be_kind_of(String)
+ 	end
 
 end
