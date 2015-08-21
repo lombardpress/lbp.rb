@@ -59,7 +59,22 @@ module Lbp
 
 
 		def abbreviates
-    	abbreviates = @results.dup.filter(:p => RDF::URI("http://scta.info/property/abbreviates")).first[:o].to_s
+    	abbreviates = @results.dup.filter(:p => RDF::URI("http://scta.info/property/abbreviates"))
+    end
+    def abbreviatedBy
+    	abbreviatedBy = @results.dup.filter(:p => RDF::URI("http://scta.info/property/abbreviatedBy"))
+    end
+    def references
+    	references = @results.dup.filter(:p => RDF::URI("http://scta.info/property/references"))
+    end
+    def copies
+    	copies = @results.dup.filter(:p => RDF::URI("http://scta.info/property/copies"))
+    end
+    def mentions
+    	mentions = @results.dup.filter(:p => RDF::URI("http://scta.info/property/quotes"))
+    end
+    def quotes
+    	quotes = @results.dup.filter(:p => RDF::URI("http://scta.info/property/quotes"))
     end
 	
     ## transcription
@@ -67,5 +82,6 @@ module Lbp
     def transcriptions
     	transcriptions = @results.dup.filter(:p => RDF::URI("http://scta.info/property/hasTranscription"))
     end
+    
 	end
 end
