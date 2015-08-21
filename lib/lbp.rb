@@ -8,6 +8,7 @@ require "lbp/version"
 	require 'lbp/collection'
   require 'lbp/query'
   require 'lbp/paragraph_image'
+  require 'lbp/paragraph_exemplar'
   
 
 
