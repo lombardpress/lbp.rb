@@ -9,18 +9,20 @@ require 'rdf/ntriples'
 
 module Lbp
 	class ParagraphExemplar 
-		attr_reader :url, :pid, :cid
+		attr_reader :url, :pid, :itemid, :cid
 		
 		def initialize(confighash, url)
 			
 			@url = url
 			@pid = url.split('/').last
+
 			@cid = url.split('/')[4]
 
-#new insert 
 			@query = Query.new();
 			@results = @query.subject("<" + url + ">");
-#new insert
+
+			@itemid = @results.dup.filter(:p => RDF::URI("http://purl.org/dc/terms/isPartOf")).first[:o].to_s.split("/").last
+
 
 	  end
 	  ### Item Header Extraction and Metadata Methods

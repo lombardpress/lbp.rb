@@ -230,5 +230,18 @@ module Lbp
 			return transcription_array
 		end
 
+		def canonical_transcription
+			canonical_transcription = @results.dup.filter(:p => RDF::URI("http://scta.info/property/hasCanonicalTranscription")).first[:o].to_s
+		end
+		def canonical_transcription_slug
+			canonical_transcription = self.canonical_transcription
+			full_slug = canonical_transcription.split("/").last
+			if full_slug.include? "_"
+				slug = full_slug.split("_").first
+			else
+				slug = "critical"
+			end
+			return slug
+		end
 	end
 end
