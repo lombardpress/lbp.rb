@@ -91,5 +91,10 @@ describe 'item object' do
 		result = $itemobject.transcriptions
 		expect(result).to be_kind_of(Array)
 	end
+	it 'should return an string of url id' do 
+		result = $itemobject.canonical_transcription
+		expect(result).to be_kind_of(String)
+	end
+
 
 end
