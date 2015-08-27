@@ -3,6 +3,7 @@ require 'nokogiri'
 require 'lbp/functions'
 
 module Lbp
+	#Paragraph should work for all divisions and paragraphs within item
 	class Paragraph
 		attr_reader :pid 
 		def initialize(confighash, filehash, pid)
@@ -10,30 +11,37 @@ module Lbp
 			@confighash = confighash
 			@filehash = filehash
 			@pid = pid
+			@element = self.element_name
 			
+	  end
+
+	  def element_name
+	  	transcr = Transcription.new(@confighash, @filehash)
+	  	xmlobject = transcr.nokogiri
+	  	element_name = xmlobject.xpath("name(//node()[@xml:id='#{@pid}'])", 'tei' => 'http://www.tei-c.org/ns/1.0')
 	  end
 
 	  def number
 	  	transcr = Transcription.new(@confighash, @filehash)
 	  	totalparagraphs = transcr.number_of_body_paragraphs
 	  	xmlobject = transcr.nokogiri
-	  	paragraphs_following = xmlobject.xpath("//tei:body//tei:p[preceding::tei:p[@xml:id='#{@pid}']]", 'tei' => 'http://www.tei-c.org/ns/1.0').count
+	  	paragraphs_following = xmlobject.xpath("//tei:body//tei:#{@element}[preceding::tei:#{@element}[@xml:id='#{@pid}']]", 'tei' => 'http://www.tei-c.org/ns/1.0').count
 	  	paragraph_number = totalparagraphs - paragraphs_following
 	  	
 			return paragraph_number
 	  end
 	  def next
 	  	xmlobject = Transcription.new(@confighash, @filehash).nokogiri
-	  	nextpid = xmlobject.xpath("//tei:p[@xml:id='#{@pid}']/following::tei:p[1]/@xml:id", 'tei' => 'http://www.tei-c.org/ns/1.0')
+	  	nextpid = xmlobject.xpath("//tei:#{@element}[@xml:id='#{@pid}']/following::tei:#{@element}[1]/@xml:id", 'tei' => 'http://www.tei-c.org/ns/1.0')
 			if nextpid.text == nil
         return nil
       else
-				return Paragraph.new(@confighahs, @filehash, nextpid.text)
+				return Paragraph.new(@confighash, @filehash, nextpid.text)
       end
 	  end
 	  def previous
 	  	xmlobject = Transcription.new(@confighash, @filehash).nokogiri
-	  	previouspid = xmlobject.xpath("//tei:p[@xml:id='#{@pid}']/preceding::tei:p[1]/@xml:id", 'tei' => 'http://www.tei-c.org/ns/1.0')
+	  	previouspid = xmlobject.xpath("//tei:#{@element}[@xml:id='#{@pid}']/preceding::tei:#{@element}[1]/@xml:id", 'tei' => 'http://www.tei-c.org/ns/1.0')
 	  	if previouspid.empty?
         return nil
       else
@@ -49,12 +57,12 @@ module Lbp
 
 	  def xml
 	  	result = Transcription.new(@confighash, @filehash).nokogiri
-	  	p = result.xpath("//tei:p[@xml:id='#{@pid}']", 'tei' => 'http://www.tei-c.org/ns/1.0')
+	  	p = result.xpath("//tei:#{@element}[@xml:id='#{@pid}']", 'tei' => 'http://www.tei-c.org/ns/1.0')
 	  end
 
 	  def transform(xsltfile, xslt_param_array=[])
 	  	result = Transcription.new(@confighash, @filehash).transform(xsltfile, xslt_param_array)
-			p = result.xpath("//p[@id='#{@pid}']")
+			p = result.xpath("//#{@element}[@id='#{@pid}']")
 			return p
 		end
 		def transform_plain_text(xslt_param_array=[])
@@ -62,7 +70,7 @@ module Lbp
 			# because we still the basic paragraph elements in order to select the desired paragraph
 			result = Transcription.new(@confighash, @filehash).transform_clean_nokogiri(xslt_param_array)
 			
-			p = result.xpath("//p[@id='#{@pid}']")
+			p = result.xpath("//#{@element}[@id='#{@pid}']")
 			return p
 		end
 

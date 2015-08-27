@@ -8,6 +8,8 @@ require 'rdf/rdfxml'
 require 'rdf/ntriples'
 
 module Lbp
+	# ParagraphExemplar works (mostly) for all transcriptions divisions and paragraphs
+	#it should eventaully be named to DivisionExemplar
 	class ParagraphExemplar 
 		attr_reader :url, :pid, :itemid, :cid
 		
@@ -73,7 +75,7 @@ module Lbp
     	copies = @results.dup.filter(:p => RDF::URI("http://scta.info/property/copies"))
     end
     def mentions
-    	mentions = @results.dup.filter(:p => RDF::URI("http://scta.info/property/quotes"))
+    	mentions = @results.dup.filter(:p => RDF::URI("http://scta.info/property/mentions"))
     end
     def quotes
     	quotes = @results.dup.filter(:p => RDF::URI("http://scta.info/property/quotes"))

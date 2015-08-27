@@ -37,5 +37,9 @@ describe 'paragraph object' do
 		result = $paragraph.xml
 		expect(result).to be_instance_of(Nokogiri::XML::NodeSet)
 	end
+	it 'it should return element name of element with xmlid' do
+		result = $paragraph.element_name
+		expect(result).to be_kind_of(String)
+	end
 	
 end 
