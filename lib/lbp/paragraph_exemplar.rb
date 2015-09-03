@@ -80,8 +80,14 @@ module Lbp
     def references
     	references = @results.dup.filter(:p => RDF::URI("http://scta.info/property/references"))
     end
+    def referencedBy
+    	references = @results.dup.filter(:p => RDF::URI("http://scta.info/property/referencedBy"))
+    end
     def copies
     	copies = @results.dup.filter(:p => RDF::URI("http://scta.info/property/copies"))
+    end
+    def copiedBy
+    	copies = @results.dup.filter(:p => RDF::URI("http://scta.info/property/copiedBy"))
     end
     def mentions
     	mentions = @results.dup.filter(:p => RDF::URI("http://scta.info/property/mentions"))
