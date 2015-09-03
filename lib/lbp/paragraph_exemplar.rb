@@ -23,7 +23,12 @@ module Lbp
 			@query = Query.new();
 			@results = @query.subject("<" + url + ">");
 
-			@itemid = @results.dup.filter(:p => RDF::URI("http://purl.org/dc/terms/isPartOf")).first[:o].to_s.split("/").last
+			if self.type == "http://scta.info/resource/item"
+				@itemid = @pid
+			else
+				@itemid = @results.dup.filter(:p => RDF::URI("http://purl.org/dc/terms/isPartOf")).first[:o].to_s.split("/").last
+			end
+
 
 
 	  end
@@ -31,6 +36,10 @@ module Lbp
 		def title
 			#title = @data.query(:predicate => RDF::DC11.title).first.object.to_s
 			title = @results.dup.filter(:p => RDF::URI(RDF::DC11.title)).first[:o].to_s
+		end
+		def type 
+			type = @results.dup.filter(:p => RDF::URI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")).first[:o].to_s
+
 		end
 		
 		def next
