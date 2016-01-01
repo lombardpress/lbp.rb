@@ -6,6 +6,7 @@ require 'openssl'
 require 'rdf'
 require 'rdf/rdfxml'
 require 'rdf/ntriples'
+require 'rdf/vocab'
 
 module Lbp
 	class Item 
@@ -36,7 +37,7 @@ module Lbp
 	  ### Item Header Extraction and Metadata Methods
 		def title
 			#title = @data.query(:predicate => RDF::DC11.title).first.object.to_s
-			title = @results.dup.filter(:p => RDF::URI(RDF::DC11.title)).first[:o].to_s
+			title = @results.dup.filter(:p => RDF::URI(RDF::Vocab::DC11.title)).first[:o].to_s
 		end
 
    	### Begin GIT functions ###
@@ -157,22 +158,28 @@ module Lbp
 			#status = @data.query(:predicate => RDF::URI.new("http://scta.info/property/status")).first.object.to_s
 			status = @results.dup.filter(:p => RDF::URI("http://scta.info/property/status")).first[:o].to_s
 		end
+		def git_repo
+			#status = @data.query(:predicate => RDF::URI.new("http://scta.info/property/status")).first.object.to_s
+			git_repo = @results.dup.filter(:p => RDF::URI("http://scta.info/property/gitRepository")).first[:o].to_s
+		end
 				
 		def file_path(source: 'local', wit: 'critical', ed: 'master')
+			git_repo = self.git_repo
+			
 			#conditional to downcase fs since bitbukcet gives a 404 error if not using lowercase for repo name
-			if @confighash[:git_repo].include? 'bitbucket.org'
-      			origin_fs = @fs.downcase
-      end
+			if git_repo.include? 'bitbucket.org'
+      			git_repo = git_repo.downcase
+     		 end
 
 			if wit == 'critical'
 				if source == "origin"
-					file_path = "https://#{@confighash[:git_repo]}#{origin_fs}/raw/#{ed}/#{@fs}.xml"
+					file_path = "#{git_repo}/raw/#{ed}/#{@fs}.xml"
 				else
        		file_path = @file_dir + @fs + ".xml"
        	end
       else
       	if source == "origin"
-      		file_path = "https://#{@confighash[:git_repo]}#{origin_fs}/raw/#{ed}/#{wit}_#{@fs}.xml"
+      		file_path = "#{git_repo}/raw/#{ed}/#{wit}_#{@fs}.xml"
 				else
     			file_path = @file_dir + wit + "_" + @fs + ".xml"
     		end

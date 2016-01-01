@@ -95,6 +95,10 @@ describe 'item object' do
 		result = $itemobject.canonical_transcription
 		expect(result).to be_kind_of(String)
 	end
+	it 'should return an string of git repository or a given item' do 
+		result = $itemobject.git_repo
+		expect(result).to be_kind_of(String)
+	end
 
 
 end

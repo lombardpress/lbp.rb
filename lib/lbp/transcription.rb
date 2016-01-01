@@ -56,7 +56,18 @@ module Lbp
 	  	@filehash[:path]
 		end
 		def file
-			file = open(self.file_path, {:http_basic_authentication => [@confighash[:git_username], @confighash[:git_password]]})
+
+			file = open(self.file_path)
+			if self.file_path.include? "http://"
+				if file.status[0] = "200"
+						return  file
+				else
+					file = open(self.file_path, {:http_basic_authentication => [@confighash[:git_username], @confighash[:git_password]]})
+					return file
+				end
+			else
+				return file
+			end
 		end
 		def nokogiri
 			xmldoc = Nokogiri::XML(self.file)
