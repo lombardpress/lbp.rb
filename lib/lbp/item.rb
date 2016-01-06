@@ -169,6 +169,7 @@ module Lbp
 			#conditional to downcase fs since bitbukcet gives a 404 error if not using lowercase for repo name
 			if git_repo.include? 'bitbucket.org'
       			git_repo = git_repo.downcase
+      			git_repo = git_repo.sub("http", "https")
      		 end
 
 			if wit == 'critical'
