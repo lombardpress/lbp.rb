@@ -58,16 +58,16 @@ module Lbp
 		def file
 
 			file = open(self.file_path)
-			if self.file_path.include? "http://"
-				if file.status[0] = "200"
-						return  file
-				else
+			
+			if self.file_path.include? "https://"
+				#this is check for 200 is not working because bitbucket is redirecting to a error page 
+				# I want to check forst if the request need authentication and the
+				# only look for credentials the initial requests fails 
+				#if file.status[0] != "200"
 					file = open(self.file_path, {:http_basic_authentication => [@confighash[:git_username], @confighash[:git_password]]})
-					return file
-				end
-			else
-				return file
+				#end
 			end
+			return file
 		end
 		def nokogiri
 			xmldoc = Nokogiri::XML(self.file)

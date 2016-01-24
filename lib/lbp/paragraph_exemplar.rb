@@ -95,6 +95,9 @@ module Lbp
     def quotes
     	quotes = @results.dup.filter(:p => RDF::URI("http://scta.info/property/quotes"))
     end
+    def quotedBy
+    	quotedBy = @results.dup.filter(:p => RDF::URI("http://scta.info/property/quotedBy"))
+    end
 	
     ## transcription
 
