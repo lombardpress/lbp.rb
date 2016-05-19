@@ -71,16 +71,18 @@ module Lbp
 		def collection_query(collection_url)
 			query = "#{@prefixes}
 			
-				SELECT ?collectiontitle ?title ?item ?questiontitle ?order ?status
+				SELECT ?collectiontitle ?title ?item ?questiontitle ?order ?status ?gitRepositorys
 	      {
 	        #{collection_url} <http://scta.info/property/hasItem> ?item .
 	        #{collection_url} <http://purl.org/dc/elements/1.1/title> ?collectiontitle .
 	        ?item <http://purl.org/dc/elements/1.1/title> ?title  .
 	        ?item <http://scta.info/property/totalOrderNumber> ?order .
 	        ?item <http://scta.info/property/status> ?status .
+
 	        
 	        OPTIONAL
 	      	{
+	      	?item <http://scta.info/property/gitRepository> ?gitRepository .
 					?item <http://scta.info/property/questionTitle> ?questiontitle  .
 	      	}
 	      }
