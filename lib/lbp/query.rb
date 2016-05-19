@@ -71,7 +71,7 @@ module Lbp
 		def collection_query(collection_url)
 			query = "#{@prefixes}
 			
-				SELECT ?collectiontitle ?title ?item ?questiontitle ?order ?status ?gitRepositorys
+				SELECT ?collectiontitle ?title ?item ?questiontitle ?order ?status ?gitRepository
 	      {
 	        #{collection_url} <http://scta.info/property/hasItem> ?item .
 	        #{collection_url} <http://purl.org/dc/elements/1.1/title> ?collectiontitle .
