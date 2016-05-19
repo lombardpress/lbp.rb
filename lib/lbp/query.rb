@@ -78,12 +78,12 @@ module Lbp
 	        ?item <http://purl.org/dc/elements/1.1/title> ?title  .
 	        ?item <http://scta.info/property/totalOrderNumber> ?order .
 	        ?item <http://scta.info/property/status> ?status .
+	        ?item <http://scta.info/property/gitRepository> ?gitRepository .
 
 	        
 	        OPTIONAL
 	      	{
-	      	?item <http://scta.info/property/gitRepository> ?gitRepository .
-					?item <http://scta.info/property/questionTitle> ?questiontitle  .
+	      	?item <http://scta.info/property/questionTitle> ?questiontitle  .
 	      	}
 	      }
 	      ORDER BY ?order"
