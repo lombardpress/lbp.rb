@@ -19,8 +19,17 @@ module Lbp
 			@commentary_id = url.split('/')[4]
 
 #new insert 
-			@query = Query.new();
-			@results = @query.subject("<" + url + ">");
+			# this conditional checks to see if the URL id is given 
+			# or the shortId is given
+			# if shortId is given a slightly different query is used
+			# that should generate the same result
+			if @url.include? "http"
+				@query = Query.new();
+				@results = @query.subject("<" + @url + ">");
+			else
+				@query = Query.new();
+				@results = @query.subject_with_short_id(@url);
+			end
 #new insert
 
 #deletion

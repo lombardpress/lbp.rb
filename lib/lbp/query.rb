@@ -48,6 +48,22 @@ module Lbp
           "
       result = self.query(query)
 		end 
+		def subject_with_short_id(shortid)
+			query = "#{@prefixes}
+
+          SELECT ?p ?o ?ptype
+          {
+          ?resource <http://scta.info/property/shortId> '#{shortid}' .
+          ?resource ?p ?o .
+          OPTIONAL {
+              ?p rdfs:subPropertyOf ?ptype .
+              }
+
+          }
+          ORDER BY ?p
+          "
+      result = self.query(query)
+		end 
 
 		def zone_info(paragraphurl)
 			query = "#{@prefixes}
