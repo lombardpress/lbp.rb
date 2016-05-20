@@ -25,10 +25,11 @@ module Lbp
 			# that should generate the same result
 			if @url.include? "http"
 				@query = Query.new();
-				@results = @query.subject("<" + @url + ">");
+				@results = @query.subject("<" + @url + ">")
 			else
 				@query = Query.new();
-				@results = @query.subject_with_short_id(@url);
+				@results = @query.subject_with_short_id(@url)
+				@commentary_id = self.commentary_id
 			end
 #new insert
 
@@ -47,6 +48,10 @@ module Lbp
 		def title
 			#title = @data.query(:predicate => RDF::DC11.title).first.object.to_s
 			title = @results.dup.filter(:p => RDF::URI(RDF::Vocab::DC11.title)).first[:o].to_s
+		end
+
+		def commentary_id
+			commentary_id = @results.dup.filter(:p => RDF::URI("http://scta.info/property/isPartOfCommentary")).first[:o].to_s.split('/')[4]
 		end
 
    	### Begin GIT functions ###
