@@ -46,30 +46,30 @@ describe 'file object' do
 		expect(result).to be_kind_of(String) 
 	end
 
-# something wrong here 
-#	it 'should retrieve the edition number from TEI xml file' do 
-#		result = $fileobject_private.ed_no
-#		expect(result).to be_kind_of(String) 
-#	end
 
-#	it 'should retrieve the edition date from TEI xml file' do 
-#		result = $fileobject3.ed_date
-#		expect(result).to be_kind_of(String) 
-#	end
+	it 'should retrieve the edition number from TEI xml file' do 
+		result = $fileobject_private.ed_no
+		expect(result).to be_kind_of(String) 
+	end
 
-#	it 'should retrieve the pubdate from TEI xml file' do 
-#		result = $fileobject.pub_date
-#		expect(result).to be_kind_of(String)
-#	end
+	it 'should retrieve the edition date from TEI xml file' do 
+		result = $fileobject3.ed_date
+		expect(result).to be_kind_of(String) 
+	end
 
-#	it 'should retrieve the encoding method from TEI xml file' do 
-#		result = $fileobject.encoding_method
-#		expect(result).to be_kind_of(String) 
-#	end
-#	it 'should retrieve the encoding location from TEI xml file' do 
-#		result = $fileobject.encoding_location
-#		expect(result).to be_kind_of(String) 
-#	end
+	it 'should retrieve the pubdate from TEI xml file' do 
+		result = $fileobject.pub_date
+		expect(result).to be_kind_of(String)
+	end
+
+	# it 'should retrieve the encoding method from TEI xml file' do 
+	# 	result = $fileobject.encoding_method
+	# 	expect(result).to be_kind_of(String) 
+	# end
+	# it 'should retrieve the encoding location from TEI xml file' do 
+	# 	result = $fileobject.encoding_location
+	# 	expect(result).to be_kind_of(String) 
+	# end
 
 	it 'should transform a doc using a specified xslt file' do
 		xslt_param_array = []

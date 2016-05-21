@@ -1,6 +1,3 @@
-## this is a replacement file for transcription.rb 
-## it should be renamed to transcription.rb 
-## when the current transcription.rb file is no longer needed
 require 'nokogiri'
 #require 'lbp/functions'
 #require 'lbp/item'
@@ -37,15 +34,11 @@ module Lbp
 	  end
 		
 		def file
-			file = open(self.file_path)
-			if self.file_path.include? "https://"
-				#this is check for 200 is not working because bitbucket is redirecting to a error page 
-				# I want to check forst if the request need authentication and the
-				# only look for credentials the initial requests fails 
-				#if file.status[0] != "200"
-					file = open(self.file_path, {:http_basic_authentication => [@confighash[:git_username], @confighash[:git_password]]})
-				#end
-			end
+			#TODO: needs to be written so auth is only need after request without
+			#auth is rejected
+			
+			#file = open(self.file_path)
+			file = open(self.file_path, {:http_basic_authentication => [@confighash[:git_username], @confighash[:git_password]]})
 			return file
 		end
 		def nokogiri

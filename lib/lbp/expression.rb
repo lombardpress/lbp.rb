@@ -27,7 +27,7 @@ module Lbp
 		end
 		def next
 			unless self.results.dup.filter(:p => RDF::URI("http://scta.info/property/next")).count == 0
-				next_expression = @results.dup.filter(:p => RDF::URI("http://scta.info/property/next")).first[:o].to_s
+				next_expression = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/next")).first[:o].to_s
 			else
 				next_expression = nil
 			end
@@ -35,7 +35,7 @@ module Lbp
 		end
 		def previous
 			unless self.results.dup.filter(:p => RDF::URI("http://scta.info/property/previous")).count == 0
-				previous_expression = @results.dup.filter(:p => RDF::URI("http://scta.info/property/previous")).first[:o].to_s
+				previous_expression = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/previous")).first[:o].to_s
 			else
 				previous_expression = nil
 			end
@@ -48,5 +48,35 @@ module Lbp
 		def status
 			status = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/status")).first[:o].to_s
 		end
+
+		# connection properties
+		def abbreviates
+    	abbreviates = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/abbreviates"))
+    end
+    def abbreviatedBy
+    	abbreviatedBy = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/abbreviatedBy"))
+    end
+    def references
+    	references = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/references"))
+    end
+    def referencedBy
+    	references = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/referencedBy"))
+    end
+    def copies
+    	copies = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/copies"))
+    end
+    def copiedBy
+    	copies = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/copiedBy"))
+    end
+    def mentions
+    	mentions = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/mentions"))
+    end
+    def quotes
+    	quotes = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/quotes"))
+    end
+    def quotedBy
+    	quotedBy = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/quotedBy"))
+    end
+
 	end
 end

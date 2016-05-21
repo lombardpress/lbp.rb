@@ -1,21 +1,18 @@
 require "lbp/version"
 
-	require 'lbp/functions'
-  require 'lbp/item'
-  require 'lbp/paragraph'
-  
-  require 'lbp/transcription'
-  	
-	
-	require 'lbp/collection'
+  require 'lbp/functions'
+ 
+#still need review
   require 'lbp/query'
   require 'lbp/paragraph_image'
-  require 'lbp/paragraph_exemplar'
 
+
+#new files
   require 'lbp/resource'
   require 'lbp/expression'
-  require 'lbp/transcript'
+  require 'lbp/transcription'
   require 'lbp/file'
+  require 'lbp/file_part'
 
   
   
