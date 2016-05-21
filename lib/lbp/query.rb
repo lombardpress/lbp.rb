@@ -89,7 +89,7 @@ module Lbp
 			
 				SELECT ?collectiontitle ?title ?item ?questiontitle ?order ?status ?gitRepository
 	      {
-	        #{collection_url} <http://scta.info/property/hasItem> ?item .
+	        #{collection_url} <http://scta.info/property/hasStructureItem> ?item .
 	        #{collection_url} <http://purl.org/dc/elements/1.1/title> ?collectiontitle .
 	        ?item <http://purl.org/dc/elements/1.1/title> ?title  .
 	        ?item <http://scta.info/property/totalOrderNumber> ?order .
