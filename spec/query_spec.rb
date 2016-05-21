@@ -14,4 +14,9 @@ describe 'query object' do
 		expect(result).to be_kind_of(Array)
 	end
 
+	it "should return result object from item info query" do 
+		result = $query_obj.item_query("<http://scta.info/resource/lectio1>")
+		expect(result).to be_kind_of(Array)
+	end
+
 end

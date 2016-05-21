@@ -110,10 +110,11 @@ module Lbp
 		def item_query(item_url)
 			query = "#{@prefixes}
 
-	      SELECT ?item_title ?transcript ?transcript_title ?transcript_status ?transcript_type
+	      SELECT ?item_title ?transcript ?transcript_title ?transcript_status ?transcript_type ?manifestation
 	      {
-	      	#{item_url} <http://purl.org/dc/elements/1.1/title> ?item_title .
-	      	?manifestation <http://scta.info/property/isManifestationOf> #{item_url} .
+	      	<http://scta.info/resource/lectio1> <http://purl.org/dc/elements/1.1/title> ?item_title .
+	      	?manifestation <http://scta.info/property/isManifestationOf> <http://scta.info/resource/lectio1> . 
+
 	      	?transcript <http://scta.info/property/isTranscriptionOf> ?manifestation .
 					?transcript <http://purl.org/dc/elements/1.1/title> ?transcript_title  .
 	        ?transcript <http://scta.info/property/status> ?transcript_status .
