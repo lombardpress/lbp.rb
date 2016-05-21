@@ -113,7 +113,7 @@ module Lbp
 	      SELECT ?item_title ?transcript ?transcript_title ?transcript_status ?transcript_type
 	      {
 	      	#{item_url} <http://purl.org/dc/elements/1.1/title> ?item_title .
-	      	?manifestation <http://scta.info/property/isManifestationOf> #{item_url}
+	      	?manifestation <http://scta.info/property/isManifestationOf> #{item_url} .
 	      	?transcript <http://scta.info/property/isTranscriptionOf> ?manifestation .
 					?transcript <http://purl.org/dc/elements/1.1/title> ?transcript_title  .
 	        ?transcript <http://scta.info/property/status> ?transcript_status .
