@@ -1,11 +1,10 @@
 $confighash = {local_texts_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/GitTextfiles/", 
 							citation_lists_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/citationlists/", 
 							xslt_dirs: { "default" => {
-								critical: "/Users/JCWitt/WebPages/lbpwrapper/lombardpress/public/pl_xslt_stylesheets/",
-								documentary: "/Users/JCWitt/WebPages/lbpwrapper/lombardpress/public/pl_xslt_stylesheets/", 
-								main_view: "text_display.xsl",
-								index_view: "text_display_index.xsl", 
-								clean_view: "clean_forStatistics.xsl",
+								critical: "/Users/jcwitt/Projects/lombardpress/lombardpress2/xslt/default/critical/",
+								documentary: "/Users/jcwitt/Projects/lombardpress/lombardpress2/xslt/default/documentary/", 
+								main_view: "main_view.xsl",
+								clean_view: "clean_view.xsl",
 								plain_text: "plaintext.xsl", 
 								toc: "lectio_outline.xsl"
 									}
