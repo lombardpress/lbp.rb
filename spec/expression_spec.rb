@@ -17,11 +17,11 @@ describe 'expression object' do
 	$resource_div2 = Lbp::Expression.new("http://scta.info/resource/wdr-l1d1q1") #div url
 	
 	it 'returns array of manifestations for given expression at the structureItem level' do 
-		result = $resource_item.manifestations
+		result = $resource_item.manifestationUrls
 		expect(result).to be_kind_of(Array)
  	end
  	it 'returns array of manifestations for given expression structureBlock level' do 
-		result = $resource_para.manifestations
+		result = $resource_para.manifestationUrls
 		expect(result).to be_kind_of(Array)
  	end
  	it 'returns type of resource id from url to check inheritance from Resource Class' do 
@@ -29,11 +29,11 @@ describe 'expression object' do
 		expect(result).to be == "expression"
  	end
  	it 'returns canonical manifestation' do 
-		result = $resource_item.canonicalManifestation
+		result = $resource_item.canonicalManifestationUrl
 		expect(result).to be == "http://scta.info/resource/lectio1/critical"
  	end
  	it 'returns canonical transcription' do 
-		result = $resource_item.canonicalTranscription
+		result = $resource_item.canonicalTranscriptionUrl
 		expect(result).to be == "http://scta.info/resource/lectio1/critical/transcription"
 	end
 	it 'returns status of expression' do 

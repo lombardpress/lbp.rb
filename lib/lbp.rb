@@ -10,6 +10,7 @@ require "lbp/version"
 #new files
   require 'lbp/resource'
   require 'lbp/expression'
+  require 'lbp/manifestation'
   require 'lbp/transcription'
   require 'lbp/file'
   require 'lbp/file_part'

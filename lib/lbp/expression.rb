@@ -7,23 +7,47 @@ require 'lbp'
 
 
 
+
 module Lbp
 	class Expression < Resource 
 		
 		#inherits initialization from Resource
 		
-		def manifestations
+		def manifestationUrls
 			results = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/hasManifestation"))
 			manifestations = results.map {|m| m[:o].to_s}
 			return manifestations
 		end
-		def canonicalManifestation
+		def canonicalManifestationUrl
 			manifestation = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/hasCanonicalManifestation")).first[:o].to_s
 			return manifestation
 		end
+		def canonicalManifestation
+			url = self.canonicalManifestationUrl
+			manifestationObj = Manifestation.new(url)
+			return manifestationObj
+		end
+		# cannonical transcriptions refers to the canonical trancription 
+		# of the canonical manifestation
+		def canonicalTranscriptionUrl
+			manifestationObj = self.canonicalManifestation
+			url = manifestationObj.canonicalTranscriptionUrl
+			return url
+		end
 		def canonicalTranscription
-			manifestation = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/hasCanonicalTranscription")).first[:o].to_s
-			return manifestation
+			url = self.canonicalTranscriptionUrl
+			transcriptionObj = Transcription.new(url)
+			return url
+		end
+		def transcriptionUrl(manifestationUrl)
+			manifestationObj = Manifestation.new(manifestationUrl)
+			transcriptionObj = manifestationObj.canonicalTranscriptionUrl 
+			return transcriptionObj
+		end
+		def transcription(manifestationUrl)
+			manifestationObj = Manifestation.new(manifestationUrl)
+			transcriptionObj = manifestationObj.canonicalTranscription 
+			return transcriptionObj
 		end
 		def next
 			unless self.results.dup.filter(:p => RDF::URI("http://scta.info/property/next")).count == 0
