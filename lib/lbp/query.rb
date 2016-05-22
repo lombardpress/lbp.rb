@@ -107,13 +107,13 @@ module Lbp
 		  result = self.query(query)
 		end
 
-		def item_query(item_url)
+		def item_query(expression_url)
 			query = "#{@prefixes}
 
 	      SELECT ?item_title ?transcript ?transcript_title ?transcript_status ?transcript_type ?manifestation
 	      {
-	      	#{item_url} <http://purl.org/dc/elements/1.1/title> ?item_title .
-	      	?manifestation <http://scta.info/property/isManifestationOf> <http://scta.info/resource/lectio1> . 
+	      	#{expression_url} <http://purl.org/dc/elements/1.1/title> ?item_title .
+	      	?manifestation <http://scta.info/property/isManifestationOf> #{expression_url} . 
 
 	      	?transcript <http://scta.info/property/isTranscriptionOf> ?manifestation .
 					?transcript <http://purl.org/dc/elements/1.1/title> ?transcript_title  .
