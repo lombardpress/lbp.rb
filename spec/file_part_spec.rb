@@ -35,6 +35,10 @@ describe 'file_part object' do
 		result = $paragraph.transform_plain_text
 		expect(result).to be_instance_of(Nokogiri::XML::NodeSet)
 	end
+	#it 'should return the plain text of the paragraph as a nokogiri object' do 
+	#	result = $paragraph.transform_main_view
+	#	expect(result).to be_instance_of(Nokogiri::XML::NodeSet)
+	#end
 	it 'should return the plain text of the topdiv as a nokogiri object' do 
 		result = $topdiv.transform_plain_text
 		expect(result).to be_instance_of(Nokogiri::XML::NodeSet)
