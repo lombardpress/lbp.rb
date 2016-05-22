@@ -37,9 +37,9 @@ module Lbp
 				return Work.new(@results)
 			elsif self.type_shortId == 'expression'
 				return Expression.new(@results)
-			elsif self.type_shortId = "manifestation"
+			elsif self.type_shortId == "manifestation"
 				return Manifestation.new(@results)
-			elsif self.type_shortId = "transcription"
+			elsif self.type_shortId == "transcription"
 				return Transcription.new(@results)
 			else
 				puts "no subclass to conver to"

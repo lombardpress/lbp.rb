@@ -37,7 +37,7 @@ module Lbp
 		def canonicalTranscription
 			url = self.canonicalTranscriptionUrl
 			transcriptionObj = Transcription.new(url)
-			return url
+			return transcriptionObj
 		end
 		def transcriptionUrl(manifestationUrl)
 			manifestationObj = Manifestation.new(manifestationUrl)
