@@ -112,7 +112,7 @@ module Lbp
 
 	      SELECT ?item_title ?transcript ?transcript_title ?transcript_status ?transcript_type ?manifestation
 	      {
-	      	<http://scta.info/resource/lectio1> <http://purl.org/dc/elements/1.1/title> ?item_title .
+	      	#{item_url} <http://purl.org/dc/elements/1.1/title> ?item_title .
 	      	?manifestation <http://scta.info/property/isManifestationOf> <http://scta.info/resource/lectio1> . 
 
 	      	?transcript <http://scta.info/property/isTranscriptionOf> ?manifestation .
