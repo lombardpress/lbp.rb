@@ -68,6 +68,14 @@ module Lbp
 			p = result.xpath("//#{@element}[@id='#{@partid}']")
 			return p
 		end
+		def transform_main_view(xslt_param_array=[])
+			xsltfile=@xslt_dir + @schema[:main_view] 
+			result = File.new(@filepath, @transcription_type, @confighash).transform_main_view(xslt_param_array)
+				#p = result.xpath("//#{@element}[@id='#{@partid}']")
+			#hard coding for the moment so it will only really work for paragraphs
+			p = result.xpath("//div[@id='pwrap_#{@partid}']")
+			return p
+		end
 		def transform_plain_text(xslt_param_array=[])
 			# not that it could be slightly confusing that paragraph plain text uses the transform clean,
 			# because we still the basic paragraph elements in order to select the desired paragraph
