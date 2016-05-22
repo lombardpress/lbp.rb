@@ -12,12 +12,38 @@ module Lbp
 		def initialize(resource_id)
 			@resource_id = resource_id
 
-			if @resource_id.include? "http"
+			# fist conditions check to see if search results 
+			# are being passed
+			if @resource_id.class != String
+				@results = @resource_id
+			# if resource id is a string rather than results 
+			# it looks ot see if this is a URL to query for results	
+			elsif @resource_id.include? "http"
 				@query = Query.new();
 				@results = @query.subject("<" + @resource_id + ">")
+			# finally, it looks for results using the shortId
 			else
 				@query = Query.new();
 				@results = @query.subject_with_short_id(@resource_id)
+			end
+		end
+		def convert
+			#this conditional should be replaced 
+			# by a function that converts the string
+			# into a class name
+			if self.type_shortId == 'workGroup'
+				return WorkGroup.new(@results)
+			elsif self.type_shortId == 'work'
+				return Work.new(@results)
+			elsif self.type_shortId == 'expression'
+				return Expression.new(@results)
+			elsif self.type_shortId = "manifestation"
+				return Manifestation.new(@results)
+			elsif self.type_shortId = "transcription"
+				return Transcription.new(@results)
+			else
+				puts "no subclass to conver to"
+				return self
 			end
 		end
 		def type_shortId

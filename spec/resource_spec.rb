@@ -34,6 +34,11 @@ describe 'resource object' do
 		result = $resource_obj1.type
 		expect(result).to be == "http://scta.info/resource/workGroup"
  	end
+ 	it 'returns object corresponding to type of resource id from url' do 
+		result = $resource_item.convert
+		binding.pry
+		expect(result).to be_kind_of(Lbp::Expression)
+ 	end
  	it 'returns title of resource ' do 
 		result = $resource_obj1.title
 		expect(result).to be == "Sentences Commentaries"
