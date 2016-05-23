@@ -66,7 +66,12 @@ module Lbp
 			return previous_expression
 		end
 		def order_number
-			ordernumber = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/totalOrderNumber")).first[:o].to_s.to_i
+			## TODO: consider changing property so that there is more symmetry here
+			if self.structureType_shortId == "structureBlock"
+				ordernumber = para.results.dup.filter(:p => RDF::URI("http://scta.info/property/paragraphNumber")).first[:o].to_s.to_i
+			else
+				ordernumber = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/totalOrderNumber")).first[:o].to_s.to_i
+			end
 			return ordernumber
 		end
 		def status
@@ -74,6 +79,9 @@ module Lbp
 		end
 
 		# connection properties
+		#TODO: notice how all these return RDF::Solutions (or some RDF:: object)
+		# rather already performing the conversion to strings as is done in all the above methods
+		# this should be standardized
 		def abbreviates
     	abbreviates = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/abbreviates"))
     end
