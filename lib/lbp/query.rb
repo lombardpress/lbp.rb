@@ -124,6 +124,28 @@ module Lbp
 			result = self.query(query)	        
 			
 		end
+		def expressionElementQuery(expression_url, type)
+		# currently assumes expression_url is for a structureType="structureCollection"
+		expression_url = "<#{expression_url}>"
+		elementTypeUrl = "<#{type}>"
+			query = "#{@prefixes}
+			
+				SELECT ?expression ?structureBlock ?resource ?resourceTitle 
+	      {
+
+	        #{expression_url} <http://scta.info/property/hasStructureItem> ?structureItem .
+	        ?structureItem <http://scta.info/property/hasStructureBlock> ?structureBlock .
+	        ?structureBlock <http://scta.info/property/hasStructureElement> ?element .
+	        ?element <http://scta.info/property/structureElementType> #{elementTypeUrl} .
+	        ?element <http://scta.info/property/isPartOfStructureBlock> ?structureBlock .
+	        ?element <http://scta.info/property/isInstanceOf> ?resource .
+	        ?resource <http://purl.org/dc/elements/1.1/title> ?resourceTitle  .
+	      }
+	       	ORDER BY ?resourceTitle
+	       
+	       "
+	    result = self.query(query)
+		end
 		def names(item_url)
 		item_url = "<#{item_url}>"
 			query = "#{@prefixes}

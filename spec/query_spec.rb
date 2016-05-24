@@ -19,4 +19,9 @@ describe 'query object' do
 		expect(result).to be_kind_of(Array)
 	end
 
+	it "should return result object from item expressionElement query" do 
+		result = $query_obj.expressionElementQuery("http://scta.info/resource/plaoulcommentary", "http://scta.info/resource/structureElementName")
+		expect(result).to be_kind_of(Array)
+	end
+
 end
