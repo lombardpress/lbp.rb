@@ -95,6 +95,17 @@ module Lbp
 		def status
 			status = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/status")).first[:o].to_s
 		end
+		
+		def top_level_expression_url
+			#TODO make sure this can handle different structure types
+			status = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/hasTopLevelExpression")).first[:o].to_s.split("/")
+		end
+		def top_level_expression_shortId
+			self.top_level_expression_url.split("/").last
+		end
+		def top_level_expression
+			expression = Expression.new(self.top_level_expression_url)
+		end
 
 		# connection properties
 		#TODO: notice how all these return RDF::Solutions (or some RDF:: object)
