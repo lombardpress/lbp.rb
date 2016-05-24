@@ -36,6 +36,16 @@ describe 'expression object' do
 		result = $resource_item.canonicalTranscriptionUrl
 		expect(result).to be == "http://scta.info/resource/lectio1/critical/transcription"
 	end
+	it 'returns true or false for presence of canonical Transcription' do 
+		result = $resource_item.canonicalTranscription?
+		expect(result).to be == true
+	end
+	it 'returns false for presence of canonical Transcription' do 
+		$resource_without_transcript_started = Lbp::Expression.new("b3-q2")
+		result = $resource_without_transcript_started.canonicalTranscription?
+		expect(result).to be == false
+	end
+	
 	it 'returns status of expression' do 
 		result = $resource_item.status
 	

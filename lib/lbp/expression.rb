@@ -27,6 +27,13 @@ module Lbp
 			manifestationObj = Manifestation.new(url)
 			return manifestationObj
 		end
+		def canonicalManifestation?
+			if self.canonicalManifestationUrl == nil
+				return false
+			else
+				return true
+			end
+		end
 		# cannonical transcriptions refers to the canonical trancription 
 		# of the canonical manifestation
 		def canonicalTranscriptionUrl
@@ -38,6 +45,17 @@ module Lbp
 			url = self.canonicalTranscriptionUrl
 			transcriptionObj = Transcription.new(url)
 			return transcriptionObj
+		end
+		def canonicalTranscription?
+			if self.canonicalManifestation? == false
+				return false
+			else
+				if self.canonicalTranscriptionUrl == nil
+					return false
+				else
+					return true
+				end
+			end
 		end
 		def transcriptionUrl(manifestationUrl)
 			manifestationObj = Manifestation.new(manifestationUrl)

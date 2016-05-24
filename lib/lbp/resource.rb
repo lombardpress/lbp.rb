@@ -8,23 +8,28 @@ require 'lbp'
 
 module Lbp
 	class Resource 
-		attr_reader :resource_id, :results
+		attr_reader :resource_shortId, :resource_url, :results
 		def initialize(resource_id)
-			@resource_id = resource_id
-
 			# fist conditions check to see if search results 
 			# are being passed
-			if @resource_id.class != String
-				@results = @resource_id
-			# if resource id is a string rather than results 
+			if resource_id.class != String
+				@results = resource_id
+				# resource should should be returned instead of "unsure"
+				@resource_shortId = "unsure"
+				@resource_url = "unsure"
+				# if resource id is a string rather than results 
 			# it looks ot see if this is a URL to query for results	
-			elsif @resource_id.include? "http"
+			elsif resource_id.include? "http"
 				@query = Query.new();
-				@results = @query.subject("<" + @resource_id + ">")
+				@results = @query.subject("<" + resource_id + ">")
+				@resource_url = resource_id
+				@resource_shortId = resource_id.split("resource/").last
 			# finally, it looks for results using the shortId
 			else
 				@query = Query.new();
-				@results = @query.subject_with_short_id(@resource_id)
+				@results = @query.subject_with_short_id(resource_id)
+				@resource_url = "http://scta.info/resource/" + resource_id
+				@resource_shortId = resource_id
 			end
 		end
 		def convert

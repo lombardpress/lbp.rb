@@ -17,8 +17,13 @@ module Lbp
 			return transcriptions
 		end
 		def canonicalTranscriptionUrl
-			transcriptionUrl = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/hasCanonicalTranscription")).first[:o].to_s
-			return transcriptionUrl
+			# TODO this check against an empty array should
+			# occur everywhere the filter is used
+			# maybe we need a helper function that does this once
+			unless self.results.count == 0 
+				transcriptionUrl = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/hasCanonicalTranscription")).first[:o].to_s
+				return transcriptionUrl
+			end
 		end
 		def canonicalTranscription
 			url = self.canonicalTranscriptionUrl
