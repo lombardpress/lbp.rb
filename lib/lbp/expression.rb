@@ -98,7 +98,7 @@ module Lbp
 
 		def top_level_expression_url
 			#TODO make sure this can handle different structure types
-			status = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/hasTopLevelExpression")).first[:o].to_s
+			status = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/isPartOfTopLevelExpression")).first[:o].to_s
 		end
 		def top_level_expression_shortId
 			self.top_level_expression_url.split("/").last
