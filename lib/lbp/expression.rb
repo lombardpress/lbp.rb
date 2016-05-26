@@ -107,6 +107,17 @@ module Lbp
 			expression = Expression.new(self.top_level_expression_url)
 		end
 
+		def item_level_expression_url
+			#TODO make sure this can handle different structure types
+			status = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/isPartOfStructureItem")).first[:o].to_s
+		end
+		def item_level_expression_shortId
+			self.item_level_expression_url.split("/").last
+		end
+		def item_level_expression
+			expression = Expression.new(self.item_level_expression_url)
+		end
+
 		# connection properties
 		#TODO: notice how all these return RDF::Solutions (or some RDF:: object)
 		# rather already performing the conversion to strings as is done in all the above methods
