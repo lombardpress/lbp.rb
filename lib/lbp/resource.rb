@@ -15,8 +15,8 @@ module Lbp
 			if resource_id.class != String
 				@results = resource_id
 				# resource should should be returned instead of "unsure"
-				@resource_shortId = "unsure"
-				@resource_url = "unsure"
+				@resource_shortId = @results.first[:s].to_s.split("resource/").last
+				@resource_url = @results.first[:s].to_s
 				# if resource id is a string rather than results 
 			# it looks ot see if this is a URL to query for results	
 			elsif resource_id.include? "http"

@@ -75,5 +75,17 @@ describe 'expression object' do
 		result = $resource_para.previous
 		expect(result).to be_kind_of(String)
 	end
+	it 'returns top level expression for expression resource' do 
+		result = $resource_para.top_level_expression_url
+		expect(result).to be_kind_of(String)
+	end
+	it 'returns top level expression for expression resource' do 
+		result = $resource_item.top_level_expression_url
+		expect(result).to be_kind_of(String)
+	end
+	it 'returns top level expression for expression resource' do 
+		result = $resource_item.top_level_expression_shortId
+		expect(result).to be_kind_of(String)
+	end
 
 end
