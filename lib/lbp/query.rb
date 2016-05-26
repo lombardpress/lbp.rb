@@ -20,10 +20,12 @@ module Lbp
 	      "
     end
 		def query(query)
-		  if ENV['RACK_ENV'] == "production"
-		    sparqlendpoint = "http://sparql.scta.info/ds/query"
-		  elsif ENV['SPARQL'] == "local"
+			if ENV['SPARQL'] == "local"
 		  	sparqlendpoint = "http://localhost:3030/ds/query"
+		  elsif ENV['SPARQL'] == "staging"
+		  	sparqlendpoint = "http://sparql-staging.scta.info/ds/query"
+		  elsif ENV['RACK_ENV'] == "production" || ENV['SPARQL'] == "production"
+		    sparqlendpoint = "http://sparql.scta.info/ds/query"
 		  else
 		    sparqlendpoint = "http://sparql.scta.info/ds/query"
 		  end
