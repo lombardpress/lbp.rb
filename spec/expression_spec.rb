@@ -8,6 +8,7 @@ describe 'expression object' do
 	$resource_obj1 = Lbp::Expression.new("sentences")
 	$resource_obj2 = Lbp::Expression.new("http://scta.info/resource/sententia")
 	$resource_item = Lbp::Expression.new("lectio1")
+	$resource_toplevelexpression = Lbp::Expression.new("plaoulcommentary")
 	$resource_itemFirstInSequence = Lbp::Expression.new("principiumI")
 	$resource_itemLastInSequence = Lbp::Expression.new("lectio134")
 	$resource_item2 = Lbp::Expression.new("pl-l1d1c1") #structureItem id
@@ -86,6 +87,10 @@ describe 'expression object' do
 	it 'returns top level expression for expression resource' do 
 		result = $resource_item.top_level_expression_shortId
 		expect(result).to be_kind_of(String)
+	end
+	it 'returns the level integer from the expression' do 
+		result = $resource_toplevelexpression.level
+		expect(result).to be_kind_of(Integer)
 	end
 
 end

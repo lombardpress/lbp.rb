@@ -117,7 +117,16 @@ module Lbp
 		def item_level_expression
 			expression = Expression.new(self.item_level_expression_url)
 		end
-
+		def level
+			result = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/level")).first[:o]
+			unless self.results.count == 0 
+				level = result.to_s.to_i
+			else
+				level = nil
+			end
+			return level
+		end
+		
 		# connection properties
 		#TODO: notice how all these return RDF::Solutions (or some RDF:: object)
 		# rather already performing the conversion to strings as is done in all the above methods
