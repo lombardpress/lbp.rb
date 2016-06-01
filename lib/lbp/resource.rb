@@ -8,6 +8,8 @@ require 'lbp'
 
 module Lbp
 	class Resource 
+		## TODO think about making a class level method called "find" to replace "convert" the result 
+		## of which would be the instantiation of the appropriate class
 		attr_reader :resource_shortId, :resource_url, :results
 		def initialize(resource_id)
 			# fist conditions check to see if search results 
