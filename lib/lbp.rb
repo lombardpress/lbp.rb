@@ -14,6 +14,7 @@ require "lbp/version"
   require 'lbp/transcription'
   require 'lbp/file'
   require 'lbp/file_part'
+  require 'lbp/article'
 
   
   
