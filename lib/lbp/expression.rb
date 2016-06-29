@@ -24,7 +24,7 @@ module Lbp
 		end
 		def canonicalManifestation
 			url = self.canonicalManifestationUrl
-			manifestationObj = Manifestation.new(url)
+			manifestationObj = Resource.find(url)
 			return manifestationObj
 		end
 		def canonicalManifestation?
@@ -43,7 +43,7 @@ module Lbp
 		end
 		def canonicalTranscription
 			url = self.canonicalTranscriptionUrl
-			transcriptionObj = Transcription.new(url)
+			transcriptionObj = Resource.find(url)
 			return transcriptionObj
 		end
 		def canonicalTranscription?
@@ -58,12 +58,12 @@ module Lbp
 			end
 		end
 		def transcriptionUrl(manifestationUrl)
-			manifestationObj = Manifestation.new(manifestationUrl)
+			manifestationObj = Manifestation.find(manifestationUrl)
 			transcriptionObj = manifestationObj.canonicalTranscriptionUrl 
 			return transcriptionObj
 		end
 		def transcription(manifestationUrl)
-			manifestationObj = Manifestation.new(manifestationUrl)
+			manifestationObj = Manifestation.find(manifestationUrl)
 			transcriptionObj = manifestationObj.canonicalTranscription 
 			return transcriptionObj
 		end
@@ -104,7 +104,7 @@ module Lbp
 			self.top_level_expression_url.split("/").last
 		end
 		def top_level_expression
-			expression = Expression.new(self.top_level_expression_url)
+			expression = Resource.find(self.top_level_expression_url)
 		end
 
 		def item_level_expression_url
@@ -115,7 +115,7 @@ module Lbp
 			self.item_level_expression_url.split("/").last
 		end
 		def item_level_expression
-			expression = Expression.new(self.item_level_expression_url)
+			expression = Resource.find(self.item_level_expression_url)
 		end
 		def level
 			result = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/level")).first[:o]

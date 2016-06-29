@@ -27,7 +27,7 @@ module Lbp
 		end
 		def canonicalTranscription
 			url = self.canonicalTranscriptionUrl
-			transcriptionObj = Transcription.new(url)
+			transcriptionObj = Resource.find(url)
 			return transcriptionObj
 		end
 	end
