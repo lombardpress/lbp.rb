@@ -5,7 +5,9 @@ require 'nokogiri'
 
 describe 'file object' do 
 	require_relative "config_globals"
-	$fileobject = Lbp::File.new("https://bitbucket.org/jeffreycwitt/principiumiv/raw/master/principiumIV.xml", "critical", $confighash)
+	# schema 1.0.0 test file
+	$fileobject = Lbp::File.new("https://bitbucket.org/jeffreycwitt/lectio1/raw/develop/lectio1.xml", "critical", $confighash)
+	# schema 0.0.0 / default file 
 	$fileobject_private = Lbp::File.new("https://bitbucket.org/jeffreycwitt/lectio19/raw/master/lectio19.xml", "critical", $confighash)
 	$fileobject3 = Lbp::File.new("https://bitbucket.org/jeffreycwitt/lectio1/raw/master/lectio1.xml", "critical", $confighash)
 
@@ -28,6 +30,15 @@ describe 'file object' do
 
 	it 'should transform file from private git repository' do 
 		result = $fileobject_private.transform_clean
+		expect(result).to be_kind_of(String)
+	end
+
+	it 'should retrieve the validating schema label from TEI xml file' do 
+		result = $fileobject.validating_schema_version
+		expect(result).to be_kind_of(String)
+	end
+		it 'should retrieve the transcription type from the TEI xml file' do 
+		result = $fileobject.transcription_type_from_file
 		expect(result).to be_kind_of(String)
 	end
 
@@ -73,7 +84,7 @@ describe 'file object' do
 
 	it 'should transform a doc using a specified xslt file' do
 		xslt_param_array = []
-		result = $fileobject.transform($confighash[:xslt_dirs]["default"][:critical] + $confighash[:xslt_dirs]["default"][:clean_view], xslt_param_array)
+		result = $fileobject.transform($confighash[:xslt_base] + "default" + "/" + "critical" + "/" + $confighash[:stylesheets][:clean_view], xslt_param_array)
 		
 		expect(result).to be_instance_of(Nokogiri::XML::Document)
 	end
