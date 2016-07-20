@@ -8,8 +8,6 @@ require 'lbp'
 
 module Lbp
 	class Resource 
-		## TODO think about making a class level method called "find" to replace "convert" the result 
-		## of which would be the instantiation of the appropriate class
 		class << self
 			def find(resource_id)
 				if resource_id.include? "http"
@@ -33,12 +31,12 @@ module Lbp
 			end
 		end
 		# end class level methods
-		attr_reader :resource_shortId, :resource_url, :results
+		attr_reader :resource_short_id, :resource_url, :results
 		
 		def initialize(resource_url, results)
 			@results = results
 			@resource_url = resource_url
-			@resource_shortId = resource_url.split("resource/").last
+			@resource_short_id = resource_url.split("resource/").last
 		end
 		def type
 			type = @results.dup.filter(:p => RDF::URI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")).first[:o]
