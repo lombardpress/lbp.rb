@@ -31,25 +31,49 @@ module Lbp
 			end
 		end
 		# end class level methods
-		attr_reader :resource_short_id, :resource_url, :results
+		attr_reader :short_id, :url, :rdf_uri, :results
 		
 		def initialize(resource_url, results)
 			@results = results
-			@resource_url = resource_url
-			@resource_short_id = resource_url.split("resource/").last
+			
+			# this is copied from resource_identifier
+			@rdf_uri = new RDF::URI.new(resource_url)
+			@url = resource_url
+			@short = if resource_url.include? "property/"
+				@url.split("property/").last
+			else
+				@url.split("resource/").last
+			end
 		end
+		def to_s
+			@url
+		end
+		#generic query methods for all resources
+		def values(property) # should return an array of resource identifiers
+			results = self.results.dup.filter(:p => RDF::URI(property))
+			array = results.map {|m| ResourceIdentifier.new(m[:o].to_s)}
+			return array
+		end
+
+		def value(property) # should return a single resource identifier; and error if there is more than one property for this value
+			value = @results.dup.filter(:p => RDF::URI(property)).first[:o]
+			ResourceIdentifier.new(value)
+		end
+
+		#query for properties global to all resources
 		def type
-			type = @results.dup.filter(:p => RDF::URI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")).first[:o]
-			ResourceIdentifier.new(type)
+			self.value("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
 		end
 		def title
-			title = @results.dup.filter(:p => RDF::URI(RDF::Vocab::DC11.title)).first[:o].to_s
+			#careful here; title in db is not actualy a uri, but a litteral
+			#to_s method should work, but it might not be correct for this to be initially 
+			#instantiated into a resource identifer. 
+			# This is why I'm forcing the to_s method in the return value rather than 
+			# return the ResourceIdentifer object itself as in the case of type above
+			self.value(RDF::Vocab::DC11.title).to_s
 		end
-		## structure type should be moved to expression and other classes because it's not generic enough
-		## some resources like quotes or name will not have structure type
-		def structureType
-			type = @results.dup.filter(:p => RDF::URI("http://scta.info/property/structureType")).first[:o]
-			ResourceIdentifier.new(type)
+		def description
+			#TODO add description here
 		end
 	end
 end
