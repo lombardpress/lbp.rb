@@ -17,7 +17,7 @@ module Lbp
 			values("http://scta.info/property/hasManifestation")
 		end
 		def canonical_manifestation # returns a single manifestation ResourceIdentifier
-			value("http://scta.info/property/hasManifestation")
+			value("http://scta.info/property/hasCanonicalManifestation")
 		end
 		def canonical_manifestation? # returns boolean
 			!canonical_manifestation.to_s.nil?
