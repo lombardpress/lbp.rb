@@ -11,24 +11,12 @@ module Lbp
 		
 		#inherits initialization from Resource
 		
-		def transcriptionUrls
-			results = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/hasTranscription"))
-			transcriptions = results.map {|m| m[:o].to_s}
-			return transcriptions
+		def transcriptions
+			values("http://scta.info/property/hasTranscription")
 		end
-		def canonicalTranscriptionUrl
-			# TODO this check against an empty array should
-			# occur everywhere the filter is used
-			# maybe we need a helper function that does this once
-			unless self.results.count == 0 
-				transcriptionUrl = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/hasCanonicalTranscription")).first[:o].to_s
-				return transcriptionUrl
-			end
-		end
-		def canonicalTranscription
-			url = self.canonicalTranscriptionUrl
-			transcriptionObj = Transcription.new(url)
-			return transcriptionObj
+		def canonical_transcription
+			value("http://scta.info/property/hasCanonicalTranscription")
+			
 		end
 	end
 end

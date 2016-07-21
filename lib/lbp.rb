@@ -15,6 +15,7 @@ require "lbp/version"
   require 'lbp/file'
   require 'lbp/file_part'
   require 'lbp/article'
+  require 'lbp/resource_identifier'
 
   
   
