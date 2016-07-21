@@ -37,9 +37,9 @@ module Lbp
 			@results = results
 			
 			# this is copied from resource_identifier
-			@rdf_uri = new RDF::URI.new(resource_url)
+			@rdf_uri = RDF::URI.new(resource_url)
 			@url = resource_url
-			@short = if resource_url.include? "property/"
+			@short_id = if resource_url.include? "property/"
 				@url.split("property/").last
 			else
 				@url.split("resource/").last
@@ -56,8 +56,14 @@ module Lbp
 		end
 
 		def value(property) # should return a single resource identifier; and error if there is more than one property for this value
-			value = @results.dup.filter(:p => RDF::URI(property)).first[:o]
-			ResourceIdentifier.new(value)
+			value = @results.dup.filter(:p => RDF::URI(property))
+			if value.count > 0 
+				value = value.first[:o]
+				ResourceIdentifier.new(value)
+			else 
+				nil
+			end
+			
 		end
 
 		#query for properties global to all resources

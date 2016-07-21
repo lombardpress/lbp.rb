@@ -41,7 +41,10 @@ module Lbp
 			# it creates the actually object resource. the creation of the object method
 			# is useful because it involves a new db call and sometimes 
 			# we only the manifest identifiers and don't need the whole db results.
-			return manifestation.object.canonical_transcription
+			
+			unless manifestation == nil
+				return manifestation.object.canonical_transcription
+			end
 		end
 		
 		def canonical_transcription? #returns boolean
