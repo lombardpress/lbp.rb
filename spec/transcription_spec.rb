@@ -21,7 +21,6 @@ describe 'transcript object' do
  	end
  	it 'returns file path for transcription' do 
 		result = $transcript_obj1.file_path
-		binding.pry
 		expect(result).to be_kind_of(String)
  	end
  	it 'returns file path for transcription' do 
