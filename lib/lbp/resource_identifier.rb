@@ -29,9 +29,9 @@ module Lbp
 		def to_s
 			@url
 		end
-		def object
+		def resource
 			unless @rdf_uri.class == RDF::Literal
-				object = Lbp::Resource.find(url)
+				Lbp::Resource.find(url)
 			else 
 				nil
 			end

@@ -24,7 +24,7 @@ describe 'resource object' do
 	 	end
 	 	it 'should return object if the resource is a uri resource (and not a literal)' do 
 			object = Lbp::ResourceIdentifier.new("lectio1")
-			result = object.object
+			result = object.resource
 			expect(result).to be_instance_of(Lbp::Expression)
 		end
 	end
@@ -46,7 +46,7 @@ describe 'resource object' do
 	 	end
 	 	it 'should return object if the resource is a uri resource (and not a literal)' do 
 			object = Lbp::ResourceIdentifier.new(RDF::Literal.new("Test"))
-			result = object.object
+			result = object.resource
 			expect(result).to be == nil
 		end
 	end	

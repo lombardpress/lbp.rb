@@ -9,7 +9,7 @@ module Lbp
 	class Transcription < Resource
 		#initionalization handled by Resource Class
 		def file_path(branch="master")
-			file_path = self.value("http://scta.info/property/hasXML").to_s
+			file_path = value("http://scta.info/property/hasXML").to_s
 			#file_path = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/hasXML")).first[:o].to_s
 			if branch != "master"
 			file_path.gsub!("master", branch)
@@ -17,7 +17,7 @@ module Lbp
 			return file_path
 		end
 	  def transcription_type
-	  	type = self.value("http://scta.info/property/transcriptionType")
+	  	type = value("http://scta.info/property/transcriptionType")
 	  	#type = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/transcriptionType")).first[:o].to_s
 	  	type.to_s.downcase
 	  end

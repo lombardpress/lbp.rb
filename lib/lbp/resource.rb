@@ -30,24 +30,21 @@ module Lbp
 				Resource.new(resource_url, results)
 			end
 		end
+		
 		# end class level methods
-		attr_reader :short_id, :url, :rdf_uri, :results
+		
+		attr_reader :identifier, :results 
+		extend Forwardable 
+		def_delegators :@identifier, :short_id, :url, :rdf_uri, :to_s
 		
 		def initialize(resource_url, results)
-			@results = results
-			
-			# this is copied from resource_identifier
-			@rdf_uri = RDF::URI.new(resource_url)
-			@url = resource_url
-			@short_id = if resource_url.include? "property/"
-				@url.split("property/").last
-			else
-				@url.split("resource/").last
-			end
+			# if there are problems with results being empty 
+			# and, for example, dup or filter being called on a null class
+			# consider changing the following line to @results = results || <an empty object for whatever results normally is>
+			@results = results || RDF::Query::Solutions.new()
+			@identifier = ResourceIdentifier.new(resource_url)
 		end
-		def to_s
-			@url
-		end
+
 		#generic query methods for all resources
 		def values(property) # should return an array of resource identifiers
 			results = self.results.dup.filter(:p => RDF::URI(property))
@@ -68,7 +65,7 @@ module Lbp
 
 		#query for properties global to all resources
 		def type
-			self.value("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
+			value("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
 		end
 		def title
 			#careful here; title in db is not actualy a uri, but a litteral
@@ -76,7 +73,7 @@ module Lbp
 			#instantiated into a resource identifer. 
 			# This is why I'm forcing the to_s method in the return value rather than 
 			# return the ResourceIdentifer object itself as in the case of type above
-			self.value(RDF::Vocab::DC11.title).to_s
+			value(RDF::Vocab::DC11.title).to_s
 		end
 		def description
 			#TODO add description here
