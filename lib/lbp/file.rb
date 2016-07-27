@@ -32,6 +32,9 @@ module Lbp
 		def file
 			#TODO: needs to be written so auth is only need after request without
 			#auth is rejected
+
+			#TODO: the requirement for credentials also means that initialization of 
+			# file class with nil confighash is still failing
 			
 			#file = open(self.file_path)
 			file = open(self.file_path, {:http_basic_authentication => [@confighash[:git_username], @confighash[:git_password]]})
