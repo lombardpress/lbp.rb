@@ -12,7 +12,10 @@ module Lbp
 		def initialize(filepath, transcription_type, confighash)
 			@file_path = filepath
 			@confighash = confighash
-			@stylesheets = @confighash[:stylesheets]
+
+			unless confighash == nil
+				@stylesheets = @confighash[:stylesheets]
+			end
 
 			# get trancription type from xmlfile
 		  @transcription_type = transcription_type # critical or documentary # there is also a method for this if one needs to get the type from the file itself
