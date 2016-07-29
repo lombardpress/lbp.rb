@@ -46,4 +46,13 @@ describe 'resource object' do
 		result = $resource_obj1.title
 		expect(result).to be == "Sentences Commentaries"
  	end
+ 	it 'returns parent part of resource ' do 
+		result = $resource_item.is_part_of
+		expect(result).to be_kind_of(Lbp::ResourceIdentifier)
+ 	end
+ 	it 'returns child parts as array' do 
+ 		resource = Lbp::Resource.find("lombardsententia")
+		result = resource.has_parts
+		expect(result).to be_kind_of(Array)
+ 	end
 end

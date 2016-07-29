@@ -10,10 +10,12 @@ module Lbp
 	class Resource 
 		class << self
 			def find(resource_id)
-				if resource_id.include? "http"
+				#adding the to_s method allows a resource to be created 
+				#by passing in an RDF::URL object as well as the url string.
+				if resource_id.to_s.include? "http"
 					query = Query.new
-					results = query.subject("<" + resource_id + ">")
-					resource_url = resource_id
+					results = query.subject("<" + resource_id.to_s + ">")
+					resource_url = resource_id.to_s
 					create(resource_url, results)
 				else
 					query = Query.new
@@ -24,7 +26,11 @@ module Lbp
 			end
 			def create(resource_url, results)
 				type = results.dup.filter(:p => RDF::URI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")).first[:o].to_s.split("/").last
-				klass = Lbp.const_get(type.capitalize)
+				klass = if type == "workGroup" 
+						Lbp.const_get("WorkGroup") 
+					else
+						Lbp.const_get(type.capitalize)
+					end
 				klass.new(resource_url, results)
 			rescue NameError
 				Resource.new(resource_url, results)
@@ -48,7 +54,7 @@ module Lbp
 		#generic query methods for all resources
 		def values(property) # should return an array of resource identifiers
 			results = self.results.dup.filter(:p => RDF::URI(property))
-			array = results.map {|m| ResourceIdentifier.new(m[:o].to_s)}
+			array = results.map {|m| ResourceIdentifier.new(m[:o])}
 			return array
 		end
 
@@ -76,7 +82,15 @@ module Lbp
 			value(RDF::Vocab::DC11.title).to_s
 		end
 		def description
-			#TODO add description here
+			value(RDF::Vocab::DC11.description).to_s
 		end
+		def has_parts
+			values(RDF::Vocab::DC.hasPart)
+		end
+		def is_part_of
+			value(RDF::Vocab::DC.isPartOf)
+		end
+
+
 	end
 end

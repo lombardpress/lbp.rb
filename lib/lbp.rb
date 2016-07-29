@@ -9,6 +9,7 @@ require "lbp/version"
 
 #new files
   require 'lbp/resource'
+  require 'lbp/work_group'
   require 'lbp/expression'
   require 'lbp/manifestation'
   require 'lbp/transcription'
