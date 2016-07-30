@@ -74,7 +74,7 @@ module Lbp
     	values("http://scta.info/property/references")
     end
     def referencedBy
-    	values("http://scta.info/property/referencesBy")
+    	values("http://scta.info/property/referencedBy")
     end
     def copies
     	values("http://scta.info/property/copies")
