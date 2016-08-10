@@ -11,6 +11,7 @@ require "lbp/version"
   require 'lbp/resource'
   require 'lbp/work_group'
   require 'lbp/expression'
+  require 'lbp/expression_type'
   require 'lbp/manifestation'
   require 'lbp/transcription'
   require 'lbp/file'
