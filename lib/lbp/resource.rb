@@ -28,6 +28,8 @@ module Lbp
 				type = results.dup.filter(:p => RDF::URI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")).first[:o].to_s.split("/").last
 				klass = if type == "workGroup" 
 						Lbp.const_get("WorkGroup") 
+					elsif type == "expressionType"
+						Lbp.const_get("ExpressionType")
 					else
 						Lbp.const_get(type.capitalize)
 					end
