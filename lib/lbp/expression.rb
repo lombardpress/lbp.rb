@@ -22,6 +22,18 @@ module Lbp
 		def canonical_manifestation? # returns boolean
 			!canonical_manifestation.to_s.nil?
 		end
+		# translations are a subclass of manifestations for any kind of manifestation not in the original language
+		# note that this currently means the manifestations methods, will not grab translation-manifestations, 
+		# these must be called with translations method
+		def translations
+			values("http://scta.info/property/hasTranslation")
+		end
+		def canonical_translation
+			values("http://scta.info/property/hasCanonicalTranslation")
+		end
+		def canonical_translation?
+			!canonical_translation.to_s.nil?
+		end
 		# cannonical transcriptions refers to the canonical trancription of the canonical manifestation
 		def canonical_transcription # returns single transcription as ResourceIdentifier
 			manifestation = canonical_manifestation
