@@ -6,7 +6,7 @@ require 'lbp'
 
 module Lbp
 	# class should be renamed to Transcription
-	class File 
+	class File
 		attr_reader :xslt_dir, :file_path
 
 		def initialize(filepath, transcription_type, confighash)
@@ -15,6 +15,7 @@ module Lbp
 
 			unless confighash == nil
 				@stylesheets = @confighash[:stylesheets]
+				# identify propery xslt directory
 			end
 
 			# get trancription type from xmlfile
@@ -23,40 +24,36 @@ module Lbp
 		  # get xslt_version from xmlfile
 		  @xslt_version = self.validating_schema_version
 
-
-		  # identify propery xslt directory
-	    @xslt_dir = "#{@confighash[:xslt_base]}#{@xslt_version}/#{@transcription_type}/"
+			unless confighash == nil
+				@xslt_dir = "#{@confighash[:xslt_base]}#{@xslt_version}/#{@transcription_type}/"
+			end
 
 	  end
-		
-		def file
-			#TODO: needs to be written so auth is only need after request without
-			#auth is rejected
 
-			#TODO: the requirement for credentials also means that initialization of 
-			# file class with nil confighash is still failing
-			
-			#file = open(self.file_path)
-			file = open(self.file_path, {:http_basic_authentication => [@confighash[:git_username], @confighash[:git_password]]})
+		def file
+			file = open(self.file_path)
+	    if file.base_uri.to_s != self.file_path
+	        file = open(self.file_path, {:http_basic_authentication => [@confighash[:git_username], @confighash[:git_password]]})
+	    end
 			return file
 		end
 		def nokogiri
 			xmldoc = Nokogiri::XML(self.file)
 		end
 		## End File Path Methods
-		
-		## Get transcription type 
+
+		## Get transcription type
 		def transcription_type_from_file
 			xmldoc = self.nokogiri
 
 			result = xmldoc.xpath("/tei:TEI/tei:text[1]/@type", 'tei' => 'http://www.tei-c.org/ns/1.0')
-			
+
 			if result.length > 0
 				return result.to_s
 			else
 				return "unknown"
 			end
-			
+
 		end
 		## get validating schema label
 		def validating_schema_version
@@ -69,7 +66,7 @@ module Lbp
 			end
 		end
 
-		def transcription_type 
+		def transcription_type
 
 		end
 		### Item Header Extraction and Metadata Methods
@@ -184,8 +181,8 @@ module Lbp
     	word_array = self.word_array
     	wf = Hash.new(0)
 			word_array.each { |word| wf[word] += 1 }
-			
-			if sort == "frequency" 
+
+			if sort == "frequency"
 				if order == "descending" # high to low
 					wf = wf.sort_by{|k,v| v}.reverse
 				elsif order == "ascending" # low to high
