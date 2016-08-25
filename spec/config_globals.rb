@@ -1,18 +1,17 @@
-$confighash = {local_texts_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/GitTextfiles/", 
-							citation_lists_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/citationlists/", 
-							xslt_dirs: { "default" => {
-								critical: "/Users/jcwitt/Projects/lombardpress/lombardpress2/xslt/default/critical/",
-								documentary: "/Users/jcwitt/Projects/lombardpress/lombardpress2/xslt/default/documentary/", 
-								main_view: "main_view.xsl",
-								clean_view: "clean_view.xsl",
-								plain_text: "plaintext.xsl", 
-								toc: "lectio_outline.xsl"
-									}
-								},
-							git_repo: "bitbucket.org/jeffreycwitt/",
-							git_username: ENV["GUN"],
-							git_password: ENV["GPW"]
-						}
+$confighash = {
+								local_texts_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/GitTextfiles/", 
+								citation_lists_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/citationlists/", 
+								xslt_base: "/Users/jcwitt/Projects/lombardpress/lombardpress2/xslt/", 
+								stylesheets: {
+							 		main_view: "main_view.xsl",
+							 		clean_view: "clean_view.xsl",
+							 		plain_text: "plaintext.xsl", 
+							 		toc: "lectio_outline.xsl"
+							 	},
+							 	git_repo: "bitbucket.org/jeffreycwitt/",
+							 	git_username: ENV["GUN"],
+							 	git_password: ENV["GPW"]
+							}
 
 		
 

@@ -6,45 +6,69 @@ require 'lbp'
 
 module Lbp
 	# class should be renamed to Transcription
-	class File 
+	class File
 		attr_reader :xslt_dir, :file_path
 
 		def initialize(filepath, transcription_type, confighash)
 			@file_path = filepath
 			@confighash = confighash
-			@xslthash = @confighash[:xslt_dirs]
 
-		  @type = transcription_type # critical or documentary
+			unless confighash == nil
+				@stylesheets = @confighash[:stylesheets]
+				# identify propery xslt directory
+			end
 
-		  #xslt version needs to gathered from a method
-		  xslt_version = nil
-		  #for now its being set to nil because no documents currently declare it
+			# get trancription type from xmlfile
+		  @transcription_type = transcription_type # critical or documentary # there is also a method for this if one needs to get the type from the file itself
 
-	    if xslt_version == nil
-	    	@schema = @xslthash["default"]
-	   	else
-	    	@schema = @xslthash[xslt_version]
-	    end
+		  # get xslt_version from xmlfile
+		  @xslt_version = self.validating_schema_version
 
-	    if @type == 'critical' || @type == 'Critical'
-	    	@xslt_dir = @schema[:critical]
-	    elsif @type == 'documentary' || @type == 'Documentary' || @type == 'diplomatic'
-	    	@xslt_dir = @schema[:documentary]
-	  	end
+			unless confighash == nil
+				@xslt_dir = "#{@confighash[:xslt_base]}#{@xslt_version}/#{@transcription_type}/"
+			end
+
 	  end
-		
+
 		def file
-			#TODO: needs to be written so auth is only need after request without
-			#auth is rejected
-			
-			#file = open(self.file_path)
-			file = open(self.file_path, {:http_basic_authentication => [@confighash[:git_username], @confighash[:git_password]]})
+			file = open(self.file_path)
+	    if file.base_uri.to_s != self.file_path
+	        file = open(self.file_path, {:http_basic_authentication => [@confighash[:git_username], @confighash[:git_password]]})
+	    end
 			return file
 		end
 		def nokogiri
 			xmldoc = Nokogiri::XML(self.file)
 		end
 		## End File Path Methods
+
+		## Get transcription type
+		def transcription_type_from_file
+			xmldoc = self.nokogiri
+
+			result = xmldoc.xpath("/tei:TEI/tei:text[1]/@type", 'tei' => 'http://www.tei-c.org/ns/1.0')
+
+			if result.length > 0
+				return result.to_s
+			else
+				return "unknown"
+			end
+
+		end
+		## get validating schema label
+		def validating_schema_version
+			xmldoc = self.nokogiri
+			result = xmldoc.xpath("/tei:TEI/tei:teiHeader[1]/tei:encodingDesc[1]/tei:schemaRef[1]/@n", 'tei' => 'http://www.tei-c.org/ns/1.0')
+			if result.length > 0
+				return result.to_s.split("-").last
+			else
+				return "default"
+			end
+		end
+
+		def transcription_type
+
+		end
 		### Item Header Extraction and Metadata Methods
 		def title
 			xmldoc = self.nokogiri
@@ -72,9 +96,13 @@ module Lbp
 			return ed_date.value
 		end
 		def pub_date
-			xmldoc = self.nokogiri
-			pub_date = xmldoc.at_xpath("/tei:TEI/tei:teiHeader[1]/tei:fileDesc[1]/tei:publicationStmt[1]/tei:date[1]/@when", 'tei' => 'http://www.tei-c.org/ns/1.0')
-			return pub_date.value
+			if self.validating_schema_version == "1.0.0"
+				return "no pub date in this schema"
+			else
+				xmldoc = self.nokogiri
+				pub_date = xmldoc.at_xpath("/tei:TEI/tei:teiHeader[1]/tei:fileDesc[1]/tei:publicationStmt[1]/tei:date[1]/@when", 'tei' => 'http://www.tei-c.org/ns/1.0')
+				return pub_date.value
+			end
 		end
 		def encoding_method
 			xmldoc = self.nokogiri
@@ -89,7 +117,7 @@ module Lbp
 		def number_of_columns
 			xmldoc = self.nokogiri
 			test = xmldoc.xpath("//tei:pb", 'tei' => 'http://www.tei-c.org/ns/1.0')
-			if @type == "critical"
+			if @transcription_type == "critical"
 				number_of_columns = nil
 			elsif xmldoc.xpath("//tei:pb", 'tei' => 'http://www.tei-c.org/ns/1.0').count != 0
             number_of_columns = 1
@@ -107,35 +135,35 @@ module Lbp
 			doc = xslt_apply_to(self.nokogiri, xsltfile, xslt_param_array)
     end
     def transform_main_view(xslt_param_array=[])
-			xsltfile=@xslt_dir + @schema[:main_view] # "text_display.xsl"
+			xsltfile=@xslt_dir + @stylesheets[:main_view] # "text_display.xsl"
 			doc = self.transform_apply(xsltfile, xslt_param_array)
 		end
 		def transform_index_view(xslt_param_array=[])
-			xsltfile=@xslt_dir + @schema[:index_view] # "text_display_index.xsl"
+			xsltfile=@xslt_dir + @stylesheets[:index_view] # "text_display_index.xsl"
 			doc = self.transform_apply(xsltfile, xslt_param_array)
 		end
 		def transform_clean(xslt_param_array=[])
-    	xsltfile=@xslt_dir + @schema[:clean_view] # "clean_forStatistics.xsl"
+    	xsltfile=@xslt_dir + @stylesheets[:clean_view] # "clean_forStatistics.xsl"
     	doc = self.transform_apply(xsltfile, xslt_param_array)
     end
     def transform_clean_nokogiri(xslt_param_array=[])
-    	xsltfile=@xslt_dir + @schema[:clean_view] # "clean_forStatistics.xsl"
+    	xsltfile=@xslt_dir + @stylesheets[:clean_view] # "clean_forStatistics.xsl"
     	doc = self.transform(xsltfile, xslt_param_array)
     end
 		def transform_plain_text(xslt_param_array=[])
-    	xsltfile=@xslt_dir + @schema[:plain_text] # "plaintext.xsl"
+    	xsltfile=@xslt_dir + @stylesheets[:plain_text] # "plaintext.xsl"
     	doc = self.transform_apply(xsltfile, xslt_param_array)
     end
     def transform_plain_text_nokogiri(xslt_param_array=[])
-    	xsltfile=@xslt_dir + @schema[:plain_text] # "plaintext.xsl"
+    	xsltfile=@xslt_dir + @stylesheets[:plain_text] # "plaintext.xsl"
     	doc = self.transform(xsltfile, xslt_param_array)
     end
     def transform_json(xslt_param_array=[])
-    	xsltfile=@xslt_dir + @schema[:json] # "plaintext.xsl"
+    	xsltfile=@xslt_dir + @stylesheets[:json] # "plaintext.xsl"
     	doc = self.transform_apply(xsltfile, xslt_param_array)
     end
     def transform_toc(xslt_param_array=[])
-    	xsltfile=@xslt_dir + @schema[:toc] # "lectio_outline.xsl"
+    	xsltfile=@xslt_dir + @stylesheets[:toc] # "lectio_outline.xsl"
     	doc = self.transform_apply(xsltfile, xslt_param_array)
     end
     ### End of Transformation Methods ###
@@ -153,8 +181,8 @@ module Lbp
     	word_array = self.word_array
     	wf = Hash.new(0)
 			word_array.each { |word| wf[word] += 1 }
-			
-			if sort == "frequency" 
+
+			if sort == "frequency"
 				if order == "descending" # high to low
 					wf = wf.sort_by{|k,v| v}.reverse
 				elsif order == "ascending" # low to high

@@ -6,157 +6,102 @@ require 'rdf/vocab'
 require 'lbp'
 
 
-
-
 module Lbp
 	class Expression < Resource 
-		
 		#inherits initialization from Resource
+
+		def structure_type #returns resource identifier 
+			value("http://scta.info/property/structureType")
+		end
+		def manifestations # returns array of available manifestations as ResourceIdentifiers
+			values("http://scta.info/property/hasManifestation")
+		end
+		def canonical_manifestation # returns a single manifestation ResourceIdentifier
+			value("http://scta.info/property/hasCanonicalManifestation")
+		end
+		def canonical_manifestation? # returns boolean
+			!canonical_manifestation.to_s.nil?
+		end
+		# translations are a subclass of manifestations for any kind of manifestation not in the original language
+		# note that this currently means the manifestations methods, will not grab translation-manifestations, 
+		# these must be called with translations method
+		def translations
+			values("http://scta.info/property/hasTranslation")
+		end
+		def canonical_translation
+			values("http://scta.info/property/hasCanonicalTranslation")
+		end
+		def canonical_translation?
+			!canonical_translation.to_s.nil?
+		end
+		# cannonical transcriptions refers to the canonical trancription of the canonical manifestation
+		def canonical_transcription # returns single transcription as ResourceIdentifier
+			manifestation = canonical_manifestation
+			unless manifestation == nil
+				return manifestation.resource.canonical_transcription
+			end
+		end
+		def canonical_transcription? #returns boolean
+			!canonical_transcription.nil?
+		end
 		
-		def manifestationUrls
-			results = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/hasManifestation"))
-			manifestations = results.map {|m| m[:o].to_s}
-			return manifestations
+		def next # returns resource identifier of next expression or nil
+			value("http://scta.info/property/next")
 		end
-		def canonicalManifestationUrl
-			manifestation = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/hasCanonicalManifestation")).first[:o].to_s
-			return manifestation
+		def previous #returns ResourceIdentifier or nil
+			value("http://scta.info/property/previous")
 		end
-		def canonicalManifestation
-			url = self.canonicalManifestationUrl
-			manifestationObj = Manifestation.new(url)
-			return manifestationObj
-		end
-		def canonicalManifestation?
-			if self.canonicalManifestationUrl == nil
-				return false
-			else
-				return true
-			end
-		end
-		# cannonical transcriptions refers to the canonical trancription 
-		# of the canonical manifestation
-		def canonicalTranscriptionUrl
-			manifestationObj = self.canonicalManifestation
-			url = manifestationObj.canonicalTranscriptionUrl
-			return url
-		end
-		def canonicalTranscription
-			url = self.canonicalTranscriptionUrl
-			transcriptionObj = Transcription.new(url)
-			return transcriptionObj
-		end
-		def canonicalTranscription?
-			if self.canonicalManifestation? == false
-				return false
-			else
-				if self.canonicalTranscriptionUrl == nil
-					return false
-				else
-					return true
-				end
-			end
-		end
-		def transcriptionUrl(manifestationUrl)
-			manifestationObj = Manifestation.new(manifestationUrl)
-			transcriptionObj = manifestationObj.canonicalTranscriptionUrl 
-			return transcriptionObj
-		end
-		def transcription(manifestationUrl)
-			manifestationObj = Manifestation.new(manifestationUrl)
-			transcriptionObj = manifestationObj.canonicalTranscription 
-			return transcriptionObj
-		end
-		def next
-			unless self.results.dup.filter(:p => RDF::URI("http://scta.info/property/next")).count == 0
-				next_expression = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/next")).first[:o].to_s
-			else
-				next_expression = nil
-			end
-			return next_expression
-		end
-		def previous
-			unless self.results.dup.filter(:p => RDF::URI("http://scta.info/property/previous")).count == 0
-				previous_expression = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/previous")).first[:o].to_s
-			else
-				previous_expression = nil
-			end
-			return previous_expression
-		end
-		def order_number
+		def order_number # returns integer
 			## TODO: consider changing property so that there is more symmetry here
-			if self.structureType_shortId == "structureBlock"
-				ordernumber = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/paragraphNumber")).first[:o].to_s.to_i
+			if structure_type.short_id == "structureBlock"
+				value("http://scta.info/property/paragraphNumber").to_s.to_i
 			else
-				ordernumber = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/totalOrderNumber")).first[:o].to_s.to_i
+				value("http://scta.info/property/totalOrderNumber").to_s.to_i
 			end
-			return ordernumber
 		end
-		def status
-			status = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/status")).first[:o].to_s
+		def status #returns string
+			value("http://scta.info/property/status").to_s
 		end
-
-		def top_level_expression_url
+		def top_level_expression # returns resource identifier
 			#TODO make sure this can handle different structure types
-			status = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/isPartOfTopLevelExpression")).first[:o].to_s
+			value("http://scta.info/property/isPartOfTopLevelExpression")
 		end
-		def top_level_expression_shortId
-			self.top_level_expression_url.split("/").last
-		end
-		def top_level_expression
-			expression = Expression.new(self.top_level_expression_url)
-		end
-
-		def item_level_expression_url
+		def item_level_expression # returns resource identifier
 			#TODO make sure this can handle different structure types
-			status = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/isPartOfStructureItem")).first[:o].to_s
+			value("http://scta.info/property/isPartOfStructureItem")
 		end
-		def item_level_expression_shortId
-			self.item_level_expression_url.split("/").last
-		end
-		def item_level_expression
-			expression = Expression.new(self.item_level_expression_url)
-		end
-		def level
-			result = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/level")).first[:o]
-			unless self.results.count == 0 
-				level = result.to_s.to_i
-			else
-				level = nil
-			end
-			return level
+		def level # returns resource integer
+			#same comment as earlier; this query does not actually return a uri, 
+			#but an litteral. We need to make sure the resource identifer can handle that
+			value("http://scta.info/property/level").to_s.to_i
 		end
 		
-		# connection properties
-		#TODO: notice how all these return RDF::Solutions (or some RDF:: object)
-		# rather already performing the conversion to strings as is done in all the above methods
-		# this should be standardized
-		def abbreviates
-    	abbreviates = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/abbreviates"))
+		def abbreviates # returns array of ResourceIdentifiers
+			values("http://scta.info/property/abbreviates")
     end
     def abbreviatedBy
-    	abbreviatedBy = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/abbreviatedBy"))
+    	values("http://scta.info/property/abbreviatedBy")
     end
     def references
-    	references = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/references"))
+    	values("http://scta.info/property/references")
     end
     def referencedBy
-    	references = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/referencedBy"))
+    	values("http://scta.info/property/referencedBy")
     end
     def copies
-    	copies = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/copies"))
+    	values("http://scta.info/property/copies")
     end
     def copiedBy
-    	copies = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/copiedBy"))
+    	values("http://scta.info/property/copiedBy")
     end
     def mentions
-    	mentions = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/mentions"))
+    	values("http://scta.info/property/mentions")
     end
     def quotes
-    	quotes = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/quotes"))
+    	values("http://scta.info/property/quotes")
     end
     def quotedBy
-    	quotedBy = self.results.dup.filter(:p => RDF::URI("http://scta.info/property/quotedBy"))
+    	values("http://scta.info/property/quotedBy")
     end
 
 	end
