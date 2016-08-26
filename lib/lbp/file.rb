@@ -3,7 +3,6 @@ require 'nokogiri'
 #require 'lbp/item'
 require 'open-uri'
 require 'lbp'
-require 'pry'
 
 module Lbp
 	# class should be renamed to Transcription
