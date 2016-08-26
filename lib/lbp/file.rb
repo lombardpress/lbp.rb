@@ -3,6 +3,7 @@ require 'nokogiri'
 #require 'lbp/item'
 require 'open-uri'
 require 'lbp'
+require 'pry'
 
 module Lbp
 	# class should be renamed to Transcription
@@ -32,9 +33,9 @@ module Lbp
 
 		def file
 			file = open(self.file_path)
-	    if file.base_uri.to_s != self.file_path
-	        file = open(self.file_path, {:http_basic_authentication => [@confighash[:git_username], @confighash[:git_password]]})
-	    end
+			if file.base_uri.to_s != self.file_path
+				file = open(self.file_path, {:http_basic_authentication => [@confighash[:git_username], @confighash[:git_password] ]})
+			end
 			return file
 		end
 		def nokogiri

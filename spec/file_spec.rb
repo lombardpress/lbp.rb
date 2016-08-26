@@ -11,6 +11,7 @@ describe 'file object' do
 	$fileobject_private = Lbp::File.new("https://bitbucket.org/jeffreycwitt/lectio19/raw/master/lectio19.xml", "critical", $confighash)
 	$fileobject3 = Lbp::File.new("https://bitbucket.org/jeffreycwitt/lectio1/raw/master/lectio1.xml", "critical", $confighash)
 	$fileobject_with_null_config = Lbp::File.new("https://bitbucket.org/jeffreycwitt/lectio1/raw/master/lectio1.xml", "critical", nil)
+	$file_from_transcription = Lbp::Resource.find("lectio1/critical/transcription").file
 
 	it 'should return the full filename for an edited item' do
 		result = $fileobject.file_path
@@ -47,13 +48,20 @@ describe 'file object' do
 		result = $fileobject.validating_schema_version
 		expect(result).to be_kind_of(String)
 	end
-		it 'should retrieve the transcription type from the TEI xml file' do
+
+	it 'should retrieve the transcription type from the TEI xml file' do
 		result = $fileobject.transcription_type_from_file
 		expect(result).to be_kind_of(String)
 	end
 
 	it 'should retrieve the item name from the TEI xml file' do
 		result = $fileobject.title
+		expect(result).to be_kind_of(String)
+	end
+
+	it 'should retrieve the validating schema label from TEI xml file from existDB batabase using hasXML rather than hasDoc' do
+		result = $file_from_transcription.title
+		binding.pry
 		expect(result).to be_kind_of(String)
 	end
 
@@ -70,11 +78,12 @@ describe 'file object' do
 
 	it 'should retrieve the edition number from TEI xml file in a private git repo' do
 		result = $fileobject_private.ed_no
+
 		expect(result).to be_kind_of(String)
 	end
 
 	it 'should retrieve the edition date from TEI xml file' do
-		result = $fileobject3.ed_date
+		result = $fileobject_private.ed_date
 		expect(result).to be_kind_of(String)
 	end
 
