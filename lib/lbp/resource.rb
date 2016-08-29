@@ -3,6 +3,7 @@ require 'rdf'
 require 'rdf/rdfxml'
 require 'rdf/ntriples'
 require 'rdf/vocab'
+require 'forwardable'
 require 'lbp'
 #require 'forwardable'
 
