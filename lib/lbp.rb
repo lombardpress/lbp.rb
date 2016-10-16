@@ -19,3 +19,4 @@ require "lbp/version"
   require 'lbp/file_part'
   require 'lbp/article'
   require 'lbp/resource_identifier'
+  require 'lbp/surface'
