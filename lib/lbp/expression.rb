@@ -7,10 +7,10 @@ require 'lbp'
 
 
 module Lbp
-	class Expression < Resource 
+	class Expression < Resource
 		#inherits initialization from Resource
 
-		def structure_type #returns resource identifier 
+		def structure_type #returns resource identifier
 			value("http://scta.info/property/structureType")
 		end
 		def manifestations # returns array of available manifestations as ResourceIdentifiers
@@ -23,7 +23,7 @@ module Lbp
 			!canonical_manifestation.to_s.nil?
 		end
 		# translations are a subclass of manifestations for any kind of manifestation not in the original language
-		# note that this currently means the manifestations methods, will not grab translation-manifestations, 
+		# note that this currently means the manifestations methods, will not grab translation-manifestations,
 		# these must be called with translations method
 		def translations
 			values("http://scta.info/property/hasTranslation")
@@ -44,7 +44,7 @@ module Lbp
 		def canonical_transcription? #returns boolean
 			!canonical_transcription.nil?
 		end
-		
+
 		def next # returns resource identifier of next expression or nil
 			value("http://scta.info/property/next")
 		end
@@ -71,11 +71,11 @@ module Lbp
 			value("http://scta.info/property/isPartOfStructureItem")
 		end
 		def level # returns resource integer
-			#same comment as earlier; this query does not actually return a uri, 
+			#same comment as earlier; this query does not actually return a uri,
 			#but an litteral. We need to make sure the resource identifer can handle that
 			value("http://scta.info/property/level").to_s.to_i
 		end
-		
+
 		def abbreviates # returns array of ResourceIdentifiers
 			values("http://scta.info/property/abbreviates")
     end
@@ -102,6 +102,9 @@ module Lbp
     end
     def quotedBy
     	values("http://scta.info/property/quotedBy")
+    end
+		def isRelatedTo
+    	values("http://scta.info/property/isRelatedTo")
     end
 
 	end
