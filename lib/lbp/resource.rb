@@ -94,6 +94,9 @@ module Lbp
 		def is_part_of
 			value(RDF::Vocab::DC.isPartOf)
 		end
+		def inbox
+			value("http://www.w3.org/ns/ldp#inbox")
+		end
 
 
 	end
