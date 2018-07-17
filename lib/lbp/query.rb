@@ -36,8 +36,7 @@ module Lbp
 
 			sparql = SPARQL::Client.new(sparqlendpoint)
 		  result = sparql.query(query)
-			puts "using sparql endpoint #{sparqlendpoint}"
-		  return result
+			return result
 		end
 		def subject(url)
 			query = "#{@prefixes}
