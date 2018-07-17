@@ -2,9 +2,9 @@ require 'sparql'
 
 module Lbp
 	class Query
-		
+
 		def initialize
-		
+
 			@prefixes = "
 	      PREFIX owl: <http://www.w3.org/2002/07/owl#>
 	      PREFIX dbpedia: <http://dbpedia.org/ontology/>
@@ -24,12 +24,16 @@ module Lbp
 		  	sparqlendpoint = "http://localhost:3030/ds/query"
 		  elsif ENV['SPARQL'] == "staging"
 		  	sparqlendpoint = "http://sparql-staging.scta.info/ds/query"
-		  elsif ENV['RACK_ENV'] == "production" || ENV['SPARQL'] == "production"
+			elsif ENV['SPARQL'] == "docker"
+				sparqlendpoint = "http://sparql-docker.scta.info/ds/query"
+			elsif ENV['SPARQL'] == "url"
+				sparqlendpoint = ENV['SPARQL_URL']
+			elsif ENV['RACK_ENV'] == "production" || ENV['SPARQL'] == "production"
 		    sparqlendpoint = "http://sparql.scta.info/ds/query"
 		  else
 		    sparqlendpoint = "http://sparql.scta.info/ds/query"
 		  end
-			
+
 			sparql = SPARQL::Client.new(sparqlendpoint)
 		  result = sparql.query(query)
 
@@ -49,7 +53,7 @@ module Lbp
           ORDER BY ?p
           "
       result = self.query(query)
-		end 
+		end
 		def subject_with_short_id(shortid)
 			query = "#{@prefixes}
 
@@ -65,7 +69,7 @@ module Lbp
           ORDER BY ?p
           "
       result = self.query(query)
-		end 
+		end
 
 		def zone_info(paragraphurl)
 			query = "#{@prefixes}
@@ -88,7 +92,7 @@ module Lbp
 
 		def collection_query(collection_url)
 			query = "#{@prefixes}
-			
+
 				SELECT ?collectiontitle ?title ?item ?questiontitle ?order ?status ?gitRepository
 	      {
 	        #{collection_url} <http://scta.info/property/hasStructureItem> ?item .
@@ -98,14 +102,14 @@ module Lbp
 	        ?item <http://scta.info/property/status> ?status .
 	        ?item <http://scta.info/property/gitRepository> ?gitRepository .
 
-	        
+
 	        OPTIONAL
 	      	{
 	      	?item <http://scta.info/property/questionTitle> ?questiontitle  .
 	      	}
 	      }
 	      ORDER BY ?order"
-		  
+
 		  result = self.query(query)
 		end
 
@@ -115,24 +119,24 @@ module Lbp
 	      SELECT ?item_title ?transcript ?transcript_title ?transcript_status ?transcript_type ?manifestation
 	      {
 	      	#{expression_url} <http://purl.org/dc/elements/1.1/title> ?item_title .
-	      	?manifestation <http://scta.info/property/isManifestationOf> #{expression_url} . 
+	      	?manifestation <http://scta.info/property/isManifestationOf> #{expression_url} .
 
 	      	?transcript <http://scta.info/property/isTranscriptionOf> ?manifestation .
 					?transcript <http://purl.org/dc/elements/1.1/title> ?transcript_title  .
 	        ?transcript <http://scta.info/property/status> ?transcript_status .
 	        ?transcript <http://scta.info/property/transcriptionType> ?transcript_type .
 	      }"
-			
-			result = self.query(query)	        
-			
+
+			result = self.query(query)
+
 		end
 		def expressionElementQuery(expression_url, type)
 		# currently assumes expression_url is for a structureType="structureCollection"
 		expression_url = "<#{expression_url}>"
 		elementTypeUrl = "<#{type}>"
 			query = "#{@prefixes}
-			
-				SELECT ?expression ?structureBlock ?resource ?resourceTitle 
+
+				SELECT ?expression ?structureBlock ?resource ?resourceTitle
 	      {
 
 	        #{expression_url} <http://scta.info/property/hasStructureItem> ?structureItem .
@@ -144,21 +148,21 @@ module Lbp
 	        ?resource <http://purl.org/dc/elements/1.1/title> ?resourceTitle  .
 	      }
 	       	ORDER BY ?resourceTitle
-	       
+
 	       "
 	    result = self.query(query)
 		end
 		def names(item_url)
 		item_url = "<#{item_url}>"
 			query = "#{@prefixes}
-			
+
 				SELECT ?item ?name ?nameTitle ?mentioningItem
 	      {
 	        #{item_url} <http://scta.info/property/mentions> ?name .
 	        ?name <http://purl.org/dc/elements/1.1/title> ?nameTitle  .
 	      }
 	       	ORDER BY ?nameTitle
-	       
+
 	       "
 	    result = self.query(query)
 		end
@@ -166,7 +170,7 @@ module Lbp
 		def quotes(item_url)
 			item_url = "<#{item_url}>"
 				query = "#{@prefixes}
-				
+
 					SELECT ?item ?quote ?quoteText ?quoteCitation
 		      {
 		        #{item_url} <http://scta.info/property/quotes> ?quote .

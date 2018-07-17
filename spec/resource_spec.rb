@@ -5,8 +5,8 @@ require 'nokogiri'
 
 describe 'resource object' do
 	#TODO: database needs be changed so that shortID is "sententia"
-	$resource_obj1 = Lbp::Resource.find("sententia")
-	$resource_obj2 = Lbp::Resource.find("http://scta.info/resource/sententia")
+	$resource_obj1 = Lbp::Resource.find("sententiae")
+	$resource_obj2 = Lbp::Resource.find("http://scta.info/resource/sententiae")
 	$resource_item = Lbp::Resource.find("lectio1")
 	$resource_item2 = Lbp::Resource.find("pl-l1d1c1") #structureItem id
 	$resource_item3 = Lbp::Resource.find("http://scta.info/resource/l1-acfefv") #paragraph url
@@ -16,11 +16,11 @@ describe 'resource object' do
 
 	it 'return shortid of resource' do
 		result = $resource_obj2.short_id
-		expect(result).to be == "sententia"
+		expect(result).to be == "sententiae"
  	end
  	it 'return urlid of resource' do
 		result = $resource_obj1.url
-		expect(result).to be == "http://scta.info/resource/sententia"
+		expect(result).to be == "http://scta.info/resource/sententiae"
  	end
  	it 'returns type of resource from shortid' do
 		result = $resource_obj1.type.short_id

@@ -1,11 +1,11 @@
 $confighash = {
-								local_texts_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/GitTextfiles/", 
-								citation_lists_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/citationlists/", 
-								xslt_base: "/Users/jcwitt/Projects/lombardpress/lombardpress2/xslt/", 
+								local_texts_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/GitTextfiles/",
+								citation_lists_dir: "/Users/JCWitt/WebPages/lbplib-testfiles/pp-projectfiles/citationlists/",
+								xslt_base: "/Users/jcwitt/Projects/lombardpress/lombardpress-web/xslt/", 
 								stylesheets: {
 							 		main_view: "main_view.xsl",
 							 		clean_view: "clean_view.xsl",
-							 		plain_text: "plaintext.xsl", 
+							 		plain_text: "plaintext.xsl",
 							 		toc: "lectio_outline.xsl"
 							 	},
 							 	git_repo: "bitbucket.org/jeffreycwitt/",
@@ -13,7 +13,7 @@ $confighash = {
 							 	git_password: ENV["GPW"]
 							}
 
-		
+
 
 
 #$filehash = {path: "https://bitbucket.org/jeffreycwitt/lectio1/raw/master/reims_lectio1.xml", fs: "lectio1", ed: "master", type: "documentary", source: "origin"}

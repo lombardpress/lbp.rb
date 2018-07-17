@@ -13,7 +13,7 @@ describe 'transcript object' do
  	end
  	it 'returns transcription type of transcription (documentary)' do
 		result = $transcript_obj1.transcription_type
-		expect(result).to be == "documentary" # the use of documentary could be confusing because somtimes I say diplomatic
+		expect(result).to be == "diplomatic" # the use of documentary could be confusing because somtimes I say diplomatic
  	end
  	it 'returns transcription type of transcription (critical)' do
 		result = $transcript_obj2.transcription_type
