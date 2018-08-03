@@ -19,5 +19,12 @@ describe 'article object' do
 		result = $article_obj2.article_type_shortId
 		expect(result).to be == "bibliography"
  	end
-
+	it 'returns canoncical transcription' do
+		result = $article_obj1.canonical_transcription.resource
+		expect(result).to be_kind_of(Lbp::Transcription)
+ 	end
+	it 'returns canoncical transcription' do
+		result = $article_obj2.transcriptions
+		expect(result).to be_kind_of(Array)
+ 	end
 end
