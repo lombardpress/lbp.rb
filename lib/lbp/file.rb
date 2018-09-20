@@ -38,7 +38,10 @@ module Lbp
 			return file
 		end
 		def nokogiri
-			xmldoc = Nokogiri::XML(self.file)
+			doc = self.file
+			xmldoc = Nokogiri::XML(doc)
+			doc.close
+			return xmldoc
 		end
 		## End File Path Methods
 
