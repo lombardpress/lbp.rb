@@ -22,14 +22,21 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "pry"
-  spec.add_runtime_dependency "nokogiri"
+  spec.add_runtime_dependency "nokogiri", "1.8.5"
   #spec.add_runtime_dependency "rugged"
   spec.add_runtime_dependency "thor"
-  spec.add_runtime_dependency "rdf"
-  spec.add_runtime_dependency "rdf-rdfxml"
-  spec.add_runtime_dependency "rdf-vocab"
-  spec.add_runtime_dependency "rest-client"
-  spec.add_runtime_dependency "sparql"
+  #spec.add_runtime_dependency "rdf", "~> 2.0.2"
+  #spec.add_runtime_dependency "rdf-rdfxml", "~> 2.0.0"
+  #spec.add_runtime_dependency "rdf-vocab", "~> 2.0.2"
+  spec.add_runtime_dependency "rdf", "~> 2.2.0"
+  spec.add_runtime_dependency "rdf-rdfxml", "~> 2.2.0"
+  spec.add_runtime_dependency "rdf-vocab", "~> 2.2.0"
+
+  spec.add_runtime_dependency "rest-client", "~> 2.0.0"
+  #spec.add_runtime_dependency "sparql", "~> 2.0.0"
+  spec.add_runtime_dependency "sparql-client", "~> 2.2.0"
+  spec.add_runtime_dependency "net-http-persistent", "~> 3.0.0"
+
 
 
 end

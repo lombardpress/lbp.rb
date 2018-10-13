@@ -1,4 +1,4 @@
-require 'sparql'
+require 'sparql/client'
 
 module Lbp
 	class Query
