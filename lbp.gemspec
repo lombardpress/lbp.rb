@@ -28,13 +28,19 @@ Gem::Specification.new do |spec|
   #spec.add_runtime_dependency "rdf", "~> 2.0.2"
   #spec.add_runtime_dependency "rdf-rdfxml", "~> 2.0.0"
   #spec.add_runtime_dependency "rdf-vocab", "~> 2.0.2"
-  spec.add_runtime_dependency "rdf", "~> 2.2.0"
+
+  # spec.add_runtime_dependency "rdf", "~> 2.2.0"
+  # spec.add_runtime_dependency "rdf-rdfxml", "~> 2.2.0"
+  # spec.add_runtime_dependency "rdf-vocab", "~> 2.2.0"
+
+  spec.add_runtime_dependency "rdf", "~> 3.0.0"
   spec.add_runtime_dependency "rdf-rdfxml", "~> 2.2.0"
-  spec.add_runtime_dependency "rdf-vocab", "~> 2.2.0"
+  spec.add_runtime_dependency "rdf-vocab", "~> 3.0.0"
+
 
   spec.add_runtime_dependency "rest-client", "~> 2.0.0"
   #spec.add_runtime_dependency "sparql", "~> 2.0.0"
-  spec.add_runtime_dependency "sparql-client", "~> 2.2.0"
+  #spec.add_runtime_dependency "sparql-client", "~> 2.2.0"
   spec.add_runtime_dependency "net-http-persistent", "~> 3.0.0"
 
 
