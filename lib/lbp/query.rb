@@ -111,7 +111,6 @@ module Lbp
 
 		  result = self.query(query)
 		end
-
 		def item_query(expression_url)
 			query = "#{@prefixes}
 
@@ -179,6 +178,15 @@ module Lbp
 		       ORDER BY ?quoteText
 		       "
 		    result = self.query(query)
+		end
+		## dbpedia test. to use this method
+		## set the following env variables
+		## export SPARQL=url
+		## export SPARQL_URL=http://dbpedia.org/sparql
+		## then uncomment next line
+		def dbpedia
+			query = "select distinct ?Concept where {[] a ?Concept} LIMIT 10"
+			result = self.query(query)
 		end
 	end
 end

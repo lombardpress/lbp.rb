@@ -16,6 +16,13 @@ describe 'query object' do
 		while counter < 100 do
 			puts "query 1"
 			result = $query_obj.collection_query("<" + $commentary_url + ">")
+
+			## dbpedia test. to use this
+			## set the following env variables
+			## export SPARQL=url
+			## export SPARQL_URL=http://dbpedia.org/sparql
+			## then uncomment next line
+			#result = $query_obj.dbpedia()
 			results << result
 			puts "waiting one second"
 			sleep 1
