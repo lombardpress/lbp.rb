@@ -31,7 +31,7 @@ module Lbp
 	  end
 
 		def file
-			file = open(self.file_path)
+			file = URI.open(self.file_path)
 			if file.base_uri.to_s != self.file_path
 				file = open(self.file_path, {:http_basic_authentication => [@confighash[:git_username], @confighash[:git_password] ]})
 			end

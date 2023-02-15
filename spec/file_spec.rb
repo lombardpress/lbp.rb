@@ -8,7 +8,7 @@ describe 'file object' do
 	# schema 1.0.0 test file
 	$fileobject = Lbp::File.new("https://raw.githubusercontent.com/scta-texts/plaoulcommentary/master/lectio1/lectio1.xml", "critical", $confighash)
 	# schema 0.0.0 / default file
-	$fileobject_private = Lbp::File.new("https://bitbucket.org/jeffreycwitt/lectio19/raw/master/lectio19.xml", "critical", $confighash)
+	$fileobject_private = Lbp::File.new("https://raw.githubusercontent.com/scta-texts/plaoulcommentary/master/lectio19/lectio19.xml", "critical", $confighash)
 	$fileobject3 = Lbp::File.new("https://raw.githubusercontent.com/scta-texts/plaoulcommentary/master/lectio1/lectio1.xml", "critical", $confighash)
 	$fileobject_with_null_config = Lbp::File.new("https://raw.githubusercontent.com/scta-texts/plaoulcommentary/master/lectio1/lectio1.xml", "critical", nil)
 	#$file_from_transcription = Lbp::Resource.find("lectio1/critical/transcription").file

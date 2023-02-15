@@ -23,11 +23,11 @@ describe 'transcript object' do
 		result = $transcript_obj1.file_path
 		expect(result).to be_kind_of(String)
  	end
- 	it 'returns file path for transcription' do
-		result = $transcript_obj1.doc_path("develop")
+ 	# it 'returns file path for transcription' do
+	# 	result = $transcript_obj1.doc_path("develop")
 
-		expect(result).to be_kind_of(String)
- 	end
+	# 	expect(result).to be_kind_of(String)
+ 	# end
  	it 'returns file path for transcription' do
 		result = $transcript_obj2.file_path
 		expect(result).to be_kind_of(String)

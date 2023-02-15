@@ -9,9 +9,9 @@ describe 'file_part object' do
 		paragraph1 = "l1-cpspfs"
 		paragraph3 = "l1-shoatd"
 		
-		$paragraph = Lbp::FilePart.new("https://bitbucket.org/jeffreycwitt/lectio1/raw/master/lectio1.xml", "critical", $confighash, paragraph1)
-		$div = Lbp::FilePart.new("https://bitbucket.org/jeffreycwitt/lectio1/raw/master/lectio1.xml", "critical", $confighash, paragraph1)
-		$topdiv = Lbp::FilePart.new("https://bitbucket.org/jeffreycwitt/lectio1/raw/master/lectio1.xml", "critical", $confighash, "lectio1")
+		$paragraph = Lbp::FilePart.new("https://raw.githubusercontent.com/scta-texts/plaoulcommentary/master/lectio1/lectio1.xml", "critical", $confighash, paragraph1)
+		$div = Lbp::FilePart.new("https://raw.githubusercontent.com/scta-texts/plaoulcommentary/master/lectio1/lectio1.xml", "critical", $confighash, paragraph1)
+		$topdiv = Lbp::FilePart.new("https://raw.githubusercontent.com/scta-texts/plaoulcommentary/master/lectio1/lectio1.xml", "critical", $confighash, "lectio1")
 
 	it 'should return the pid for the Paragraph object' do 
 		result = $paragraph.partid
